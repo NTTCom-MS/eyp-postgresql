@@ -1,0 +1,8 @@
+*~
+/pkg/
+/.vagrant
+/junit
+/log
+/spec/fixtures/manifests
+/spec/fixtures/modules
+/Gemfile.lock
