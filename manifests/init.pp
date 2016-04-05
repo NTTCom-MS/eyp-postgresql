@@ -3,29 +3,35 @@
 # === postgresql documentation
 #
 class postgresql(
-                  $version='9.2',
+                  #general
+                  $version=$postgresql::params::version_default,
                   $datadir=$postgresql::params::datadir_default,
+                  # install
+                  # config
+                  $listen='*',
+                  $port='5432',
+                  $max_connections='100',
+                  # service
+                  $manage_service=true,
                 ) inherits postgresql::params {
 
-  package { $postgresql::params::reponame[$version]:
-    ensure   => 'installed',
-    source   => $postgresql::params::reposource[$version],
-    provider => $postgresql::params::repoprovider,
-  }
+  class { '::postgresql::install':
+    version => $version,
+    datadir => $datadir,
+  } ->
 
-  package { $postgresql::params::packagename:
-    ensure  => 'installed',
-    require => Package[$postgresql::params::reponame[$version]],
-  }
+  class { '::postgresql::config':
+    version         => $version,
+    datadir         => $datadir,
+    listen          => $listen,
+    port            => $port,
+    max_connections => $max_connections,
+  } ~>
 
-  #initdb
-  #com a postgres
-  #-bash-4.1$ PGDATA="/var/lib/pgsql/9.2/data" /usr/pgsql-9.2/bin/initdb
-  #creates => /var/lib/pgsql/9.2/data/pg_hba.conf
+  class { '::postgresql::service':
+    manage_service => $manage_service,
+  } ->
 
-  # service definition and notification:
-  #
-  # notify => Class['postgresql::service'],
-  # class { 'postgresql::service': }
+  Class['::postgresql']
 
 }

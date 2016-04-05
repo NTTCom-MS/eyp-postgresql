@@ -11,6 +11,9 @@ class postgresql::params {
         /^6.*$/:
         {
           #TODO: es centos only
+
+          $version_default='9.2'
+          #TODO: modificar segons versio
           $datadir_default='/var/lib/pgsql/9.2/data'
           $repoprovider = 'rpm'
           $reposource =  {
@@ -23,9 +26,10 @@ class postgresql::params {
           $servicename = {
                             '9.2' => 'postgresql-9.2',
                           }
-          $inidb = {
+          $initdb = {
                       '9.2' => '/usr/pgsql-9.2/bin/initdb',
                     }
+          $postgresuser='postgres'
         }
         default: { fail("Unsupported RHEL/CentOS version! - ${::operatingsystemrelease}")  }
       }
