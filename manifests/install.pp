@@ -3,8 +3,8 @@
 # === postgresql::install documentation
 #
 class postgresql::install (
-                            $version=$postgresql::params::version_default,
-                            $datadir=$postgresql::params::datadir_default,
+                            $version = $postgresql::params::version_default,
+                            $datadir = $postgresql::params::datadir_default,
                           ) inherits postgresql::params {
 
   Exec {

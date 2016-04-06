@@ -1,8 +1,8 @@
 class postgresql::service (
-                        $manage_service=true,
-                        $manage_docker_service=true,
-                        $ensure ='running',
-                        $enable =true,
+                        $manage_service        = true,
+                        $manage_docker_service = true,
+                        $ensure                = 'running',
+                        $enable                = true,
                       ) inherits postgresql::params {
 
   #
