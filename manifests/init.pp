@@ -17,6 +17,7 @@ class postgresql(
                   $checkpoint_segments = '3',
                   $wal_keep_segments   = '0',
                   $hot_standby         = false,
+                  $pidfile             = $postgresql::params::servicename[$version],
                   # service
                   $manage_service      = true,
                 ) inherits postgresql::params {
