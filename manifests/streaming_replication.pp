@@ -10,19 +10,19 @@ class postgresql::streaming_replication (
   }
 
   file { '/root/.pgpass':
-    ensure => 'present',
-    owner => 'root',
-    group => 'root',
-    mode => '0600',
+    ensure  => 'present',
+    owner   => 'root',
+    group   => 'root',
+    mode    => '0600',
     content => "${masterhost}:${masterport}:postgres:${masterusername}:${masterpassword}\n",
     require => Class['::postgresql::install'],
   }
 
   exec { 'init streaming replication':
-    command => "bash -c  'pg_basebackup -D ${datadir} -h ${masterhost} -p ${masterport} -U ${masterusername} -w -v > ${datadir}/.streaming_replication_init.log 2>&1'",
-    user => $postgresql::params::postgresuser,
+    command => "bash -c 'pg_basebackup -D ${datadir} -h ${masterhost} -p ${masterport} -U ${masterusername} -w -v > ${datadir}/.streaming_replication_init.log 2>&1'",
+    user    => $postgresql::params::postgresuser,
     creates => "${datadir}/.streaming_replication_init.log",
     require => File['/root/.pgpass'],
-    before => Class['::postgresql::service'],
+    before  => Class['::postgresql::service'],
   }
 }
