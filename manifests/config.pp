@@ -16,7 +16,7 @@ class postgresql::config(
                           $checkpoint_segments = '3',
                           $wal_keep_segments   = '0',
                           $hot_standby         = false,
-                          $pidfile = $postgresql::params::servicename[$version],
+                          $pidfile             = $postgresql::params::servicename[$version],
                         ) inherits postgresql::params {
 
   file { "${datadir}/postgresql.conf":
