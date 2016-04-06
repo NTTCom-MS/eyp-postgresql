@@ -9,6 +9,10 @@ class postgresql::config(
                           $port='5432',
                           $max_connections='100',
                           $wal_level='hot_standby',
+                          $max_wal_senders='0',
+                          $checkpoint_segments='3',
+                          $wal_keep_segments='0',
+                          $hot_standby=false,
                         ) inherits postgresql::params {
 
   file { "${datadir}/postgresql.conf":
