@@ -9,6 +9,10 @@ define postgresql::role (
     path => '/usr/sbin:/usr/bin:/sbin:/bin',
   }
 
+  Postgresql_psql {
+    require => Class['::postgresql::service'],
+  }
+
   $password_hash_md5=md5("${password}${rolename}")
   $password_hash_sql="md5${password_hash_md5}"
   $password_sql="ENCRYPTED PASSWORD '${password}'"
