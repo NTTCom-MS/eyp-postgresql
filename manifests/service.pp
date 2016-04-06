@@ -3,6 +3,7 @@ class postgresql::service (
                         $manage_docker_service = true,
                         $ensure                = 'running',
                         $enable                = true,
+                        $version               = $postgresql::params::version_default,
                       ) inherits postgresql::params {
 
   #
@@ -19,7 +20,10 @@ class postgresql::service (
   {
     if($manage_service)
     {
-      #service or exec here
+      service { $postgresql::params::servicename[$version]:
+        ensure  => $ensure,
+        enable  => $enable,
+      }
     }
   }
 }

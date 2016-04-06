@@ -5,6 +5,7 @@
 class postgresql::install (
                             $version = $postgresql::params::version_default,
                             $datadir = $postgresql::params::datadir_default,
+                            $initdb  = true,
                           ) inherits postgresql::params {
 
   Exec {
@@ -36,23 +37,32 @@ class postgresql::install (
     require => Exec["mkdir p ${datadir}"],
   }
 
-  #initdb
-  #com a postgres
-  #-bash-4.1$ PGDATA="/var/lib/pgsql/9.2/data" /usr/pgsql-9.2/bin/initdb
-  #creates => /var/lib/pgsql/9.2/data/pg_hba.conf
-  exec { 'initdb postgresql':
-    command     => $postgresql::params::initdb[$version],
-    environment => "PGDATA=${datadir}",
-    user        => $postgresql::params::postgresuser,
-    creates     => "${datadir}/pg_hba.conf",
-    require     => [File[$datadir], Package[$postgresql::params::packagename]],
+  if($initdb)
+  {
+    #initdb
+    #com a postgres
+    #-bash-4.1$ PGDATA="/var/lib/pgsql/9.2/data" /usr/pgsql-9.2/bin/initdb
+    #creates => /var/lib/pgsql/9.2/data/pg_hba.conf
+    exec { 'initdb postgresql':
+      command     => $postgresql::params::initdb[$version],
+      environment => "PGDATA=${datadir}",
+      user        => $postgresql::params::postgresuser,
+      creates     => "${datadir}/pg_hba.conf",
+      require     => [File[$datadir], Package[$postgresql::params::packagename]],
+    }
+
+    $before_initdb=Exec['initdb postgresql']
+  }
+  else
+  {
+    $before_initdb=undef
   }
 
   if(defined(Class['sysctl']))
   {
     sysctl::set { 'vm.overcommit_memory':
       value  => '2',
-      before => Exec['initdb postgresql'],
+      before => $before_initdb,
     }
   }
 

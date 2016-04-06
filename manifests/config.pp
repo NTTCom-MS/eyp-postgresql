@@ -9,7 +9,7 @@ class postgresql::config(
                           $version             = $postgresql::params::version_default,
                           $datadir             = $postgresql::params::datadir_default,
                           $listen              = '*',
-                          $port                = '5432',
+                          $port                = $postgresql::params::port_default,
                           $max_connections     = '100',
                           $wal_level           = 'hot_standby',
                           $max_wal_senders     = '0',

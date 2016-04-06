@@ -1,5 +1,6 @@
 class postgresql::params {
 
+  $port_default='5432'
   #fer 9.2 minim
 
   case $::osfamily
