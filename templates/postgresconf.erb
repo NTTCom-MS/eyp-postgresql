@@ -160,7 +160,7 @@ shared_buffers = 32MB			# min 128kB
 
 # - Settings -
 
-#wal_level = minimal			# minimal, archive, or hot_standby
+wal_level = <%= @wal_level %>			# minimal, archive, or hot_standby
 					# (change requires restart)
 #fsync = on				# turns forced synchronization on or off
 #synchronous_commit = on		# synchronization level;
