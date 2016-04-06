@@ -17,7 +17,7 @@ class postgresql::params {
           $datadir_default='/var/lib/pgsql/9.2/data'
           $repoprovider = 'rpm'
           $reposource =  {
-                          '9.2' => 'https://download.postgresql.org/pub/repos/yum/9.2/redhat/rhel-6-x86_64/pgdg-centos92-9.2-7.noarch.rpm',
+                          '9.2' => 'http://download.postgresql.org/pub/repos/yum/9.2/redhat/rhel-6-x86_64/pgdg-centos92-9.2-7.noarch.rpm',
                           }
           $reponame = {
                         '9.2' => 'pgdg-centos92',
@@ -30,6 +30,7 @@ class postgresql::params {
                       '9.2' => '/usr/pgsql-9.2/bin/initdb',
                     }
           $postgresuser='postgres'
+          $postgresgroup='postgres'
         }
         default: { fail("Unsupported RHEL/CentOS version! - ${::operatingsystemrelease}")  }
       }

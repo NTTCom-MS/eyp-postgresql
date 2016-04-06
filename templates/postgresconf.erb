@@ -60,7 +60,7 @@
 
 # - Connection Settings -
 
-listen_addresses = '<%= @listen %>'		# what IP address(es) to listen on;
+listen_addresses = '<%= @listen.join(',') %>'		# what IP address(es) to listen on;
 port = <%= @port %>				# (change requires restart)
 max_connections = <%= @max_connections %>			# (change requires restart)
 # Note:  Increasing max_connections costs ~400 bytes of shared memory per

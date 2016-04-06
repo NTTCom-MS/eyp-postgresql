@@ -8,12 +8,15 @@ class postgresql(
                   $datadir=$postgresql::params::datadir_default,
                   # install
                   # config
-                  $listen='*',
+                  $listen=['*'],
                   $port='5432',
                   $max_connections='100',
+                  $wal_level='hot_standby',
                   # service
                   $manage_service=true,
                 ) inherits postgresql::params {
+
+  validate_array($listen)
 
   class { '::postgresql::install':
     version => $version,
@@ -26,6 +29,7 @@ class postgresql(
     listen          => $listen,
     port            => $port,
     max_connections => $max_connections,
+    wal_level       => $wal_level,
   } ~>
 
   class { '::postgresql::service':

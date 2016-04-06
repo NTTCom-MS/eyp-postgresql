@@ -22,6 +22,20 @@ class postgresql::install (
     require => Package[$postgresql::params::reponame[$version]],
   }
 
+  exec { "mkdir p ${datadir}":
+    command => "mkdir -p ${datadir}",
+    creates => $datadir,
+    require => Package[$postgresql::params::packagename],
+  }
+
+  file { $datadir:
+    ensure  => 'directory',
+    owner   => $postgresql::params::postgresuser,
+    group   => $postgresql::params::postgresgroup,
+    mode    => '0700',
+    require => Exec["mkdir p ${datadir}"],
+  }
+
   #initdb
   #com a postgres
   #-bash-4.1$ PGDATA="/var/lib/pgsql/9.2/data" /usr/pgsql-9.2/bin/initdb
@@ -31,7 +45,7 @@ class postgresql::install (
     environment => "PGDATA=${datadir}",
     user        => $postgresql::params::postgresuser,
     creates     => "${datadir}/pg_hba.conf",
-    require     => Package[$postgresql::params::packagename],
+    require     => [File[$datadir], Package[$postgresql::params::packagename]],
   }
 
   if(defined(Class['sysctl']))
