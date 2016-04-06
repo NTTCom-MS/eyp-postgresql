@@ -2,6 +2,9 @@
 #
 # === postgresql::config documentation
 #
+# ==== pg_hba concat order
+# 00: header
+# 01-99: user defined rules
 class postgresql::config(
                           $version=$postgresql::params::version_default,
                           $datadir=$postgresql::params::datadir_default,
@@ -28,7 +31,12 @@ class postgresql::config(
     owner   => $postgresql::params::postgresuser,
     group   => $postgresql::params::postgresgroup,
     mode    => '0600',
-    content => template("${module_name}/pghba.erb"),
+  }
+
+  concat::fragment{ "header pg_hba ${datadir}":
+    target  => "${datadir}/pg_hba.conf",
+    content => template("${module_name}/hba/header.erb"),
+    order   => '00',
   }
 
 }
