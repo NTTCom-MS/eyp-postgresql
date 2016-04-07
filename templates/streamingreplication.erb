@@ -1,0 +1,9 @@
+#
+# puppet managed file
+#
+
+# streaming replication
+
+standby_mode = 'on'
+primary_conninfo = 'host=<%= @masterhost %> port=<%= @masterport %> user=<%= @masterusername %> password=<%= @masterpassword %>'
+trigger_file = '/tmp/postgresql.enable_master_mode'

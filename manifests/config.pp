@@ -19,12 +19,17 @@ class postgresql::config(
                           $pidfile             = $postgresql::params::servicename[$version],
                         ) inherits postgresql::params {
 
-  file { "${datadir}/postgresql.conf":
+  concat { "${datadir}/postgresql.conf":
     ensure  => 'present',
     owner   => $postgresql::params::postgresuser,
     group   => $postgresql::params::postgresgroup,
     mode    => '0600',
+  }
+
+  concat::fragment{ "base postgresql ${datadir}":
+    target  => "${datadir}/postgresql.conf",
     content => template("${module_name}/postgresconf.erb"),
+    order   => '00',
   }
 
   concat { "${datadir}/pg_hba.conf":

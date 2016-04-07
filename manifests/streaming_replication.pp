@@ -9,20 +9,32 @@ class postgresql::streaming_replication (
     path => '/usr/sbin:/usr/bin:/sbin:/bin',
   }
 
-  file { '/root/.pgpass':
+  #TODO: postgres home
+
+  file { "${postgresql::params::postgreshome}/.pgpass":
     ensure  => 'present',
-    owner   => 'root',
-    group   => 'root',
+    owner   => $postgresql::params::postgresuser,
+    group   => $postgresql::params::postgresuser,
     mode    => '0600',
-    content => "${masterhost}:${masterport}:postgres:${masterusername}:${masterpassword}\n",
+    content => "${masterhost}:${masterport}:*:${masterusername}:${masterpassword}\n",
     require => Class['::postgresql::install'],
   }
 
   exec { 'init streaming replication':
-    command => "bash -c 'pg_basebackup -D ${datadir} -h ${masterhost} -p ${masterport} -U ${masterusername} -w -v > ${datadir}/.streaming_replication_init.log 2>&1'",
+    command => "bash -xc 'pg_basebackup -D ${datadir} -h ${masterhost} -p ${masterport} -U ${masterusername} -w -v -X stream > $(dirname ${datadir})/.streaming_replication_init.log 2>&1'",
     user    => $postgresql::params::postgresuser,
-    creates => "${datadir}/.streaming_replication_init.log",
-    require => File['/root/.pgpass'],
-    before  => Class['::postgresql::service'],
+    creates => "${datadir}/recovery.conf",
+    require => File["${postgresql::params::postgreshome}/.pgpass"],
+    before  => Class['::postgresql::config'],
+  }
+
+  file { "${datadir}/recovery.conf":
+    ensure  => 'present',
+    owner   => $postgresql::params::postgresuser,
+    group   => $postgresql::params::postgresgroup,
+    mode    => '0600',
+    content => template("${module_name}/streamingreplication.erb"),
+    require => Exec['init streaming replication'],
+    before  => Class['::postgresql::config'],
   }
 }

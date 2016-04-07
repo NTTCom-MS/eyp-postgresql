@@ -32,6 +32,7 @@ class postgresql::params {
                     }
           $postgresuser='postgres'
           $postgresgroup='postgres'
+          $postgreshome='/var/lib/pgsql'
         }
         default: { fail("Unsupported RHEL/CentOS version! - ${::operatingsystemrelease}")  }
       }
