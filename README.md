@@ -54,8 +54,59 @@ for upgrading, you may wish to include an additional section here: Upgrading
 
 ## Usage
 
-Put the classes, types, and resources for customizing, configuring, and doing
-the fancy stuff with your module here.
+```puppet
+node 'pgm'
+{
+	#.29
+
+	class { 'sysctl': }
+
+	class { 'postgresql':
+		wal_level => 'hot_standby',
+		max_wal_senders => '3',
+		checkpoint_segments => '8',
+		wal_keep_segments => '8',
+	}
+
+	postgresql::hba_rule { 'test':
+		user => 'replicator',
+		database => 'replication',
+		address => '192.168.56.30/32',
+	}
+
+	postgresql::role { 'replicator':
+		replication => true,
+		password => 'replicatorpassword',
+	}
+
+	postgresql::schema { 'jordi':
+		owner => 'replicator',
+	}
+
+}
+
+node 'pgs'
+{
+	#.30
+
+	class { 'sysctl': }
+
+	class { 'postgresql':
+		wal_level => 'hot_standby',
+		max_wal_senders => '3',
+		checkpoint_segments => '8',
+		wal_keep_segments => '8' ,
+		hot_standby => true,
+		initdb => false,
+	}
+
+	class { 'postgresql::streaming_replication':
+		masterhost     => '192.168.56.29',
+		masterusername => 'replicator',
+		masterpassword => 'replicatorpassword',
+	}
+}
+```
 
 ## Reference
 
