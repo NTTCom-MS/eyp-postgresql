@@ -4,6 +4,8 @@ class postgresql::params {
 
   $log_directory_default='pg_log'
   $log_filename_default='postgresql-%Y%m%d.log'
+
+  $log_timezone_default='Europe/Andorra'
   #fer 9.2 minim
 
   case $::osfamily
