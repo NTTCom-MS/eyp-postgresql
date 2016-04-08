@@ -18,6 +18,8 @@ class postgresql(
                   $wal_keep_segments   = '0',
                   $hot_standby         = false,
                   $pidfile             = $postgresql::params::servicename[$version],
+                  $log_directory       = $postgresql::params::log_directory_default,
+                  $log_filename        = $postgresql::params::log_filename_default,
                   # service
                   $manage_service      = true,
                 ) inherits postgresql::params {
@@ -41,6 +43,8 @@ class postgresql(
     checkpoint_segments => $checkpoint_segments,
     wal_keep_segments   => $wal_keep_segments,
     hot_standby         => $hot_standby,
+    log_directory       => $log_directory,
+    log_filename        => $log_filename,
   } ~>
 
   class { '::postgresql::service':

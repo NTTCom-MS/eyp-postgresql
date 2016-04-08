@@ -304,9 +304,9 @@ logging_collector = on			# Enable capturing of stderr and csvlog
 					# (change requires restart)
 
 # These are only used if logging_collector is on:
-log_directory = 'pg_log'		# directory where log files are written,
+log_directory = '<%= @log_directory %>'		# directory where log files are written,
 					# can be absolute or relative to PGDATA
-log_filename = 'postgresql-%a.log'	# log file name pattern,
+log_filename = '<%= @log_filename %>'	# log file name pattern,
 					# can include strftime() escapes
 #log_file_mode = 0600			# creation mode for log files,
 					# begin with 0 to use octal notation
@@ -409,7 +409,6 @@ log_rotation_size = 0			# Automatic rotation of logfiles will
 					#   %q = stop here in non-session
 					#        processes
 					#   %% = '%'
-					# e.g. '<%u%%%d> '
 #log_lock_waits = off			# log lock waits >= deadlock_timeout
 #log_statement = 'none'			# none, ddl, mod, all
 #log_temp_files = -1			# log temporary files equal or larger

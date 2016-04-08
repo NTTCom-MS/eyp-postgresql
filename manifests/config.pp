@@ -17,6 +17,8 @@ class postgresql::config(
                           $wal_keep_segments   = '0',
                           $hot_standby         = false,
                           $pidfile             = $postgresql::params::servicename[$version],
+                          $log_directory       = $postgresql::params::log_directory_default,
+                          $log_filename        = $postgresql::params::log_filename_default,
                         ) inherits postgresql::params {
 
   concat { "${datadir}/postgresql.conf":
