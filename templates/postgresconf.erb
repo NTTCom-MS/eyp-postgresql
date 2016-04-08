@@ -496,9 +496,9 @@ autovacuum_analyze_scale_factor = <%= @autovacuum_analyze_scale_factor %>	# frac
 
 # - Locale and Formatting -
 
-datestyle = 'iso, mdy'
+datestyle = 'iso, dmy'
 #intervalstyle = 'postgres'
-timezone = 'Europe/Brussels'
+timezone = '<%= @timezone %>'
 #timezone_abbreviations = 'Default'     # Select the set of available time zone
 					# abbreviations.  Currently, there are
 					#   Default

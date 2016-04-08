@@ -20,7 +20,6 @@ class postgresql(
                   $pidfile                         = $postgresql::params::servicename[$version],
                   $log_directory                   = $postgresql::params::log_directory_default,
                   $log_filename                    = $postgresql::params::log_filename_default,
-                  $log_timezone                    = $postgresql::params::log_timezone_default,
                   $track_activities                = true,
                   $track_counts                    = true,
                   $autovacuum                      = true,
@@ -28,6 +27,8 @@ class postgresql(
                   $autovacuum_vacuum_threshold     = '5000',
                   $autovacuum_analyze_scale_factor = '0.0',
                   $autovacuum_analyze_threshold    = '5000',
+                  $timezone                        = $postgresql::params::timezone_default,
+                  $log_timezone                    = $postgresql::params::timezone_default,
                   # service
                   $manage_service      = true,
                 ) inherits postgresql::params {
@@ -53,7 +54,6 @@ class postgresql(
     hot_standby                     => $hot_standby,
     log_directory                   => $log_directory,
     log_filename                    => $log_filename,
-    log_timezone                    => $log_timezone,
     track_activities                => $track_activities,
     track_counts                    => $track_counts,
     autovacuum                      => $autovacuum,
@@ -61,6 +61,8 @@ class postgresql(
     autovacuum_vacuum_threshold     => $autovacuum_vacuum_threshold,
     autovacuum_analyze_scale_factor => $autovacuum_analyze_scale_factor,
     autovacuum_analyze_threshold    => $autovacuum_analyze_threshold,
+    timezone                        => $timezone,
+    log_timezone                    => $log_timezone,
   } ~>
 
   class { '::postgresql::service':

@@ -19,7 +19,6 @@ class postgresql::config(
                           $pidfile                         = $postgresql::params::servicename[$version],
                           $log_directory                   = $postgresql::params::log_directory_default,
                           $log_filename                    = $postgresql::params::log_filename_default,
-                          $log_timezone                    = $postgresql::params::log_timezone_default,
                           $track_activities                = true,
                           $track_counts                    = true,
                           $autovacuum                      = true,
@@ -27,6 +26,8 @@ class postgresql::config(
                           $autovacuum_vacuum_threshold     = '5000',
                           $autovacuum_analyze_scale_factor = '0.0',
                           $autovacuum_analyze_threshold    = '5000',
+                          $timezone                        = $postgresql::params::timezone_default,
+                          $log_timezone                    = $postgresql::params::timezone_default,
                         ) inherits postgresql::params {
 
   concat { "${datadir}/postgresql.conf":
