@@ -14,7 +14,7 @@ class postgresql(
                   $max_connections                 = '100',
                   $wal_level                       = 'hot_standby',
                   $max_wal_senders                 = '0',
-                  $checkpoint_segments             = '3',
+                  $checkpoint_segments             = '10',
                   $wal_keep_segments               = '0',
                   $hot_standby                     = false,
                   $pidfile                         = $postgresql::params::servicename[$version],
@@ -30,6 +30,12 @@ class postgresql(
                   $timezone                        = $postgresql::params::timezone_default,
                   $log_timezone                    = $postgresql::params::timezone_default,
                   $superuser_reserved_connections  = '5',
+                  $archive_mode                     = false,
+                  $archive_command                  = '',
+                  $archive_timeout                  = '0',
+                  $maintenance_work_mem             = '10MB',
+                  $wal_buffers                      = '-1',
+                  $work_mem                         = '8MB',
                   # service
                   $manage_service      = true,
                 ) inherits postgresql::params {
@@ -65,6 +71,12 @@ class postgresql(
     timezone                        => $timezone,
     log_timezone                    => $log_timezone,
     superuser_reserved_connections  => $superuser_reserved_connections,
+    archive_mode                    => $archive_mode,
+    archive_command                 => $archive_command,
+    archive_timeout                 => $archive_timeout,
+    maintenance_work_mem            => $maintenance_work_mem,
+    wal_buffers                     => $wal_buffers,
+    work_mem                        => $work_mem,
   } ~>
 
   class { '::postgresql::service':

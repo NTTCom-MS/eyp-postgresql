@@ -120,8 +120,8 @@ shared_buffers = 32MB			# min 128kB
 # per transaction slot, plus lock space (see max_locks_per_transaction).
 # It is not advisable to set max_prepared_transactions nonzero unless you
 # actively intend to use prepared transactions.
-#work_mem = 1MB				# min 64kB
-#maintenance_work_mem = 16MB		# min 1MB
+work_mem = <%= @work_mem %>				# min 64kB
+maintenance_work_mem = <%= @maintenance_work_mem %>		# min 1MB
 #max_stack_depth = 2MB			# min 100kB
 
 # - Disk -
@@ -173,7 +173,7 @@ wal_level = <%= @wal_level %>			# minimal, archive, or hot_standby
 					#   fsync_writethrough
 					#   open_sync
 #full_page_writes = on			# recover from partial page writes
-#wal_buffers = -1			# min 32kB, -1 sets based on shared_buffers
+wal_buffers = -1			# min 32kB, -1 sets based on shared_buffers
 					# (change requires restart)
 #wal_writer_delay = 200ms		# 1-10000 milliseconds
 
@@ -189,13 +189,13 @@ checkpoint_segments = <%= @checkpoint_segments %>		# in logfile segments, min 1,
 
 # - Archiving -
 
-#archive_mode = off		# allows archiving to be done
+archive_mode = <%= scope.function_bool2onoff([@archive_mode]) %>		# allows archiving to be done
 				# (change requires restart)
-#archive_command = ''		# command to use to archive a logfile segment
+archive_command = '<%= @archive_command %>'		# command to use to archive a logfile segment
 				# placeholders: %p = path of file to archive
 				#               %f = file name only
 				# e.g. 'test ! -f /mnt/server/archivedir/%f && cp %p /mnt/server/archivedir/%f'
-#archive_timeout = 0		# force a logfile segment switch after this
+archive_timeout = <%= @archive_timeout %>		# force a logfile segment switch after this
 				# number of seconds; 0 disables
 
 

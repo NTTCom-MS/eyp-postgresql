@@ -29,6 +29,12 @@ class postgresql::config(
                           $timezone                        = $postgresql::params::timezone_default,
                           $log_timezone                    = $postgresql::params::timezone_default,
                           $superuser_reserved_connections  = '5',
+                          $archive_mode                     = false,
+                          $archive_command                  = '',
+                          $archive_timeout                  = '0',
+                          $maintenance_work_mem             = '10MB',
+                          $wal_buffers                      = '-1',
+                          $work_mem                         = '8MB',
                         ) inherits postgresql::params {
 
   concat { "${datadir}/postgresql.conf":
