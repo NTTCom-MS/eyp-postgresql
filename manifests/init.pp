@@ -31,9 +31,10 @@ class postgresql(
                   $log_timezone                    = $postgresql::params::timezone_default,
                   $superuser_reserved_connections  = '5',
                   $archive_mode                     = false,
-                  $archive_command                  = undef,
+                  $archive_command_custom           = undef,
                   $archive_dir                      = undef,
                   $archive_timeout                  = '0',
+                  $archived_wals_retention          = '+7',
                   $maintenance_work_mem             = '10MB',
                   $wal_buffers                      = '-1',
                   $work_mem                         = '8MB',
@@ -43,29 +44,38 @@ class postgresql(
 
   validate_array($listen)
 
-  if($archive_dir!=undef and $archive_command==undef)
-  {
-    validate_absolute_path($archive_dir)
+  validate_absolute_path($archive_dir)
 
-    exec { "mkdir -p ${archive_dir} postgres archive command ${version} ${datadir}":
-      command => "mkdir -p ${archive_dir}",
-      creates => $archive_dir,
-      before  => Class['::postgresql::config'],
+  exec { "mkdir -p ${archive_dir} postgres archive command ${version} ${datadir}":
+    command => "mkdir -p ${archive_dir}",
+    creates => $archive_dir,
+    before  => Class['::postgresql::config'],
+  }
+
+  if($archive_dir!=undef and $archive_command_custom==undef)
+  {
+    $archive_comand='test ! -f %{archive_dir}/%f && cp %p ${archive_dir}/%f'
+  }
+
+  if($archive_dir!=undef and $archive_command_custom!=undef)
+  {
+    $archive_comand=$archive_command_custom
+  }
+
+  if($archived_wals_retention!=undef)
+  {
+    cron { "cronjob purge walls ${$archived_wals_retention} postgres ${archive_dir}":
+      ensure   => 'present',
+      command  => "find ${archive_dir} -type f -mtime ${archived_wals_retention} -delete",
+      user     => 'root',
+      hour     => '0',
+      minute   => '0',
+      month    => '*',
+      monthday => '*',
+      weekday  => '*',
+      before   => Class['::postgresql::config'],
     }
-
-    $archive_comand_validated='test ! -f %{archive_dir}/%f && cp %p ${archive_dir}/%f'
   }
-
-  if($archive_dir!=undef and $archive_command!=undef)
-  {
-    fail('incompatible options: archive_dir / archive_command')
-  }
-
-  if($archive_dir==undef and $archive_command!=undef)
-  {
-    $archive_comand_validated=$archive_command
-  }
-
 
   class { '::postgresql::install':
     version => $version,
@@ -97,7 +107,7 @@ class postgresql(
     log_timezone                    => $log_timezone,
     superuser_reserved_connections  => $superuser_reserved_connections,
     archive_mode                    => $archive_mode,
-    archive_command                 => $archive_comand_validated,
+    archive_command                 => $archive_comand,
     archive_timeout                 => $archive_timeout,
     maintenance_work_mem            => $maintenance_work_mem,
     wal_buffers                     => $wal_buffers,
