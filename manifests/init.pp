@@ -49,38 +49,46 @@ class postgresql(
 
   validate_array($listen)
 
-  validate_absolute_path($archive_dir)
-
-  exec { "mkdir -p ${archive_dir} postgres archive command ${version} ${datadir}":
-    command => "mkdir -p ${archive_dir}",
-    creates => $archive_dir,
-    before  => Class['::postgresql::config'],
-  }
-
-  if($archive_dir!=undef and $archive_command_custom==undef)
+  if($archive_dir!=undef)
   {
-    $archive_comand="test ! -f ${archive_dir}/%f && cp %p ${archive_dir}/%f"
-  }
+    validate_absolute_path($archive_dir)
 
-  if($archive_dir!=undef and $archive_command_custom!=undef)
-  {
-    $archive_comand=$archive_command_custom
-  }
+    exec { "mkdir -p ${archive_dir} postgres archive command ${version} ${datadir}":
+      command => "mkdir -p ${archive_dir}",
+      creates => $archive_dir,
+      before  => Class['::postgresql::config'],
+    }
 
-  if($archived_wals_retention!=undef)
-  {
-    cron { "cronjob purge walls ${$archived_wals_retention} postgres ${archive_dir}":
-      ensure   => 'present',
-      command  => "find ${archive_dir} -type f -mtime ${archived_wals_retention} -delete",
-      user     => 'root',
-      hour     => $archived_wals_hour,
-      minute   => $archived_wals_minute,
-      month    => $archived_wals_month,
-      monthday => $archived_wals_monthday,
-      weekday  => $archived_wals_weekday,
-      before   => Class['::postgresql::config'],
+    if($archive_dir!=undef and $archive_command_custom==undef)
+    {
+      $archive_comand="test ! -f ${archive_dir}/%f && cp %p ${archive_dir}/%f"
+    }
+
+    if($archive_dir!=undef and $archive_command_custom!=undef)
+    {
+      $archive_comand=$archive_command_custom
+    }
+
+    if($archived_wals_retention!=undef)
+    {
+      cron { "cronjob purge walls ${$archived_wals_retention} postgres ${archive_dir}":
+        ensure   => 'present',
+        command  => "find ${archive_dir} -type f -mtime ${archived_wals_retention} -delete",
+        user     => 'root',
+        hour     => $archived_wals_hour,
+        minute   => $archived_wals_minute,
+        month    => $archived_wals_month,
+        monthday => $archived_wals_monthday,
+        weekday  => $archived_wals_weekday,
+        before   => Class['::postgresql::config'],
+      }
     }
   }
+  else
+  {
+    $archive_comand=undef
+  }
+
 
   class { '::postgresql::install':
     version => $version,
