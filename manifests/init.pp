@@ -31,7 +31,8 @@ class postgresql(
                   $log_timezone                    = $postgresql::params::timezone_default,
                   $superuser_reserved_connections  = '5',
                   $archive_mode                     = false,
-                  $archive_command                  = '',
+                  $archive_command                  = undef,
+                  $archive_dir                      = undef,
                   $archive_timeout                  = '0',
                   $maintenance_work_mem             = '10MB',
                   $wal_buffers                      = '-1',
@@ -41,6 +42,24 @@ class postgresql(
                 ) inherits postgresql::params {
 
   validate_array($listen)
+
+  if($archive_dir!=undef and $archive_command==undef)
+  {
+    validate_absolute_path($archive_dir)
+
+    $archive_comand_validated='test ! -f %{archive_dir}/%f && cp %p ${archive_dir}/%f'
+  }
+
+  if($archive_dir!=undef and $archive_command!=undef)
+  {
+    fail('incompatible options: archive_dir / archive_command')
+  }
+
+  if($archive_dir==undef and $archive_command!=undef)
+  {
+    $archive_comand_validated=$archive_command
+  }
+
 
   class { '::postgresql::install':
     version => $version,
@@ -72,7 +91,7 @@ class postgresql(
     log_timezone                    => $log_timezone,
     superuser_reserved_connections  => $superuser_reserved_connections,
     archive_mode                    => $archive_mode,
-    archive_command                 => $archive_command,
+    archive_command                 => $archive_comand_validated,
     archive_timeout                 => $archive_timeout,
     maintenance_work_mem            => $maintenance_work_mem,
     wal_buffers                     => $wal_buffers,
