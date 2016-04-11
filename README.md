@@ -32,10 +32,13 @@ Installs and configures PostgreSQL on CentOS 6
 
 ### What postgresql affects
 
-* A list of files, packages, services, or operations that the module will alter,
-  impact, or execute on the system it's installed on.
-* This is a great place to stick any warnings.
-* Can be in list or paragraph form.
+* Installs PostgreSQL:
+* configures:
+  * postgres.conf
+  * pg_hba
+* it can manage the following DB objects:
+  * roles
+  * schemas
 
 ### Setup Requirements
 
@@ -44,7 +47,7 @@ installed
 
 ### Beginning with postgresql
 
-By default, it installs PostgreSQL 9.2
+Right now, it only supports PostgreSQL 9.2
 
 ## Usage
 
@@ -107,7 +110,36 @@ node 'pgs'
 ### classes
 
 #### postgresql
+
+
+
 #### postgresql::streaming_replication
+
+* **masterhost**: postgres master
+* **masterusername**: replication username
+* **$masterpassword**: replication password
+* **$masterport** (default: port_default)
+* **$datadir** (default: datadir_default)
+
+It requires to have **pg_basebackup** and the defined username already create on
+the master DB, for example:
+
+```puppet
+postgresql::role { 'replicator':
+  replication => true,
+  password => 'replicatorpassword',
+}
+```
+
+example:
+
+```puppet
+class { 'postgresql::streaming_replication':
+  masterhost     => '192.168.56.29',
+  masterusername => 'replicator',
+  masterpassword => 'replicatorpassword',
+}
+```
 
 ### defines
 
