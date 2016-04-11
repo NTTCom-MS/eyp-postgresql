@@ -111,7 +111,7 @@ node 'pgs'
 
 #### postgresql
 
-
+```puppet
 
 #### postgresql::streaming_replication
 
@@ -122,14 +122,7 @@ node 'pgs'
 * **$datadir** (default: datadir_default)
 
 It requires to have **pg_basebackup** and the defined username already create on
-the master DB, for example:
-
-```puppet
-postgresql::role { 'replicator':
-  replication => true,
-  password => 'replicatorpassword',
-}
-```
+the master DB
 
 example:
 

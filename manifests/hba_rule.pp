@@ -9,7 +9,7 @@ define postgresql::hba_rule (
                               $order       = '01',
                             ) {
 
-  concat::fragment{ "header pg_hba ${datadir}":
+  concat::fragment{ "rule pg_hba ${postgresql::datadir} ${user} ${description} ${address} ${database}":
     target  => "${postgresql::datadir}/pg_hba.conf",
     content => template("${module_name}/hba/rule.erb"),
     order   => $order,
