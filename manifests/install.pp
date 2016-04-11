@@ -64,6 +64,19 @@ class postgresql::install (
       value  => '2',
       before => $before_initdb,
     }
+
+    # shared memory
+    #
+    # The default maximum segment size is 32 MB, which is only adequate for
+    # very small PostgreSQL installations.
+    # The default maximum total size is 2097152 pages
+    #
+    # SHMMAX 	Maximum size of shared memory segment (bytes) 	at least several megabytes (see text)
+    # $ sysctl -w kernel.shmmax=17179869184
+    #
+    # SHMALL 	Total amount of shared memory available (bytes or pages) 	if bytes, same as SHMMAX; if pages, ceil(SHMMAX/PAGE_SIZE)
+    # $ sysctl -w kernel.shmall=4194304
+
   }
 
 }
