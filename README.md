@@ -43,7 +43,7 @@ Installs and configures PostgreSQL on CentOS 6
 ### Setup Requirements
 
 This module requires pluginsync enabled and **optionally** *eyp/sysctl* module
-installed
+installed. Mountpoints **must** be already in place (datadir, archive_dir...)
 
 ### Beginning with postgresql
 
