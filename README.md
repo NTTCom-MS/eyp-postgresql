@@ -111,6 +111,18 @@ node 'pgs'
 
 #### postgresql
 
+It uses the following (private) classes to install, configure and manage PostgreSQL:
+
+* postgresql::install
+* postgresql::config
+* postgresql::service
+
+Options:
+* **version**: version to install (default: 9.2)
+* **datadir**: datadir to use (default: /var/lib/pgsql/9.2/data)
+* **initdb**: boolean, true to create datadir's directies. In a standby server with streaming replication you want to set it to false (default: true)
+* **manage_service**: boolean, true to manage PostgreSQL's service (default: true)
+
 ```puppet
 class { 'postgresql': }
 ```
