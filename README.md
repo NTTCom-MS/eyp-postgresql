@@ -39,6 +39,8 @@ Installs and configures PostgreSQL on CentOS 6
 * it can manage the following DB objects:
   * roles
   * schemas
+* if eyp-sysctl is present:
+  * overcommit_memory = 2 (total virtual address space on the system is limited to (SWAP + RAM*( /proc/sys/vm/overcommit_ratio /100)) 
 
 ### Setup Requirements
 
