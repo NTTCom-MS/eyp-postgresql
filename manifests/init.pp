@@ -59,7 +59,7 @@ class postgresql(
 
   if($archive_dir!=undef and $archive_command_custom==undef)
   {
-    $archive_comand='test ! -f %{archive_dir}/%f && cp %p ${archive_dir}/%f'
+    $archive_comand="test ! -f ${archive_dir}/%f && cp %p ${archive_dir}/%f"
   }
 
   if($archive_dir!=undef and $archive_command_custom!=undef)
