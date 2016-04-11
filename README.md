@@ -1,5 +1,9 @@
 # postgresql
 
+![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)
+
+**AtlasIT-AM/eyp-postgresql**: [![Build Status](https://travis-ci.org/AtlasIT-AM/eyp-postgresql.png?branch=master)](https://travis-ci.org/AtlasIT-AM/eyp-postgresql)
+
 #### Table of Contents
 
 1. [Overview](#overview)
@@ -16,19 +20,13 @@
 
 ## Overview
 
-A one-maybe-two sentence summary of what the module does/what problem it solves.
-This is your 30 second elevator pitch for your module. Consider including
-OS/Puppet version it works with.
+manages postgresql:
+* standalone
+* streaming replication
 
 ## Module Description
 
-If applicable, this section should have a brief description of the technology
-the module integrates with and what that integration enables. This section
-should answer the questions: "What does this module *do*?" and "Why would I use
-it?"
-
-If your module has a range of functionality (installation, configuration,
-management, etc.) this is the time to mention it.
+Installs and configures PostgreSQL on CentOS 6
 
 ## Setup
 
@@ -41,16 +39,12 @@ management, etc.) this is the time to mention it.
 
 ### Setup Requirements
 
-If your module requires anything extra before setting up (pluginsync enabled,
-etc.), mention it here.
+This module requires pluginsync enabled and **optionally** *eyp/sysctl* module
+installed
 
 ### Beginning with postgresql
 
-The very basic steps needed for a user to get the module up and running.
-
-If your most recent release breaks compatibility or requires particular steps
-for upgrading, you may wish to include an additional section here: Upgrading
-(For an example, see http://forge.puppetlabs.com/puppetlabs/firewall).
+By default, it installs PostgreSQL 9.2
 
 ## Usage
 
@@ -71,7 +65,7 @@ node 'pgm'
 	postgresql::hba_rule { 'test':
 		user => 'replicator',
 		database => 'replication',
-		address => '192.168.56.30/32',
+		address => '192.168.56.0/24',
 	}
 
 	postgresql::role { 'replicator':
@@ -110,19 +104,42 @@ node 'pgs'
 
 ## Reference
 
-Here, list the classes, types, providers, facts, etc contained in your module.
-This section should include all of the under-the-hood workings of your module so
-people know what the module is touching on their system but don't need to mess
-with things. (We are working on automating this section!)
+### classes
+
+#### postgresql
+#### postgresql::streaming_replication
+
+### defines
+
+#### postgresql::role
+
+Create a new role:
+
+* **rolename**: role to define (default: resource's name)
+* **password**: password for this role (if it's not a group)
+* **login**: boolean, enable or disable login grant (default: true)
+* **superuser** boolean, enable or disable superuser grant (default: false)
+* **replication** boolean, enable or disable replication grant (default: false)
+
+for example:
+```puppet
+postgresql::role { 'replicator':
+  replication => true,
+  password => 'replicatorpassword',
+}
+```
+
+#### postgresql::schema
+#### postgresql::hba_rule
 
 ## Limitations
 
-This is where you list OS compatibility, version compatibility, etc.
+CentOS 6 only
 
 ## Development
 
 We are pushing to have acceptance testing in place, so any new feature should
-have some test to check both presence and absence of any feature
+have some tests to check both presence and absence of any feature
 
 ### Contributing
 

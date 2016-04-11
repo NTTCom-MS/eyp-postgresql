@@ -2,7 +2,7 @@
   "name": "eyp-postgresql",
   "version": "0.1.0",
   "author": "eyp",
-  "summary": null,
+  "summary": "manages postgresql",
   "license": "Apache-2.0",
   "source": "https://github.com/AtlasIT-AM/eyp-postgresql",
   "project_page": null,
