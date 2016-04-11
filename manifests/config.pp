@@ -28,6 +28,7 @@ class postgresql::config(
                           $autovacuum_analyze_threshold    = '5000',
                           $timezone                        = $postgresql::params::timezone_default,
                           $log_timezone                    = $postgresql::params::timezone_default,
+                          $superuser_reserved_connections  = '5',
                         ) inherits postgresql::params {
 
   concat { "${datadir}/postgresql.conf":

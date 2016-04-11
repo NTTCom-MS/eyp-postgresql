@@ -29,6 +29,7 @@ class postgresql(
                   $autovacuum_analyze_threshold    = '5000',
                   $timezone                        = $postgresql::params::timezone_default,
                   $log_timezone                    = $postgresql::params::timezone_default,
+                  $superuser_reserved_connections  = '5',
                   # service
                   $manage_service      = true,
                 ) inherits postgresql::params {
@@ -63,6 +64,7 @@ class postgresql(
     autovacuum_analyze_threshold    => $autovacuum_analyze_threshold,
     timezone                        => $timezone,
     log_timezone                    => $log_timezone,
+    superuser_reserved_connections  => $superuser_reserved_connections,
   } ~>
 
   class { '::postgresql::service':
