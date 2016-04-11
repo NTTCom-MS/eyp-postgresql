@@ -122,6 +122,7 @@ Options:
 * **datadir**: datadir to use (default: /var/lib/pgsql/9.2/data)
 * **initdb**: boolean, true to create datadir's directies. In a standby server with streaming replication you want to set it to false (default: true)
 * **manage_service**: boolean, true to manage PostgreSQL's service (default: true)
+* (...)
 
 ```puppet
 class { 'postgresql': }
