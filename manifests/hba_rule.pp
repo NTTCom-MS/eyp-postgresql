@@ -4,7 +4,7 @@ define postgresql::hba_rule (
                               $address,
                               $type        = 'host',
                               $auth_method = 'md5',
-                              $auth_option = undef,
+                              $auth_option = undef, # TODO: sera clau valor, fer hash
                               $description = $name,
                               $order       = '01',
                             ) {

@@ -113,7 +113,7 @@ node 'pgs'
 
 #### postgresql::role
 
-Create a new role:
+manages roles (alias users):
 
 * **rolename**: role to define (default: resource's name)
 * **password**: password for this role (if it's not a group)
@@ -122,15 +122,91 @@ Create a new role:
 * **replication** boolean, enable or disable replication grant (default: false)
 
 for example:
+
 ```puppet
-postgresql::role { 'replicator':
-  replication => true,
-  password => 'replicatorpassword',
+postgresql::role { 'jordi':
+  superuser => true,
+  password => 'fuckyeah',
 }
 ```
 
 #### postgresql::schema
+
+Manages schemas:
+
+* **schemaname**: schema to create (default: resource's name)
+* **owner**: required, schema's owner
+
+example:
+
+```puppet
+postgresql::schema { 'jordidb':
+  owner => 'jordi',
+}
+```
+
 #### postgresql::hba_rule
+
+creates rules to pg_hba:
+
+* **user**: "all", a user name, a group name prefixed with "+", or a
+comma-separated list thereof.  In both the DATABASE and USER fields
+you can also write a file name prefixed with "@" to include names
+from a separate file.
+
+* **database**: "all", "sameuser", "samerole", "replication", a database name,
+or a comma-separated list thereof. The "all" keyword does not match "replication".
+Access to replication must be enabled in a separate record (see example below).
+* **address**: specifies the set of hosts the record matches.  It can be a
+host name, or it is made up of an IP address and a CIDR mask that is
+an integer (between 0 and 32 (IPv4) or 128 (IPv6) inclusive) that
+specifies the number of significant bits in the mask.  A host name
+that starts with a dot (.) matches a suffix of the actual host name.
+Alternatively, you can write an IP address and netmask in separate
+columns to specify the set of hosts.  Instead of a CIDR-address, you
+can write "samehost" to match any of the server's own IP addresses,
+or "samenet" to match any address in any subnet that the server is
+directly connected to.
+* **type**: it can be set to:
+  * **local** is a Unix-domain socket
+  * **host** is either a plain or SSL-encrypted TCP/IP socket,
+  * **hostssl** is an SSL-encrypted TCP/IP socket
+  * **hostnossl** is a plain TCP/IP socket. (default: host)
+* **auth_method**: can be:
+  * **trust**
+  * **reject**
+  * **md5** (default)
+  * **password** (clear text passwords!)
+  * **gss**
+  * **sspi**
+  * **krb5**
+  * **ident**
+  * **peer**
+  * **pam**
+  * **ldap**
+  * **radius**
+  * **cert
+* **auth_option**: set of options for the authentication in the format
+NAME=VALUE.  The available options depend on the different
+authentication methods(default: undef)
+* **description**: description to identify each rule, see example below (default: resource's name)
+* **order**: if any (default: 01)
+
+example:
+
+```puppet
+postgresql::hba_rule { 'test':
+  user => 'replicator',
+  database => 'replication',
+  address => '192.168.56.0/24',
+}
+```
+It will create the following pg_hba rule:
+
+```
+# rule: test
+host	replication	replicator	192.168.56.30/32			md5
+```
 
 ## Limitations
 
