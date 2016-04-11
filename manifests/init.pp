@@ -47,6 +47,12 @@ class postgresql(
   {
     validate_absolute_path($archive_dir)
 
+    exec { "mkdir -p ${archive_dir} postgres archive command ${version} ${datadir}":
+      command => "mkdir -p ${archive_dir}",
+      creates => $archive_dir,
+      before  => Class['::postgresql::config'],
+    }
+
     $archive_comand_validated='test ! -f %{archive_dir}/%f && cp %p ${archive_dir}/%f'
   }
 
