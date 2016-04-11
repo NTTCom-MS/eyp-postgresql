@@ -112,12 +112,14 @@ node 'pgs'
 #### postgresql
 
 ```puppet
+class { 'postgresql': }
+```
 
 #### postgresql::streaming_replication
 
-* **masterhost**: postgres master
-* **masterusername**: replication username
-* **$masterpassword**: replication password
+* **masterhost**: required, postgres master
+* **masterusername**: required, replication username
+* **$masterpassword**: required, replication password
 * **$masterport** (default: port_default)
 * **$datadir** (default: datadir_default)
 
