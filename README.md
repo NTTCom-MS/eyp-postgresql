@@ -123,7 +123,7 @@ class { 'postgresql': }
 * **$masterport** (default: port_default)
 * **$datadir** (default: datadir_default)
 
-It requires to have **pg_basebackup** and the defined username already create on
+It requires to have **pg_basebackup** and the defined username already created on
 the master DB
 
 example:
@@ -212,7 +212,7 @@ directly connected to.
   * **pam**
   * **ldap**
   * **radius**
-  * **cert
+  * **cert**
 * **auth_option**: set of options for the authentication in the format
 NAME=VALUE.  The available options depend on the different
 authentication methods(default: undef)
