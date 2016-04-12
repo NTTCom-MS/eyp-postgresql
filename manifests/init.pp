@@ -9,6 +9,8 @@ class postgresql(
                   # install
                   $initdb                          = true,
                   $overcommit_memory               = '2',
+                  $shmmax                          = undef,
+                  $shmall                          = undef,
                   # config
                   $listen                          = [ '*' ],
                   $port                            = $postgresql::params::port_default,
@@ -96,6 +98,8 @@ class postgresql(
     datadir           => $datadir,
     initdb            => $initdb,
     overcommit_memory => $overcommit_memory,
+    shmmax            => $shmmax,
+    shmall            => $shmall,
   } ->
 
   class { '::postgresql::config':

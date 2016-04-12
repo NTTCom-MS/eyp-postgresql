@@ -7,6 +7,8 @@ class postgresql::install (
                             $datadir           = $postgresql::params::datadir_default,
                             $initdb            = true,
                             $overcommit_memory = '2',
+                            $shmmax            = undef,
+                            $shmall            = undef,
                           ) inherits postgresql::params {
 
   Exec {
@@ -61,9 +63,12 @@ class postgresql::install (
 
   if(defined(Class['sysctl']))
   {
-    sysctl::set { 'vm.overcommit_memory':
-      value  => $overcommit_memory,
-      before => $before_initdb,
+    if($overcommit_memory!=undef)
+    {
+      sysctl::set { 'vm.overcommit_memory':
+        value  => $overcommit_memory,
+        before => $before_initdb,
+      }
     }
 
     # shared memory
