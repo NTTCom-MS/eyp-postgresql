@@ -7,8 +7,8 @@ class postgresql::install (
                             $datadir           = $postgresql::params::datadir_default,
                             $initdb            = true,
                             $overcommit_memory = '2',
-                            $shmmax            = undef,
-                            $shmall            = undef,
+                            $shmmax            = ceiling($::memoryfree_mb*786432),
+                            $shmall            = ceiling(ceiling($::memoryfree_mb*786432)/$::eyp_postgresql_pagesize),
                           ) inherits postgresql::params {
 
   Exec {
@@ -77,7 +77,7 @@ class postgresql::install (
     # very small PostgreSQL installations.
     # The default maximum total size is 2097152 pages
     #
-    # SHMMAX 	Maximum size of shared memory segment (bytes) 	at least several megabytes (see text)
+    # SHMMAX   Maximum size of shared memory segment (bytes)   at least several megabytes (see text)
     # 3/4 of the physical memory
     # $ sysctl -w kernel.shmmax=17179869184
 
@@ -90,7 +90,7 @@ class postgresql::install (
     }
 
     #
-    # SHMALL 	Total amount of shared memory available (bytes or pages) 	if bytes, same as SHMMAX; if pages, ceil(SHMMAX/PAGE_SIZE)
+    # SHMALL   Total amount of shared memory available (bytes or pages)   if bytes, same as SHMMAX; if pages, ceil(SHMMAX/PAGE_SIZE)
     # if bytes, same as SHMMAX, if pages, ceil(SHMMAX/PAGE_SIZE)
     # $ sysctl -w kernel.shmall=4194304
     #

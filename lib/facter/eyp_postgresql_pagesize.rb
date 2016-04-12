@@ -5,7 +5,6 @@ unless pagesize.nil? or pagesize.empty?
   Facter.add('eyp_postgresql_pagesize') do
       setcode do
           pagesize
-        end
       end
   end
 end
