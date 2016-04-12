@@ -3,9 +3,12 @@
 # === postgresql::install documentation
 #
 class postgresql::install (
-                            $version = $postgresql::params::version_default,
-                            $datadir = $postgresql::params::datadir_default,
-                            $initdb  = true,
+                            $version           = $postgresql::params::version_default,
+                            $datadir           = $postgresql::params::datadir_default,
+                            $initdb            = true,
+                            $overcommit_memory = '2',
+                            $shmmax            = ceiling(sprintf('%f', $::memorysize_mb)*786432),
+                            $shmall            = ceiling(ceiling(sprintf('%f', $::memorysize_mb)*786432)/$::eyp_postgresql_pagesize),
                           ) inherits postgresql::params {
 
   Exec {
@@ -60,10 +63,46 @@ class postgresql::install (
 
   if(defined(Class['sysctl']))
   {
-    sysctl::set { 'vm.overcommit_memory':
-      value  => '2',
-      before => $before_initdb,
+    if($overcommit_memory!=undef)
+    {
+      sysctl::set { 'vm.overcommit_memory':
+        value  => $overcommit_memory,
+        before => $before_initdb,
+      }
     }
+
+    # shared memory
+    #
+    # The default maximum segment size is 32 MB, which is only adequate for
+    # very small PostgreSQL installations.
+    # The default maximum total size is 2097152 pages
+    #
+    # SHMMAX   Maximum size of shared memory segment (bytes)   at least several megabytes (see text)
+    # 3/4 of the physical memory
+    # $ sysctl -w kernel.shmmax=17179869184
+
+    if($shmmax!=undef)
+    {
+      sysctl::set { 'kernel.shmmax':
+        value  => $shmmax,
+        before => $before_initdb,
+      }
+    }
+
+    #
+    # SHMALL   Total amount of shared memory available (bytes or pages)   if bytes, same as SHMMAX; if pages, ceil(SHMMAX/PAGE_SIZE)
+    # if bytes, same as SHMMAX, if pages, ceil(SHMMAX/PAGE_SIZE)
+    # $ sysctl -w kernel.shmall=4194304
+    #
+
+    if($shmall!=undef)
+    {
+      sysctl::set { 'kernel.shmall':
+        value  => $shmall,
+        before => $before_initdb,
+      }
+    }
+
   }
 
 }

@@ -1,5 +1,9 @@
 # postgresql
 
+![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)
+
+**AtlasIT-AM/eyp-postgresql**: [![Build Status](https://travis-ci.org/AtlasIT-AM/eyp-postgresql.png?branch=master)](https://travis-ci.org/AtlasIT-AM/eyp-postgresql)
+
 #### Table of Contents
 
 1. [Overview](#overview)
@@ -16,41 +20,36 @@
 
 ## Overview
 
-A one-maybe-two sentence summary of what the module does/what problem it solves.
-This is your 30 second elevator pitch for your module. Consider including
-OS/Puppet version it works with.
+manages postgresql:
+* standalone
+* streaming replication
 
 ## Module Description
 
-If applicable, this section should have a brief description of the technology
-the module integrates with and what that integration enables. This section
-should answer the questions: "What does this module *do*?" and "Why would I use
-it?"
-
-If your module has a range of functionality (installation, configuration,
-management, etc.) this is the time to mention it.
+Installs and configures PostgreSQL on CentOS 6
 
 ## Setup
 
 ### What postgresql affects
 
-* A list of files, packages, services, or operations that the module will alter,
-  impact, or execute on the system it's installed on.
-* This is a great place to stick any warnings.
-* Can be in list or paragraph form.
+* Installs PostgreSQL:
+* configures:
+  * postgres.conf
+  * pg_hba
+* it can manage the following DB objects:
+  * roles
+  * schemas
+* if eyp-sysctl is present:
+  * overcommit_memory = 2 - total virtual address space on the system is limited to *(SWAP + RAM ·( /proc/sys/vm/overcommit_ratio /100))*
 
 ### Setup Requirements
 
-If your module requires anything extra before setting up (pluginsync enabled,
-etc.), mention it here.
+This module requires pluginsync enabled and **optionally** *eyp/sysctl* module
+installed. Mountpoints **must** be already in place (datadir, archive_dir...)
 
 ### Beginning with postgresql
 
-The very basic steps needed for a user to get the module up and running.
-
-If your most recent release breaks compatibility or requires particular steps
-for upgrading, you may wish to include an additional section here: Upgrading
-(For an example, see http://forge.puppetlabs.com/puppetlabs/firewall).
+Right now, it only supports PostgreSQL 9.2
 
 ## Usage
 
@@ -71,7 +70,7 @@ node 'pgm'
 	postgresql::hba_rule { 'test':
 		user => 'replicator',
 		database => 'replication',
-		address => '192.168.56.30/32',
+		address => '192.168.56.0/24',
 	}
 
 	postgresql::role { 'replicator':
@@ -110,19 +109,155 @@ node 'pgs'
 
 ## Reference
 
-Here, list the classes, types, providers, facts, etc contained in your module.
-This section should include all of the under-the-hood workings of your module so
-people know what the module is touching on their system but don't need to mess
-with things. (We are working on automating this section!)
+### classes
+
+#### postgresql
+
+It uses the following (private) classes to install, configure and manage PostgreSQL:
+
+* postgresql::install
+* postgresql::config
+* postgresql::service
+
+Options:
+* **version**: version to install (default: 9.2)
+* **datadir**: datadir to use (default: /var/lib/pgsql/9.2/data)
+* **initdb**: boolean, true to create datadir's directies. In a standby server with streaming replication you want to set it to false (default: true)
+* **manage_service**: boolean, true to manage PostgreSQL's service (default: true)
+* (...)
+
+```puppet
+class { 'postgresql': }
+```
+
+#### postgresql::streaming_replication
+
+* **masterhost**: required, postgres master
+* **masterusername**: required, replication username
+* **$masterpassword**: required, replication password
+* **$masterport** (default: port_default)
+* **$datadir** (default: datadir_default)
+
+It requires to have **pg_basebackup** and the defined username already created on
+the master DB
+
+example:
+
+```puppet
+class { 'postgresql::streaming_replication':
+  masterhost     => '192.168.56.29',
+  masterusername => 'replicator',
+  masterpassword => 'replicatorpassword',
+}
+```
+
+### defines
+
+#### postgresql::role
+
+manages roles (alias users):
+
+* **rolename**: role to define (default: resource's name)
+* **password**: password for this role (if it's not a group)
+* **login**: boolean, enable or disable login grant (default: true)
+* **superuser** boolean, enable or disable superuser grant (default: false)
+* **replication** boolean, enable or disable replication grant (default: false)
+
+for example:
+
+```puppet
+postgresql::role { 'jordi':
+  superuser => true,
+  password => 'fuckyeah',
+}
+```
+
+#### postgresql::schema
+
+Manages schemas:
+
+* **schemaname**: schema to create (default: resource's name)
+* **owner**: required, schema's owner
+
+example:
+
+```puppet
+postgresql::schema { 'jordidb':
+  owner => 'jordi',
+}
+```
+
+#### postgresql::hba_rule
+
+creates rules to pg_hba:
+
+* **user**: "all", a user name, a group name prefixed with "+", or a
+comma-separated list thereof.  In both the DATABASE and USER fields
+you can also write a file name prefixed with "@" to include names
+from a separate file.
+
+* **database**: "all", "sameuser", "samerole", "replication", a database name,
+or a comma-separated list thereof. The "all" keyword does not match "replication".
+Access to replication must be enabled in a separate record (see example below).
+* **address**: specifies the set of hosts the record matches.  It can be a
+host name, or it is made up of an IP address and a CIDR mask that is
+an integer (between 0 and 32 (IPv4) or 128 (IPv6) inclusive) that
+specifies the number of significant bits in the mask.  A host name
+that starts with a dot (.) matches a suffix of the actual host name.
+Alternatively, you can write an IP address and netmask in separate
+columns to specify the set of hosts.  Instead of a CIDR-address, you
+can write "samehost" to match any of the server's own IP addresses,
+or "samenet" to match any address in any subnet that the server is
+directly connected to.
+* **type**: it can be set to:
+  * **local** is a Unix-domain socket
+  * **host** is either a plain or SSL-encrypted TCP/IP socket,
+  * **hostssl** is an SSL-encrypted TCP/IP socket
+  * **hostnossl** is a plain TCP/IP socket. (default: host)
+* **auth_method**: can be:
+  * **trust**
+  * **reject**
+  * **md5** (default)
+  * **password** (clear text passwords!)
+  * **gss**
+  * **sspi**
+  * **krb5**
+  * **ident**
+  * **peer**
+  * **pam**
+  * **ldap**
+  * **radius**
+  * **cert**
+* **auth_option**: set of options for the authentication in the format
+NAME=VALUE.  The available options depend on the different
+authentication methods(default: undef)
+* **description**: description to identify each rule, see example below (default: resource's name)
+* **order**: if any (default: 01)
+
+example:
+
+```puppet
+postgresql::hba_rule { 'test':
+  user => 'replicator',
+  database => 'replication',
+  address => '192.168.56.0/24',
+}
+```
+It will create the following pg_hba rule:
+
+```
+# rule: test
+host	replication	replicator	192.168.56.30/32			md5
+```
 
 ## Limitations
 
-This is where you list OS compatibility, version compatibility, etc.
+CentOS 6 only
 
 ## Development
 
 We are pushing to have acceptance testing in place, so any new feature should
-have some test to check both presence and absence of any feature
+have some tests to check both presence and absence of any feature
 
 ### Contributing
 
