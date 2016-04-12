@@ -8,6 +8,7 @@ class postgresql(
                   $datadir                         = $postgresql::params::datadir_default,
                   # install
                   $initdb                          = true,
+                  $overcommit_memory               = '2',
                   # config
                   $listen                          = [ '*' ],
                   $port                            = $postgresql::params::port_default,
@@ -91,9 +92,10 @@ class postgresql(
 
 
   class { '::postgresql::install':
-    version => $version,
-    datadir => $datadir,
-    initdb  => $initdb,
+    version           => $version,
+    datadir           => $datadir,
+    initdb            => $initdb,
+    overcommit_memory => $overcommit_memory,
   } ->
 
   class { '::postgresql::config':
