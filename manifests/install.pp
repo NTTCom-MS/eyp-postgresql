@@ -7,8 +7,8 @@ class postgresql::install (
                             $datadir           = $postgresql::params::datadir_default,
                             $initdb            = true,
                             $overcommit_memory = '2',
-                            $shmmax            = ceiling($::memoryfree_mb*786432),
-                            $shmall            = ceiling(ceiling($::memoryfree_mb*786432)/$::eyp_postgresql_pagesize),
+                            $shmmax            = ceiling(sprintf('%f', $::memorysize_mb)*786432),
+                            $shmall            = ceiling(ceiling(sprintf('%f', $::memorysize_mb)*786432)/$::eyp_postgresql_pagesize),
                           ) inherits postgresql::params {
 
   Exec {
