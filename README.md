@@ -124,6 +124,9 @@ Options:
 * **datadir**: datadir to use (default: /var/lib/pgsql/9.2/data)
 * **initdb**: boolean, true to create datadir's directies. In a standby server with streaming replication you want to set it to false (default: true)
 * **manage_service**: boolean, true to manage PostgreSQL's service (default: true)
+* **overcommit_memory** (default: 2)',
+* **shmmax**: (default: ceiling(sprintf('%f', $::memorysize_mb)·786432),)
+* **shmall**: (default: ceiling(ceiling(sprintf('%f',$::memorysize_mb)·786432)/$::eyp_postgresql_pagesize))
 * (...)
 
 ```puppet
