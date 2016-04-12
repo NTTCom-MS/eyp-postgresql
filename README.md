@@ -124,7 +124,15 @@ Options:
 * **datadir**: datadir to use (default: /var/lib/pgsql/9.2/data)
 * **initdb**: boolean, true to create datadir's directies. In a standby server with streaming replication you want to set it to false (default: true)
 * **manage_service**: boolean, true to manage PostgreSQL's service (default: true)
-* (...)
+* **archive_command_custom**: custom archive command
+* **archive_dir**: archive dir, if archive_command_custom is undef, it will be: *test ! -f ${archive_dir}/%f && cp %p ${archive_dir}/%f*
+* **overcommit_memory**: 3 modes available:
+  * 0: heuristic overcommit (this is the default)
+  * 1: always overcommit, never check
+  * 2: always check, never overcommit(default: 2)',
+* **shmmax**: maximum size of shared memory segment (default: ceiling(sprintf('%f', $::memorysize_mb)·786432))
+* **shmall**: total amount of shared memory available (default: ceiling(ceiling(sprintf('%f',$::memorysize_mb)·786432)/$::eyp_postgresql_pagesize))
+* (...) check postgres documentation, most common options are already implemented
 
 ```puppet
 class { 'postgresql': }
