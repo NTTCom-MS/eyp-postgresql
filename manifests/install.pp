@@ -80,11 +80,28 @@ class postgresql::install (
     # SHMMAX 	Maximum size of shared memory segment (bytes) 	at least several megabytes (see text)
     # 3/4 of the physical memory
     # $ sysctl -w kernel.shmmax=17179869184
+
+    if($shmmax!=undef)
+    {
+      sysctl::set { 'kernel.shmmax':
+        value  => $shmmax,
+        before => $before_initdb,
+      }
+    }
+
     #
     # SHMALL 	Total amount of shared memory available (bytes or pages) 	if bytes, same as SHMMAX; if pages, ceil(SHMMAX/PAGE_SIZE)
     # if bytes, same as SHMMAX, if pages, ceil(SHMMAX/PAGE_SIZE)
     # $ sysctl -w kernel.shmall=4194304
     #
+
+    if($shmall!=undef)
+    {
+      sysctl::set { 'kernel.shmall':
+        value  => $shmall,
+        before => $before_initdb,
+      }
+    }
 
   }
 
