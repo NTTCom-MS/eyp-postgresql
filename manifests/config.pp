@@ -16,7 +16,7 @@ class postgresql::config(
                           $checkpoint_segments             = '3',
                           $wal_keep_segments               = '0',
                           $hot_standby                     = false,
-                          $pidfile                         = $postgresql::params::servicename[$version],
+                          $pidfile                         = $postgresql::params::servicename[$postgresql::params::version_default],
                           $log_directory                   = $postgresql::params::log_directory_default,
                           $log_filename                    = $postgresql::params::log_filename_default,
                           $track_activities                = true,
@@ -38,10 +38,10 @@ class postgresql::config(
                         ) inherits postgresql::params {
 
   concat { "${datadir}/postgresql.conf":
-    ensure  => 'present',
-    owner   => $postgresql::params::postgresuser,
-    group   => $postgresql::params::postgresgroup,
-    mode    => '0600',
+    ensure => 'present',
+    owner  => $postgresql::params::postgresuser,
+    group  => $postgresql::params::postgresgroup,
+    mode   => '0600',
   }
 
   concat::fragment{ "base postgresql ${datadir}":
@@ -51,10 +51,10 @@ class postgresql::config(
   }
 
   concat { "${datadir}/pg_hba.conf":
-    ensure  => 'present',
-    owner   => $postgresql::params::postgresuser,
-    group   => $postgresql::params::postgresgroup,
-    mode    => '0600',
+    ensure => 'present',
+    owner  => $postgresql::params::postgresuser,
+    group  => $postgresql::params::postgresgroup,
+    mode   => '0600',
   }
 
   concat::fragment{ "header pg_hba ${datadir}":

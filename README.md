@@ -16,6 +16,7 @@
 5. [Reference](#reference)
 5. [Limitations](#limitations)
 6. [Development](#development)
+    * [TODO](#todo)
     * [Contributing](#contributing)
 
 ## Overview
@@ -41,6 +42,9 @@ Installs and configures PostgreSQL on CentOS 6
   * schemas
 * if eyp-sysctl is present:
   * overcommit_memory = 2 - total virtual address space on the system is limited to *(SWAP + RAM ·( /proc/sys/vm/overcommit_ratio /100))*
+  * shmmax: maximum size of shared memory segment (default: ceiling(sprintf('%f', $::memorysize_mb)·786432))
+  * shmall: total amount of shared memory available (default: ceiling(ceiling(sprintf('%f',$::memorysize_mb)·786432)/$::eyp_postgresql_pagesize))
+  * (...) check postgres documentation, most common options are already implemented
 
 ### Setup Requirements
 
@@ -126,12 +130,13 @@ Options:
 * **manage_service**: boolean, true to manage PostgreSQL's service (default: true)
 * **archive_command_custom**: custom archive command
 * **archive_dir**: archive dir, if archive_command_custom is undef, it will be: *test ! -f ${archive_dir}/%f && cp %p ${archive_dir}/%f*
-* **overcommit_memory**: 3 modes available:
+* **overcommit_memory**: modes available:
+  * undef: do not change it
   * 0: heuristic overcommit (this is the default)
   * 1: always overcommit, never check
   * 2: always check, never overcommit(default: 2)',
-* **shmmax**: maximum size of shared memory segment (default: ceiling(sprintf('%f', $::memorysize_mb)·786432))
-* **shmall**: total amount of shared memory available (default: ceiling(ceiling(sprintf('%f',$::memorysize_mb)·786432)/$::eyp_postgresql_pagesize))
+* **shmmax**: maximum size of shared memory segment (default: ceiling(sprintf('%f', $::memorysize_mb)·786432)) you can set it to undef to disable
+* **shmall**: total amount of shared memory available (default: ceiling(ceiling(sprintf('%f',$::memorysize_mb)·786432)/$::eyp_postgresql_pagesize)) you can set it to undef to disable
 * (...) check postgres documentation, most common options are already implemented
 
 ```puppet
@@ -266,6 +271,10 @@ CentOS 6 only
 
 We are pushing to have acceptance testing in place, so any new feature should
 have some tests to check both presence and absence of any feature
+
+### TODO
+
+TODO list
 
 ### Contributing
 

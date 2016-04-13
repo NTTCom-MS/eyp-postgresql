@@ -21,8 +21,8 @@ class postgresql::service (
     if($manage_service)
     {
       service { $postgresql::params::servicename[$version]:
-        ensure  => $ensure,
-        enable  => $enable,
+        ensure => $ensure,
+        enable => $enable,
       }
     }
   }
