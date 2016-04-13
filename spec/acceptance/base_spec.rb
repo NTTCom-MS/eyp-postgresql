@@ -63,5 +63,10 @@ describe 'postgresql class' do
       its(:content) { should match 'puppet managed file' }
     end
 
+    #echo "SELECT nspname FROM pg_namespace WHERE nspname='jordi'" | psql -U postgres | grep jordi
+    it "schema jordi" do
+      expect(shell("echo \"SELECT nspname FROM pg_namespace WHERE nspname='jordi'\" | psql -U postgres | grep jordi").exit_code).to be_zero
+    end
+
   end
 end
