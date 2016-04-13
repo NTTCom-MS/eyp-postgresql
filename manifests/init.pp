@@ -20,7 +20,7 @@ class postgresql(
                   $checkpoint_segments             = '10',
                   $wal_keep_segments               = '0',
                   $hot_standby                     = false,
-                  $pidfile                         = $postgresql::params::servicename[$version],
+                  $pidfile                         = $postgresql::params::servicename[$postgresql::params::version_default],
                   $log_directory                   = $postgresql::params::log_directory_default,
                   $log_filename                    = $postgresql::params::log_filename_default,
                   $track_activities                = true,
