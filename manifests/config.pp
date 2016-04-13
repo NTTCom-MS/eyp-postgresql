@@ -38,10 +38,10 @@ class postgresql::config(
                         ) inherits postgresql::params {
 
   concat { "${datadir}/postgresql.conf":
-    ensure  => 'present',
-    owner   => $postgresql::params::postgresuser,
-    group   => $postgresql::params::postgresgroup,
-    mode    => '0600',
+    ensure => 'present',
+    owner  => $postgresql::params::postgresuser,
+    group  => $postgresql::params::postgresgroup,
+    mode   => '0600',
   }
 
   concat::fragment{ "base postgresql ${datadir}":
@@ -51,10 +51,10 @@ class postgresql::config(
   }
 
   concat { "${datadir}/pg_hba.conf":
-    ensure  => 'present',
-    owner   => $postgresql::params::postgresuser,
-    group   => $postgresql::params::postgresgroup,
-    mode    => '0600',
+    ensure => 'present',
+    owner  => $postgresql::params::postgresuser,
+    group  => $postgresql::params::postgresgroup,
+    mode   => '0600',
   }
 
   concat::fragment{ "header pg_hba ${datadir}":
