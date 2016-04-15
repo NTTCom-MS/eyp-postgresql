@@ -54,6 +54,7 @@ class postgresql(
 
   if($archive_dir!=undef)
   {
+    #tenim un munt de muntatge local, per exemple un NFS pels arvhivats
     validate_absolute_path($archive_dir)
 
     exec { "mkdir -p ${archive_dir} postgres archive command ${version} ${datadir}":
@@ -64,16 +65,18 @@ class postgresql(
 
     if($archive_dir!=undef and $archive_command_custom==undef)
     {
-      $archive_comand="test ! -f ${archive_dir}/%f && cp %p ${archive_dir}/%f"
+      #si no tenim un archive_command_custom definit, fem el default
+      $archive_command="test ! -f ${archive_dir}/%f && cp %p ${archive_dir}/%f"
     }
-
-    if($archive_dir!=undef and $archive_command_custom!=undef)
+    else
     {
-      $archive_comand=$archive_command_custom
+      #sino, el que ens pasin
+      $archive_command=$archive_command_custom
     }
 
     if($archived_wals_retention!=undef)
     {
+      #si no definim com undef la retencio, configurem un cron per purgar
       cron { "cronjob purge walls ${$archived_wals_retention} postgres ${archive_dir}":
         ensure   => 'present',
         command  => "find ${archive_dir} -type f -mtime ${archived_wals_retention} -delete",
@@ -89,13 +92,16 @@ class postgresql(
   }
   else
   {
+    #si els arxivats no son locals
     if($archive_command_custom!=undef)
     {
-      $archive_comand=$archive_command_custom
+      # pasem el que toqui
+      $archive_command=$archive_command_custom
     }
     else
     {
-      $archive_comand=undef
+      # segurament es un: i have no idea what i'm doing o son proves, deixem un cd .
+      $archive_command='cd .'
     }
   }
 
@@ -133,7 +139,7 @@ class postgresql(
     log_timezone                    => $log_timezone,
     superuser_reserved_connections  => $superuser_reserved_connections,
     archive_mode                    => $archive_mode,
-    archive_command                 => $archive_comand,
+    archive_command                 => $archive_command,
     archive_timeout                 => $archive_timeout,
     maintenance_work_mem            => $maintenance_work_mem,
     wal_buffers                     => $wal_buffers,
