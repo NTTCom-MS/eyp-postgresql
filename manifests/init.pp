@@ -89,7 +89,14 @@ class postgresql(
   }
   else
   {
-    $archive_comand=undef
+    if($archive_command_custom!=undef)
+    {
+      $archive_comand=$archive_command_custom
+    }
+    else
+    {
+      $archive_comand=undef
+    }
   }
 
 
