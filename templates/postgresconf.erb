@@ -191,7 +191,7 @@ checkpoint_segments = <%= @checkpoint_segments %>		# in logfile segments, min 1,
 
 archive_mode = <%= scope.function_bool2onoff([@archive_mode]) %>		# allows archiving to be done
 				# (change requires restart)
-archive_command = '<%= @archive_comand %>'		# command to use to archive a logfile segment
+archive_command = '<%= @archive_command %>'		# command to use to archive a logfile segment
 				# placeholders: %p = path of file to archive
 				#               %f = file name only
 				# e.g. 'test ! -f /mnt/server/archivedir/%f && cp %p /mnt/server/archivedir/%f'
