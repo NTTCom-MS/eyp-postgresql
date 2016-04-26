@@ -52,11 +52,17 @@ class postgresql(
                   $lc_numeric                      = 'en_US.UTF-8',
                   $lc_time                         = 'en_US.UTF-8',
                   $default_text_search_config      = 'pg_catalog.english',
+                  $shared_preload_libraries        = undef,
                   # service
                   $manage_service                  = true,
                 ) inherits postgresql::params {
 
   validate_array($listen)
+
+  if($shared_preload_libraries!=undef)
+  {
+    validate_array($shared_preload_libraries)
+  }
 
   if($archive_dir!=undef)
   {
