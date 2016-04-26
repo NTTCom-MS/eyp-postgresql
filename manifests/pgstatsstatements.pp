@@ -10,7 +10,7 @@ class postgresql::pgstatsstatements (
   {
     package { $postgresql::params::contrib[$version]:
       ensure => 'installed',
-      before => Class['::postgresql::config'],
+      before => Class['::postgresql::service'],
     }
   }
 
