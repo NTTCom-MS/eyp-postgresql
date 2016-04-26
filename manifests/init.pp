@@ -59,6 +59,10 @@ class postgresql(
 
   validate_array($listen)
 
+  Exec {
+    path => '/usr/sbin:/usr/bin:/sbin:/bin',
+  }
+
   if($shared_preload_libraries!=undef)
   {
     validate_array($shared_preload_libraries)
