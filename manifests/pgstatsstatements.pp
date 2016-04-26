@@ -6,6 +6,14 @@ class postgresql::pgstatsstatements (
                                       $max = '10000',
                                     ) inherits postgresql::params {
   #
+  if(!defined(Package[$postgresql::params::contrib[$version]]))
+  {
+    package { $postgresql::params::contrib[$version]:
+      ensure => 'installed',
+      before => Class['::postgresql::config'],
+    }
+  }
+
   concat::fragment{ "pg_stats_statement postgresql ${datadir}":
     target  => "${datadir}/postgresql.conf",
     content => template("${module_name}/pgstatsstatements/pgstatsstatements.erb"),

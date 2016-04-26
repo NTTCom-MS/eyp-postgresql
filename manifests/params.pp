@@ -35,6 +35,9 @@ class postgresql::params {
           $initdb = {
                       '9.2' => '/usr/pgsql-9.2/bin/initdb',
                     }
+          $contrib = {
+                      '9.2' => 'postgresql92-contrib',
+                    }
           $postgresuser='postgres'
           $postgresgroup='postgres'
           $postgreshome='/var/lib/pgsql'
