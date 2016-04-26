@@ -19,6 +19,7 @@ class postgresql::install (
     ensure   => 'installed',
     source   => $postgresql::params::reposource[$version],
     provider => $postgresql::params::repoprovider,
+    before   => Package[$postgresql::params::packagename],
   }
 
   package { $postgresql::params::packagename:
