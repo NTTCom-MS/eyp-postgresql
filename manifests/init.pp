@@ -17,7 +17,7 @@ class postgresql(
                   $max_connections                 = '100',
                   $wal_level                       = 'hot_standby',
                   $max_wal_senders                 = '0',
-                  $checkpoint_segments             = '10',
+                  $checkpoint_segments             = '16',
                   $wal_keep_segments               = '0',
                   $hot_standby                     = false,
                   $pidfile                         = $postgresql::params::servicename[$postgresql::params::version_default],
