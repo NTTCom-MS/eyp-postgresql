@@ -45,6 +45,8 @@ class postgresql::params {
               $postgresuser='postgres'
               $postgresgroup='postgres'
               $postgreshome='/var/lib/pgsql'
+
+              $sysconfig=true
             }
             default: { fail("Unsupported RHEL version! - ${::operatingsystemrelease}")  }
           }
@@ -80,6 +82,8 @@ class postgresql::params {
               $postgresuser='postgres'
               $postgresgroup='postgres'
               $postgreshome='/var/lib/pgsql'
+
+              $sysconfig=true
             }
             default: { fail("Unsupported CentOS version! - ${::operatingsystemrelease}")  }
           }

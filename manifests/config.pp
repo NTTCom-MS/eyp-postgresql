@@ -73,4 +73,15 @@ class postgresql::config(
     order   => '00',
   }
 
+  if($sysconfig)
+  {
+    file { "/etc/sysconfig/pgsql/${servicename[$version]}":
+      ensure  => 'present',
+      owner   => 'root',
+      group   => 'root',
+      mode    => '0644',
+      content => "PGPORT=${port}\n",
+    }
+  }
+
 }
