@@ -156,6 +156,13 @@ class postgresql(
     maintenance_work_mem            => $maintenance_work_mem,
     wal_buffers                     => $wal_buffers,
     work_mem                        => $work_mem,
+    shared_buffers                  => $shared_buffers,
+    lc_messages                     => $lc_messages,
+    lc_monetary                     => $lc_monetary,
+    lc_numeric                      => $lc_numeric,
+    lc_time                         => $lc_time,
+    default_text_search_config      => $default_text_search_config,
+    shared_preload_libraries        => $shared_preload_libraries,
   } ~>
 
   class { '::postgresql::service':

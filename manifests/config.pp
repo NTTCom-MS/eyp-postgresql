@@ -38,6 +38,13 @@ class postgresql::config(
                           $maintenance_work_mem             = '10MB',
                           $wal_buffers                      = '-1',
                           $work_mem                         = '8MB',
+                          $shared_buffers                   = ceiling(sprintf('%f', $::memorysize_mb)*256),
+                          $lc_messages                      = 'C',
+                          $lc_monetary                      = 'en_US.UTF-8',
+                          $lc_numeric                       = 'en_US.UTF-8',
+                          $lc_time                          = 'en_US.UTF-8',
+                          $default_text_search_config       = 'pg_catalog.english',
+                          $shared_preload_libraries         = undef,
                         ) inherits postgresql::params {
 
   concat { "${datadir}/postgresql.conf":
