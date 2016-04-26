@@ -5,6 +5,9 @@
 # ==== pg_hba concat order
 # 00: header
 # 01-99: user defined rules
+# ==== postgres.conf concat order
+# 00: base
+# 80: pg_stats_statements
 class postgresql::config(
                           $version                         = $postgresql::params::version_default,
                           $datadir                         = $postgresql::params::datadir_default,

@@ -1,0 +1,8 @@
+
+#------------------------------------------------------------------------------
+# pg_stat_statements
+#------------------------------------------------------------------------------
+
+pg_stat_statements.max = <%= @max %>
+pg_stat_statements.track = <%= @track %>
+pg_stat_statements.track_utility = <%= scope.function_bool2onoff([@track_utility]) %>
