@@ -111,7 +111,7 @@ superuser_reserved_connections = <%= @superuser_reserved_connections %>	# (chang
 
 # - Memory -
 
-shared_buffers = 32MB			# min 128kB
+shared_buffers = <%= @shared_buffers %>			# min 128kB
 					# (change requires restart)
 #temp_buffers = 8MB			# min 800kB
 #max_prepared_transactions = 0		# zero disables the feature

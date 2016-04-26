@@ -46,6 +46,7 @@ class postgresql(
                   $maintenance_work_mem            = '10MB',
                   $wal_buffers                     = '-1',
                   $work_mem                        = '8MB',
+                  $shared_buffers                  = ceiling(sprintf('%f', $::memorysize_mb)*256),
                   # service
                   $manage_service                  = true,
                 ) inherits postgresql::params {
