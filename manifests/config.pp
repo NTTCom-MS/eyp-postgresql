@@ -47,6 +47,10 @@ class postgresql::config(
                           $shared_preload_libraries         = undef,
                         ) inherits postgresql::params {
 
+  Postgresql_psql {
+    port => $port,
+  }
+
   concat { "${datadir}/postgresql.conf":
     ensure => 'present',
     owner  => $postgresql::params::postgresuser,
