@@ -46,7 +46,7 @@ class postgresql(
                   $maintenance_work_mem            = '10MB',
                   $wal_buffers                     = '-1',
                   $work_mem                        = '8MB',
-                  $shared_buffers                  = sprintf('%dMB',ceiling(sprintf('%f', $::memorysize_mb)*4)),
+                  $shared_buffers                  = sprintf('%dMB',ceiling(sprintf('%f', $::memorysize_mb)/4)),
                   $lc_messages                     = 'C',
                   $lc_monetary                     = 'en_US.UTF-8',
                   $lc_numeric                      = 'en_US.UTF-8',
