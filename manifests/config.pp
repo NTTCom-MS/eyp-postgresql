@@ -88,4 +88,12 @@ class postgresql::config(
     }
   }
 
+  file { "/etc/profile.d/psql.sh":
+    ensure  => 'present',
+    owner   => 'root',
+    group   => 'root',
+    mode    => '0644',
+    content => "alias psql='psql -p ${port}'\n",
+  }
+
 }
