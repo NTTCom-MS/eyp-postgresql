@@ -33,6 +33,19 @@ class postgresql::install (
     require => Package[$postgresql::params::packagename],
   }
 
+  # FATAL:  data directory "/var/lib/pgsql/9.2/data" has group or world access
+  # DETAIL:  Permissions should be u=rwx (0700).
+  # [root@evx2401660 9.2]# ls -la
+  # total 28
+  # drwx------  6 postgres postgres 4096 Apr 27 10:48 .
+  # drwx------  4 postgres postgres 4096 Apr 26 16:39 ..
+  # drwx------  2 postgres postgres 4096 Mar 29 22:42 backups
+  # drwxr-xr-x 15 postgres postgres 4096 Apr 27 10:48 data
+  # drwx------  2 root     root     4096 Apr 27 10:50 lost+found
+  # -rw-------  1 postgres postgres 2094 Apr 27 10:50 pgstartup.log
+  # drwxr-xr-x  3 postgres postgres 4096 Apr 27 10:36 tablespaces
+  # [root@evx2401660 9.2]# chmod 700 /var/lib/pgsql/9.2/data
+
   file { $datadir:
     ensure  => 'directory',
     owner   => $postgresql::params::postgresuser,
