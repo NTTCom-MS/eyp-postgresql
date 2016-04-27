@@ -17,7 +17,7 @@ class postgresql(
                   $max_connections                 = '100',
                   $wal_level                       = 'hot_standby',
                   $max_wal_senders                 = '0',
-                  $checkpoint_segments             = '10',
+                  $checkpoint_segments             = '16',
                   $wal_keep_segments               = '0',
                   $hot_standby                     = false,
                   $pidfile                         = $postgresql::params::servicename[$postgresql::params::version_default],
@@ -46,11 +46,27 @@ class postgresql(
                   $maintenance_work_mem            = '10MB',
                   $wal_buffers                     = '-1',
                   $work_mem                        = '8MB',
+                  $shared_buffers                  = sprintf('%dMB',ceiling(sprintf('%f', $::memorysize_mb)/4)),
+                  $lc_messages                     = 'C',
+                  $lc_monetary                     = 'en_US.UTF-8',
+                  $lc_numeric                      = 'en_US.UTF-8',
+                  $lc_time                         = 'en_US.UTF-8',
+                  $default_text_search_config      = 'pg_catalog.english',
+                  $shared_preload_libraries        = undef,
                   # service
                   $manage_service                  = true,
                 ) inherits postgresql::params {
 
   validate_array($listen)
+
+  Exec {
+    path => '/usr/sbin:/usr/bin:/sbin:/bin',
+  }
+
+  if($shared_preload_libraries!=undef)
+  {
+    validate_array($shared_preload_libraries)
+  }
 
   if($archive_dir!=undef)
   {
@@ -144,6 +160,13 @@ class postgresql(
     maintenance_work_mem            => $maintenance_work_mem,
     wal_buffers                     => $wal_buffers,
     work_mem                        => $work_mem,
+    shared_buffers                  => $shared_buffers,
+    lc_messages                     => $lc_messages,
+    lc_monetary                     => $lc_monetary,
+    lc_numeric                      => $lc_numeric,
+    lc_time                         => $lc_time,
+    default_text_search_config      => $default_text_search_config,
+    shared_preload_libraries        => $shared_preload_libraries,
   } ~>
 
   class { '::postgresql::service':

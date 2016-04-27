@@ -111,7 +111,7 @@ superuser_reserved_connections = <%= @superuser_reserved_connections %>	# (chang
 
 # - Memory -
 
-shared_buffers = 32MB			# min 128kB
+shared_buffers = <%= @shared_buffers %>			# min 128kB
 					# (change requires restart)
 #temp_buffers = 8MB			# min 800kB
 #max_prepared_transactions = 0		# zero disables the feature
@@ -133,7 +133,7 @@ maintenance_work_mem = <%= @maintenance_work_mem %>		# min 1MB
 
 #max_files_per_process = 1000		# min 25
 					# (change requires restart)
-#shared_preload_libraries = ''		# (change requires restart)
+
 
 # - Cost-Based Vacuum Delay -
 
@@ -511,14 +511,14 @@ timezone = '<%= @timezone %>'
 					# encoding
 
 # These settings are initialized by initdb, but they can be changed.
-lc_messages = 'C'			# locale for system error message
+lc_messages = '<%= @lc_messages %>'			# locale for system error message
 					# strings
-lc_monetary = 'C'			# locale for monetary formatting
-lc_numeric = 'C'			# locale for number formatting
-lc_time = 'C'				# locale for time formatting
+lc_monetary = '<%= @lc_monetary %>'			# locale for monetary formatting
+lc_numeric = '<%= @lc_numeric %>'			# locale for number formatting
+lc_time = '<%= @lc_time %>'				# locale for time formatting
 
 # default configuration for text search
-default_text_search_config = 'pg_catalog.english'
+default_text_search_config = '<%= @default_text_search_config %>'
 
 # - Other Defaults -
 
@@ -568,9 +568,10 @@ default_text_search_config = 'pg_catalog.english'
 #exit_on_error = off			# terminate session on any error?
 #restart_after_crash = on		# reinitialize after backend crash?
 
-
 #------------------------------------------------------------------------------
 # CUSTOMIZED OPTIONS
 #------------------------------------------------------------------------------
 
-# Add settings for extensions here
+<% if defined?(@shared_preload_libraries) -%>
+shared_preload_libraries = '<%= @shared_preload_libraries.join(',') %>'
+<% end -%>

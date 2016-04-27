@@ -5,6 +5,9 @@
 # ==== pg_hba concat order
 # 00: header
 # 01-99: user defined rules
+# ==== postgres.conf concat order
+# 00: base
+# 80: pg_stats_statements
 class postgresql::config(
                           $version                         = $postgresql::params::version_default,
                           $datadir                         = $postgresql::params::datadir_default,
@@ -35,7 +38,18 @@ class postgresql::config(
                           $maintenance_work_mem             = '10MB',
                           $wal_buffers                      = '-1',
                           $work_mem                         = '8MB',
+                          $shared_buffers                   = sprintf('%dMB',ceiling(sprintf('%f', $::memorysize_mb)*4)),
+                          $lc_messages                      = 'C',
+                          $lc_monetary                      = 'en_US.UTF-8',
+                          $lc_numeric                       = 'en_US.UTF-8',
+                          $lc_time                          = 'en_US.UTF-8',
+                          $default_text_search_config       = 'pg_catalog.english',
+                          $shared_preload_libraries         = undef,
                         ) inherits postgresql::params {
+
+  Postgresql_psql {
+    port => $port,
+  }
 
   concat { "${datadir}/postgresql.conf":
     ensure => 'present',
@@ -61,6 +75,25 @@ class postgresql::config(
     target  => "${datadir}/pg_hba.conf",
     content => template("${module_name}/hba/header.erb"),
     order   => '00',
+  }
+
+  if($sysconfig)
+  {
+    file { "/etc/sysconfig/pgsql/${servicename[$version]}":
+      ensure  => 'present',
+      owner   => 'root',
+      group   => 'root',
+      mode    => '0644',
+      content => "PGPORT=${port}\n",
+    }
+  }
+
+  file { "/etc/profile.d/psql.sh":
+    ensure  => 'present',
+    owner   => 'root',
+    group   => 'root',
+    mode    => '0644',
+    content => "alias psql='psql -p ${port}'\n",
   }
 
 }

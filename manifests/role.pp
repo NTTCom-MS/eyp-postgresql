@@ -4,9 +4,14 @@ define postgresql::role (
                           $login       = true,
                           $superuser   = false,
                           $replication = false,
+                          $port        = undef,
                         ) {
   Exec {
     path => '/usr/sbin:/usr/bin:/sbin:/bin',
+  }
+
+  Postgresql_psql {
+    port => $port,
   }
 
   $password_hash_md5=md5("${password}${rolename}")
