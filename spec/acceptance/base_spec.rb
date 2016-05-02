@@ -53,6 +53,11 @@ describe 'postgresql class' do
     describe file($postgresconf92) do
       it { should be_file }
       its(:content) { should match 'wal_level = hot_standby' }
+      its(:content) { should match 'max_connections = 100' }
+      its(:content) { should match 'wal_level = hot_standby' }
+      its(:content) { should match 'wal_keep_segments = 8' }
+      its(:content) { should match 'checkpoint_segments = 8' }
+      its(:content) { should match 'max_wal_senders = 3' }
       its(:content) { should match 'puppet managed file' }
     end
 
@@ -66,6 +71,11 @@ describe 'postgresql class' do
     #echo "SELECT nspname FROM pg_namespace WHERE nspname='jordi'" | psql -U postgres | grep jordi
     it "schema jordi" do
       expect(shell("echo \"SELECT nspname FROM pg_namespace WHERE nspname='jordi'\" | psql -U postgres | grep jordi").exit_code).to be_zero
+    end
+
+    #SELECT rolname FROM pg_roles WHERE rolname=
+    it "role replicator" do
+      expect(shell("echo \"SELECT rolname FROM pg_roles WHERE rolname='replicator'\" | psql -U postgres | grep replicator").exit_code).to be_zero
     end
 
   end
