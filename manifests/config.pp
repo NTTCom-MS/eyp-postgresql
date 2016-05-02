@@ -77,9 +77,9 @@ class postgresql::config(
     order   => '00',
   }
 
-  if($sysconfig)
+  if($postgresql::params::sysconfig)
   {
-    file { "/etc/sysconfig/pgsql/${servicename[$version]}":
+    file { "/etc/sysconfig/pgsql/${postgresql::params::servicename[$version]}":
       ensure  => 'present',
       owner   => 'root',
       group   => 'root',
@@ -88,7 +88,7 @@ class postgresql::config(
     }
   }
 
-  file { "/etc/profile.d/psql.sh":
+  file { '/etc/profile.d/psql.sh':
     ensure  => 'present',
     owner   => 'root',
     group   => 'root',
