@@ -37,6 +37,7 @@ Installs and configures PostgreSQL on CentOS 6
 * configures:
   * postgres.conf
   * pg_hba
+  * pg_stat_statements
 * it can manage the following DB objects:
   * roles
   * schemas
@@ -44,7 +45,6 @@ Installs and configures PostgreSQL on CentOS 6
   * overcommit_memory = 2 - total virtual address space on the system is limited to *(SWAP + RAM ·( /proc/sys/vm/overcommit_ratio /100))*
   * shmmax: maximum size of shared memory segment (default: ceiling(sprintf('%f', $::memorysize_mb)·786432))
   * shmall: total amount of shared memory available (default: ceiling(ceiling(sprintf('%f',$::memorysize_mb)·786432)/$::eyp_postgresql_pagesize))
-  * (...) check postgres documentation, most common options are already implemented
 
 ### Setup Requirements
 
@@ -53,9 +53,11 @@ installed. Mountpoints **must** be already in place (datadir, archive_dir...)
 
 ### Beginning with postgresql
 
-Right now, it only supports PostgreSQL 9.2
+Currently, it only supports PostgreSQL 9.2 (check TODO list)
 
 ## Usage
+
+streaming replication setup:
 
 ```puppet
 node 'pgm'
@@ -119,9 +121,9 @@ node 'pgs'
 
 It uses the following (private) classes to install, configure and manage PostgreSQL:
 
-* postgresql::install
-* postgresql::config
-* postgresql::service
+* **postgresql::install**: Installation and initdb
+* **postgresql::config**: Modifies configuration files
+* **postgresql::service**: Manages postgres service
 
 Options:
 * **version**: version to install (default: 9.2)
@@ -137,7 +139,9 @@ Options:
   * 2: always check, never overcommit(default: 2)',
 * **shmmax**: maximum size of shared memory segment (default: ceiling(sprintf('%f', $::memorysize_mb)·786432)) you can set it to undef to disable
 * **shmall**: total amount of shared memory available (default: ceiling(ceiling(sprintf('%f',$::memorysize_mb)·786432)/$::eyp_postgresql_pagesize)) you can set it to undef to disable
-* (...) check postgres documentation, most common options are already implemented
+* for directly mapped variables (lc_messages, listen, port...) check postgres documentation, most common options are already implemented
+
+usage example:
 
 ```puppet
 class { 'postgresql': }
@@ -147,14 +151,14 @@ class { 'postgresql': }
 
 * **masterhost**: required, postgres master
 * **masterusername**: required, replication username
-* **$masterpassword**: required, replication password
-* **$masterport** (default: port_default)
-* **$datadir** (default: datadir_default)
+* **masterpassword**: required, replication password
+* **masterport** (default: port_default)
+* **datadir** (default: datadir_default)
 
 It requires to have **pg_basebackup** and the defined username already created on
 the master DB
 
-example:
+usage example:
 
 ```puppet
 class { 'postgresql::streaming_replication':
@@ -162,6 +166,20 @@ class { 'postgresql::streaming_replication':
   masterusername => 'replicator',
   masterpassword => 'replicatorpassword',
 }
+```
+
+#### postgresql::pgstatsstatements
+
+Enable pg_stats_statements:
+
+* **track_utility**: (default: true)
+* **track**: (default: all)
+* **max**: (default: 10000)
+
+usage example:
+
+```puppet
+class { 'postgresql::pgstatsstatements': }
 ```
 
 ### defines
@@ -176,7 +194,7 @@ manages roles (alias users):
 * **superuser** boolean, enable or disable superuser grant (default: false)
 * **replication** boolean, enable or disable replication grant (default: false)
 
-for example:
+usage example:
 
 ```puppet
 postgresql::role { 'jordi':
@@ -192,7 +210,7 @@ Manages schemas:
 * **schemaname**: schema to create (default: resource's name)
 * **owner**: required, schema's owner
 
-example:
+usage example:
 
 ```puppet
 postgresql::schema { 'jordidb':
@@ -247,7 +265,7 @@ authentication methods(default: undef)
 * **description**: description to identify each rule, see example below (default: resource's name)
 * **order**: if any (default: 01)
 
-example:
+usage example:
 
 ```puppet
 postgresql::hba_rule { 'test':
@@ -274,7 +292,8 @@ have some tests to check both presence and absence of any feature
 
 ### TODO
 
-TODO list
+* Add more postgres versions
+* tablespaces management
 
 ### Contributing
 
