@@ -15,8 +15,8 @@ class postgresql::service (
 
   if($::eyp_docker_iscontainer!=undef)
   {
-    if(getvar('::eyp_docker_iscontainer')==false or
-      getvar('::eyp_docker_iscontainer') =~ /false/ or
+    if($::eyp_docker_iscontainer==false or
+      $::eyp_docker_iscontainer =~ /false/ or
       $manage_docker_service)
       {
         if($manage_service)
