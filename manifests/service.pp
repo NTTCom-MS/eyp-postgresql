@@ -26,4 +26,31 @@ class postgresql::service (
       }
     }
   }
+
+  if(getvar('::eyp_docker_iscontainer')!=undef)
+  {
+    if(getvar('::eyp_docker_iscontainer')==false or
+      getvar('::eyp_docker_iscontainer') =~ /false/ or
+      $manage_docker_service)
+      {
+        if($manage_service)
+        {
+          service { $postgresql::params::servicename[$version]:
+            ensure => $ensure,
+            enable => $enable,
+          }
+        }
+      }
+  }
+  else
+  {
+    if($manage_service)
+    {
+      service { $postgresql::params::servicename[$version]:
+        ensure => $ensure,
+        enable => $enable,
+      }
+    }
+  }
+
 }
