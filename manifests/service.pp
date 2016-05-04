@@ -13,7 +13,7 @@ class postgresql::service (
 
   validate_re($ensure, [ '^running$', '^stopped$' ], "Not a valid daemon status: ${ensure}")
 
-  if(getvar('::eyp_docker_iscontainer')!=undef)
+  if($::eyp_docker_iscontainer!=undef)
   {
     if(getvar('::eyp_docker_iscontainer')==false or
       getvar('::eyp_docker_iscontainer') =~ /false/ or
