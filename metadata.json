@@ -1,6 +1,6 @@
 {
   "name": "eyp-postgresql",
-  "version": "0.1.21",
+  "version": "0.1.22",
   "author": "eyp",
   "summary": "manages postgresql",
   "license": "Apache-2.0",
@@ -8,7 +8,7 @@
   "project_page": null,
   "issues_url": "https://github.com/AtlasIT-AM/eyp-postgresql/issues",
   "dependencies": [
-    {"name":"puppetlabs/stdlib","version_requirement":">= 1.0.0"},
+    {"name":"puppetlabs/stdlib","version_requirement":">= 4.12.0"},
     {"name":"puppetlabs/concat","version_requirement":">= 1.2.3"},
     {"name":"eyp/eyplib","version_requirement":">= 0.1.0 < 0.2.0"}
   ],
