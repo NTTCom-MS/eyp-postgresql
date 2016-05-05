@@ -15,7 +15,8 @@ class postgresql::service (
 
   if($manage_service)
   {
-    if(defined($::eyp_docker_iscontainer))
+    #https://docs.puppet.com/puppet/latest/reference/function.html#defined
+    if(defined('$::eyp_docker_iscontainer'))
     {
       if(getvar('::eyp_docker_iscontainer')==false or
           getvar('::eyp_docker_iscontainer') =~ /false/ or
