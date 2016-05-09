@@ -17,7 +17,6 @@ define postgresql::pgdumpbackup (
                       $month_cronjob    = undef,
                       $monthday_cronjob = undef,
                       $weekday_cronjob  = undef,
-                      $setcron_cronjob  = true,
                     ) {
 
   Exec {
