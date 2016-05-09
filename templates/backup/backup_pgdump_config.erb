@@ -1,0 +1,20 @@
+<% if defined?(@pgroot) -%>
+PGROOT=<%= @pgroot %>
+<% end -%>
+<% if defined?(@instance) -%>
+INSTANCE=<%= @instance %>
+<% end -%>
+RETENTION=<%= @retention %>
+DATABASE="<%= @dbs %>"
+PDEST=<%= @destination %>
+<% if defined?(@mailto) -%>
+NOTIFY="<%= @mailto %>"
+<% end -%>
+<% if defined?(@idhost) -%>
+IDHOST=<%= @idhost %>
+<% else -%>
+IDHOST=<%= @fqdn %>
+<% end -%>
+<% if defined?(@pgroot) && defined?(@instance) -%>
+CONN="${PGROOT}/${INSTANCE}/data"
+<% end -%>
