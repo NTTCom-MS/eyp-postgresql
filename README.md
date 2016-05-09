@@ -311,6 +311,16 @@ host	replication	replicator	192.168.56.30/32			md5
   * **monthday_cronjob**: monthday (default: undef)
   * **weekday_cronjob**: weekday (default: undef)
 
+example setup:
+
+```puppet
+postgresql::pgdumpbackup { "backup logic":
+  destination => '/backup',
+  mailto => 'backup_notifications@systemadmin.es',
+  idhost => 'postgresmaster01',
+}
+```
+
 ## Limitations
 
 CentOS 6 only
