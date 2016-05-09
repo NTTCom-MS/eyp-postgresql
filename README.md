@@ -113,6 +113,16 @@ node 'pgs'
 }
 ```
 
+backup configurtion:
+
+```puppet
+postgresql::pgdumpbackup { "backup logic":
+  destination => '/backup',
+  mailto => 'backup_notifications@systemadmin.es',
+  idhost => 'postgresmaster01',
+}
+```
+
 ## Reference
 
 ### classes
@@ -279,6 +289,36 @@ It will create the following pg_hba rule:
 ```
 # rule: test
 host	replication	replicator	192.168.56.30/32			md5
+```
+
+#### postgresql::pgdumpbackup
+
+* **destination**: path to store backups
+* **pgroot**: Postgres installation base (default: undef)
+* **instance**: postgres instance (default: undef)
+* **retention**: (default: 7)
+* **dbs**: dbs to backup (default: ALL)
+* **mailto**: notify by mail (default: undef)
+* **idhost**: host ID, if this variabla is set to undef, it will use it's fqdn
+* **basedir**: path to install the backup script (default: /usr/local/bin)
+* **ensure**: presence or absence of this backup script (default: present)
+* **username**: user to perform backups (default: postgres)
+* cron settings:
+  * **setcronjob**: create a cronjob (default: true)
+  * **hour_cronjob**: hour (default: 2)
+  * **minute_cronjob**: minute (default: 0)
+  * **month_cronjob**: month (default: undef)
+  * **monthday_cronjob**: monthday (default: undef)
+  * **weekday_cronjob**: weekday (default: undef)
+
+example setup:
+
+```puppet
+postgresql::pgdumpbackup { "backup logic":
+  destination => '/backup',
+  mailto => 'backup_notifications@systemadmin.es',
+  idhost => 'postgresmaster01',
+}
 ```
 
 ## Limitations
