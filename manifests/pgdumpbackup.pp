@@ -20,6 +20,10 @@ define postgresql::pgdumpbackup (
                       $setcron_cronjob  = true,
                     ) {
 
+  Exec {
+    path => '/usr/sbin:/usr/bin:/sbin:/bin',
+  }
+
   validate_absolute_path($basedir)
   validate_absolute_path($destination)
 
@@ -37,6 +41,19 @@ define postgresql::pgdumpbackup (
     group   => $username,
     mode    => '0640',
     content => template("${module_name}/backup/backup_pgdump_config.erb"),
+  }
+
+  exec { "mkdir p ${destination} backup":
+    command => "mkdir -p ${destination}",
+    creates => $destination,
+  }
+
+  file { $destination:
+    ensure  => 'directory',
+    owner   => 'root',
+    group   => $username,
+    mode    => '0770',
+    require => Exec["mkdir p ${destination} backup"],
   }
 
   if($setcronjob)
