@@ -59,6 +59,7 @@ define postgresql::pgdumpbackup (
   if($setcronjob)
   {
     cron { "cronjob logical postgres backup: ${backupname}":
+      ensure   => $ensure,
       command  => "${basedir}/pgdumpbackup.sh",
       user     => $username,
       hour     => $hour_cronjob,
