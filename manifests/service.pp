@@ -37,7 +37,4 @@ class postgresql::service (
     }
   }
 
-
-
-
 }
