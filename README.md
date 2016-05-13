@@ -2,7 +2,7 @@
 
 ![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)
 
-**AtlasIT-AM/eyp-postgresql**: [![Build Status](https://travis-ci.org/AtlasIT-AM/eyp-postgresql.png?branch=master)](https://travis-ci.org/AtlasIT-AM/eyp-postgresql)
+**NTTCom-MS/eyp-postgresql**: [![Build Status](https://travis-ci.org/NTTCom-MS/eyp-postgresql.png?branch=master)](https://travis-ci.org/NTTCom-MS/eyp-postgresql)
 
 #### Table of Contents
 
