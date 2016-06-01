@@ -1,9 +1,9 @@
 class postgresql::pgstatsstatements (
-                                      $version = $postgresql::params::version_default,
-                                      $datadir = $postgresql::params::datadir_default,
+                                      $version       = $postgresql::params::version_default,
+                                      $datadir       = $postgresql::params::datadir_default,
                                       $track_utility = true,
-                                      $track = 'all',
-                                      $max = '10000',
+                                      $track         = 'all',
+                                      $max           = '10000',
                                     ) inherits postgresql::params {
   #
   if(!defined(Package[$postgresql::params::contrib[$version]]))

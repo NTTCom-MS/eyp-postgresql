@@ -1,9 +1,9 @@
 class postgresql::streaming_replication (
-                                          $masterhost=undef,
-                                          $masterusername=undef,
-                                          $masterpassword=undef,
-                                          $masterport=$postgresql::params::port_default,
-                                          $datadir = $postgresql::params::datadir_default
+                                          $masterhost     = undef,
+                                          $masterusername = undef,
+                                          $masterpassword = undef,
+                                          $masterport     = $postgresql::params::port_default,
+                                          $datadir        = $postgresql::params::datadir_default
                                         ) inherits postgresql::params {
   Exec {
     path => '/usr/sbin:/usr/bin:/sbin:/bin',
