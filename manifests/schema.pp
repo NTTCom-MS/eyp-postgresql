@@ -3,6 +3,10 @@ define postgresql::schema (
                             $schemaname=$name
                           ) {
 
+  Postgresql_psql {
+    port => $port,
+  }
+
   postgresql_psql { "CREATE SCHEMA ${schemaname}":
     command => "CREATE SCHEMA ${schemaname} AUTHORIZATION ${owner}",
     unless  => "SELECT nspname FROM pg_namespace WHERE nspname='${schemaname}'",
