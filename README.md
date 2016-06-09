@@ -123,6 +123,106 @@ postgresql::pgdumpbackup { "backup logic":
 }
 ```
 
+postgresmaster using hiera:
+
+```hiera
+---
+classes:
+  - postgresql
+  - postgresql::pgstatsstatements
+postgresql::port: 60901
+postgresql::wal_level: hot_standby
+postgresql::max_wal_senders: 3
+postgresql::checkpoint_segments: 16
+postgresql::wal_keep_segments: 8
+postgresql::archive_mode: true
+postgresql::max_connections: 200
+postgresql::archive_mode: true
+postgresql::archive_command_custom: 'rsync --exclude lost+found -a %p barman@192.168.52.21:/var/lib/barman/pgm/incoming/%f'
+postgresql::shared_preload_libraries:
+  - pg_stat_statements
+postgresroles:
+  extension:
+    password: '1234'
+    port: 60901
+  extension_ro:
+    password: '1234'
+    port: 60901
+  extension_rw:
+    password: '1234'
+    port: 60901
+  replicator:
+    port: 60901
+    password: '1234'
+    replication: true
+postgresschemas:
+  extension:
+    owner: extension
+    port: 60901
+```
+
+postgres slave using hiera:
+
+```hiera
+---
+classes:
+  - postgresql
+  - postgresql::pgstatsstatements
+  - postgresql::streaming_replication
+postgresql::port: 60901
+postgresql::wal_level: hot_standby
+postgresql::max_wal_senders: 3
+postgresql::checkpoint_segments: 16
+postgresql::wal_keep_segments: 8
+postgresql::archive_mode: true
+postgresql::max_connections: 200
+postgresql::initdb: false
+postgresql::hot_standby: true
+postgresql::shared_preload_libraries:
+  - pg_stat_statements
+postgresql::streaming_replication::masterhost: 192.168.52.20
+postgresql::streaming_replication::masterport: 60901
+postgresql::streaming_replication::masterusername: replicator
+postgresql::streaming_replication::masterpassword: af35dbf3394b2b961fea37db2b2bfb0c
+```
+
+hba rules using hiera:
+
+```hiera
+---
+hbarules:
+  barman:
+    user: postgres
+    database: all
+    address: '192.168.52.21/32'
+    auth_method: trust
+  replicator:
+    user: replicator
+    database: replication
+    address: '192.168.52.0/24'
+  nagios:
+    user: nagios
+    database: nagios
+    address: '1.2.3.4/32'
+  nagiospre:
+    user: nagios
+    database: nagios
+    address: '1.2.3.4/32'
+  extension:
+    user: extension
+    database: extension
+    address: '192.168.52.0/24'
+  extensionRO:
+    user: extension_ro
+    database: extension
+    address: '192.168.52.0/24'
+  extensionRW:
+    user: extension_rw
+    database: extension
+    address: '192.168.52.0/24'
+```
+
+
 ## Reference
 
 ### classes
@@ -149,7 +249,46 @@ Options:
   * 2: always check, never overcommit(default: 2)',
 * **shmmax**: maximum size of shared memory segment (default: ceiling(sprintf('%f', $::memorysize_mb)·786432)) you can set it to undef to disable
 * **shmall**: total amount of shared memory available (default: ceiling(ceiling(sprintf('%f',$::memorysize_mb)·786432)/$::eyp_postgresql_pagesize)) you can set it to undef to disable
-* for directly mapped variables (lc_messages, listen, port...) check postgres documentation, most common options are already implemented
+* for directly mapped variables (lc_messages, listen, port...) check postgres documentation:
+  * port (default: 5432)
+  * listen (default: \*)
+  * max_connections (default: 100)
+  * wal_level (default: hot_standby)
+  * max_wal_senders (default: 0)
+  * checkpoint_segments (default: 16)
+  * wal_keep_segments (default: 0)
+  * hot_standby
+  * pidfile
+  * log_directory
+  * log_filename
+  * track_activities
+  * track_counts
+  * autovacuum
+  * autovacuum_vacuum_scale_factor
+  * autovacuum_vacuum_threshold
+  * autovacuum_analyze_scale_factor
+  * autovacuum_analyze_threshold
+  * timezone
+  * log_timezone
+  * superuser_reserved_connections
+  * archive_mode
+  * archive_timeout
+  * archived_wals_retention
+  * archived_wals_hour
+  * archived_wals_minute
+  * archived_wals_month
+  * archived_wals_monthday
+  * archived_wals_weekday
+  * maintenance_work_mem
+  * wal_buffers
+  * work_mem
+  * shared_buffers (autocalculated to 1/4 main RAM)
+  * lc_messages (default: C)
+  * lc_monetary (default: en_US.UTF-8)
+  * lc_numeric (default: en_US.UTF-8)
+  * lc_time (default: en_US.UTF-8)
+  * default_text_search_config (default: pg_catalog.english)
+  * shared_preload_libraries (default: undef)
 
 usage example:
 
