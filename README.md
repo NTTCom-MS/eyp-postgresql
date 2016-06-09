@@ -149,7 +149,49 @@ Options:
   * 2: always check, never overcommit(default: 2)',
 * **shmmax**: maximum size of shared memory segment (default: ceiling(sprintf('%f', $::memorysize_mb)·786432)) you can set it to undef to disable
 * **shmall**: total amount of shared memory available (default: ceiling(ceiling(sprintf('%f',$::memorysize_mb)·786432)/$::eyp_postgresql_pagesize)) you can set it to undef to disable
-* for directly mapped variables (lc_messages, listen, port...) check postgres documentation, most common options are already implemented
+* for directly mapped variables (lc_messages, listen, port...) check postgres documentation:
+  * port
+  * listen
+  * port
+  * max_connections
+  * wal_level
+  * max_wal_senders
+  * checkpoint_segments
+  * wal_keep_segments
+  * hot_standby
+  * pidfile
+  * log_directory
+  * log_filename
+  * track_activities
+  * track_counts
+  * autovacuum
+  * autovacuum_vacuum_scale_factor
+  * autovacuum_vacuum_threshold
+  * autovacuum_analyze_scale_factor
+  * autovacuum_analyze_threshold
+  * timezone
+  * log_timezone
+  * superuser_reserved_connections
+  * archive_mode
+  * archive_command_custom
+  * archive_dir
+  * archive_timeout
+  * archived_wals_retention
+  * archived_wals_hour
+  * archived_wals_minute
+  * archived_wals_month
+  * archived_wals_monthday
+  * archived_wals_weekday
+  * maintenance_work_mem
+  * wal_buffers
+  * work_mem
+  * shared_buffers (autocalculated to 1/4 main RAM)
+  * lc_messages
+  * lc_monetary
+  * lc_numeric
+  * lc_time
+  * default_text_search_config
+  * shared_preload_libraries
 
 usage example:
 
