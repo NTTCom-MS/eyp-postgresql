@@ -173,8 +173,6 @@ Options:
   * log_timezone
   * superuser_reserved_connections
   * archive_mode
-  * archive_command_custom
-  * archive_dir
   * archive_timeout
   * archived_wals_retention
   * archived_wals_hour
