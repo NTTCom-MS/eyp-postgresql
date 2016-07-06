@@ -13,22 +13,13 @@ class postgresql::service (
 
   validate_re($ensure, [ '^running$', '^stopped$' ], "Not a valid daemon status: ${ensure}")
 
-  if($manage_service)
+  $is_docker_container_var=getvar('::eyp_docker_iscontainer')
+  $is_docker_container=str2bool($is_docker_container_var)
+
+  if( $is_docker_container==false or
+      $manage_docker_service)
   {
-    #https://docs.puppet.com/puppet/latest/reference/function.html#defined
-    if(defined('$::eyp_docker_iscontainer'))
-    {
-      if(getvar('::eyp_docker_iscontainer')==false or
-          getvar('::eyp_docker_iscontainer') =~ /false/ or
-          $manage_docker_service)
-      {
-        service { $postgresql::params::servicename[$version]:
-          ensure => $ensure,
-          enable => $enable,
-        }
-      }
-    }
-    else
+    if($manage_service)
     {
       service { $postgresql::params::servicename[$version]:
         ensure => $ensure,
@@ -36,5 +27,4 @@ class postgresql::service (
       }
     }
   }
-
 }
