@@ -9,4 +9,4 @@ primary_conninfo = 'host=<%= @masterhost %> port=<%= @masterport %> user=<%= @ma
 trigger_file = '/tmp/postgresql.enable_master_mode'
 <% if defined?(@restore_command) -%>
 restore_command='<%= @restore_command %>'
-<% end %>
+<% end -%>
