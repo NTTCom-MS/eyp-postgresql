@@ -303,6 +303,7 @@ class { 'postgresql': }
 * **masterpassword**: required, replication password
 * **masterport** (default: port_default)
 * **datadir** (default: datadir_default)
+* **restore_command**: (default: undef)
 
 It requires to have **pg_basebackup** and the defined username already created on
 the master DB
