@@ -102,7 +102,6 @@ class postgresql(
         month    => $archived_wals_month,
         monthday => $archived_wals_monthday,
         weekday  => $archived_wals_weekday,
-        before   => Class['::postgresql::config'],
       }
     }
   }
