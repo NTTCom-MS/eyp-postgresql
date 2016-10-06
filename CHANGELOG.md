@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.1.33
+
+* added user, group and mode to **archive_dir**
+
 ## 0.1.32
 
 * bugfix dependencies

@@ -36,6 +36,9 @@ class postgresql(
                   $archive_mode                    = false,
                   $archive_command_custom          = undef,
                   $archive_dir                     = undef,
+                  $archive_dir_user                = undef,
+                  $archive_dir_group               = undef,
+                  $archive_dir_mode                = undef,
                   $archive_timeout                 = '0',
                   $archived_wals_retention         = '+7',
                   $archived_wals_hour              = '0',
@@ -77,6 +80,14 @@ class postgresql(
       command => "mkdir -p ${archive_dir}",
       creates => $archive_dir,
       before  => Class['::postgresql::service'],
+    }
+
+    file { $archive_dir:
+      ensure  => 'directory',
+      user    => $archive_dir_user,
+      group   => $archive_dir_group,
+      mode    => $archive_dir_mode,
+      require => Exec["mkdir -p ${archive_dir} postgres archive command ${version} ${datadir}"],
     }
 
     if($archive_dir!=undef and $archive_command_custom==undef)
