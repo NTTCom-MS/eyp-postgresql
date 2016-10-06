@@ -76,7 +76,7 @@ class postgresql(
     exec { "mkdir -p ${archive_dir} postgres archive command ${version} ${datadir}":
       command => "mkdir -p ${archive_dir}",
       creates => $archive_dir,
-      before  => Class['::postgresql::config'],
+      before  => Class['::postgresql::service'],
     }
 
     if($archive_dir!=undef and $archive_command_custom==undef)

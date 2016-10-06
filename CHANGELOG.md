@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.1.31
+
+* updated dependency for mkdir archivedir to dependd on service
+
 ## 0.1.30
 
 * deleted dependency for cronjob
