@@ -171,8 +171,6 @@ class postgresql(
   class { '::postgresql::service':
     version        => $version,
     manage_service => $manage_service,
-  } ->
-
-  Class['::postgresql']
+  }
 
 }

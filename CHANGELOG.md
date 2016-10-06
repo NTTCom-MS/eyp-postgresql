@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.1.32
+
+* bugfix dependencies
+
 ## 0.1.31
 
 * updated dependency for mkdir archivedir to dependd on service
