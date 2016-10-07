@@ -39,6 +39,7 @@ class postgresql(
                   $archive_dir_user                = undef,
                   $archive_dir_group               = undef,
                   $archive_dir_mode                = undef,
+                  $archive_dir_chmod               = undef,
                   $archive_timeout                 = '0',
                   $archived_wals_retention         = '+7',
                   $archived_wals_hour              = '0',
@@ -93,7 +94,14 @@ class postgresql(
     if($archive_dir!=undef and $archive_command_custom==undef)
     {
       #si no tenim un archive_command_custom definit, fem el default
-      $archive_command="test ! -f ${archive_dir}/%f && cp %p ${archive_dir}/%f"
+      if($archive_dir_chmod==undef)
+      {
+        $archive_command="test ! -f ${archive_dir}/%f && cp %p ${archive_dir}/%f"
+      }
+      else
+      {
+        $archive_command="test ! -f ${archive_dir}/%f && cp %p ${archive_dir}/%f && chmod ${archive_dir_chmod} ${archive_dir}/%f"  
+      }
     }
     else
     {

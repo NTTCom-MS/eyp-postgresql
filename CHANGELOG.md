@@ -1,8 +1,11 @@
 # CHANGELOG
 
+## 0.1.35
+
+* added **archive_dir_chmod**, change mode after archiving WALs
+
 ## 0.1.29 - 0.1.34
 
-**MINOR**:
 * added user, group and mode to **archive_dir**
 * bugfix dependencies
 * updated dependency for mkdir archivedir to depend on service
@@ -10,5 +13,4 @@
 
 ## 0.1.28
 
-**MINOR**:
 * restore_command option added to **postgresql::streaming_replication** (default: undef)
