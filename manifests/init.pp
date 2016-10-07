@@ -100,7 +100,7 @@ class postgresql(
       }
       else
       {
-        $archive_command="test ! -f ${archive_dir}/%f && cp %p ${archive_dir}/%f && chmod ${archive_dir_chmod} ${archive_dir}/%f"  
+        $archive_command="test ! -f ${archive_dir}/%f && chmod ${archive_dir_chmod} %p && cp -p %p ${archive_dir}/%f"
       }
     }
     else

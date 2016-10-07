@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.1.36
+
+* changed chmod order to be done **BEFORE** copying it to archive_dir
+
 ## 0.1.35
 
 * added **archive_dir_chmod**, change mode after archiving WALs
