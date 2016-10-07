@@ -84,7 +84,7 @@ class postgresql(
 
     file { $archive_dir:
       ensure  => 'directory',
-      user    => $archive_dir_user,
+      owner   => $archive_dir_user,
       group   => $archive_dir_group,
       mode    => $archive_dir_mode,
       require => Exec["mkdir -p ${archive_dir} postgres archive command ${version} ${datadir}"],
