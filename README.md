@@ -242,6 +242,10 @@ Options:
 * **manage_service**: boolean, true to manage PostgreSQL's service (default: true)
 * **archive_command_custom**: custom archive command
 * **archive_dir**: archive dir, if archive_command_custom is undef, it will be: *test ! -f ${archive_dir}/%f && cp %p ${archive_dir}/%f*
+* **archive_dir_user**: archive dir user (default: undef)
+* **archive_dir_group**: archive dir group (default: undef)
+* **archive_dir_mode**: archive dir mode (default: undef)
+* **archive_dir_chmod**: chmod to this mask if using archive_dir (default: undef)
 * **overcommit_memory**: modes available:
   * undef: do not change it
   * 0: heuristic overcommit (this is the default)

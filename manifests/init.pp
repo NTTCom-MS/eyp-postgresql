@@ -36,6 +36,10 @@ class postgresql(
                   $archive_mode                    = false,
                   $archive_command_custom          = undef,
                   $archive_dir                     = undef,
+                  $archive_dir_user                = undef,
+                  $archive_dir_group               = undef,
+                  $archive_dir_mode                = undef,
+                  $archive_dir_chmod               = undef,
                   $archive_timeout                 = '0',
                   $archived_wals_retention         = '+7',
                   $archived_wals_hour              = '0',
@@ -76,13 +80,28 @@ class postgresql(
     exec { "mkdir -p ${archive_dir} postgres archive command ${version} ${datadir}":
       command => "mkdir -p ${archive_dir}",
       creates => $archive_dir,
-      before  => Class['::postgresql::config'],
+      before  => Class['::postgresql::service'],
+    }
+
+    file { $archive_dir:
+      ensure  => 'directory',
+      owner   => $archive_dir_user,
+      group   => $archive_dir_group,
+      mode    => $archive_dir_mode,
+      require => Exec["mkdir -p ${archive_dir} postgres archive command ${version} ${datadir}"],
     }
 
     if($archive_dir!=undef and $archive_command_custom==undef)
     {
       #si no tenim un archive_command_custom definit, fem el default
-      $archive_command="test ! -f ${archive_dir}/%f && cp %p ${archive_dir}/%f"
+      if($archive_dir_chmod==undef)
+      {
+        $archive_command="test ! -f ${archive_dir}/%f && cp %p ${archive_dir}/%f"
+      }
+      else
+      {
+        $archive_command="test ! -f ${archive_dir}/%f && chmod ${archive_dir_chmod} %p && cp -p %p ${archive_dir}/%f"
+      }
     }
     else
     {
@@ -102,7 +121,6 @@ class postgresql(
         month    => $archived_wals_month,
         monthday => $archived_wals_monthday,
         weekday  => $archived_wals_weekday,
-        before   => Class['::postgresql::config'],
       }
     }
   }
@@ -172,8 +190,6 @@ class postgresql(
   class { '::postgresql::service':
     version        => $version,
     manage_service => $manage_service,
-  } ->
-
-  Class['::postgresql']
+  }
 
 }
