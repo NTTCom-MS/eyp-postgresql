@@ -2,7 +2,7 @@
 
 ## 0.1.37
 
-* added support for rhel-7 and centos-7
+* added support for rhel-7 and  centos-7
 
 ## 0.1.36
 
