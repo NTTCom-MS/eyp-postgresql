@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.1.37
+
+* added support for rhel-7 and centos-7
+
 ## 0.1.36
 
 * changed chmod order to be done **BEFORE** copying it to archive_dir
