@@ -1,5 +1,17 @@
 # CHANGELOG
 
+## 0.1.40
+
+* **archive_dir_chmod**: changed functionality to chmod all archived files
+
+## 0.1.39
+
+* force datadir for **archive_command**
+
+## 0.1.38
+
+* bugfix **archive_dir_chmod**
+
 ## 0.1.37
 
 * added support for rhel-7 and  centos-7
