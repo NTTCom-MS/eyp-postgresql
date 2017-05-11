@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.1.38
+
+* bugfix **archive_dir_chmod**
+
 ## 0.1.37
 
 * added support for rhel-7 and  centos-7
