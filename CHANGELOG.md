@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.1.39
+
+* force datadir for **archive_command**
+
 ## 0.1.38
 
 * bugfix **archive_dir_chmod**
