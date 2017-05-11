@@ -96,11 +96,11 @@ class postgresql(
       #si no tenim un archive_command_custom definit, fem el default
       if($archive_dir_chmod==undef)
       {
-        $archive_command="test ! -f ${archive_dir}/%f && cp ${datadir}/%p ${archive_dir}/%f"
+        $archive_command="test ! -f ${archive_dir}/%f && cp --no-preserve=mode,ownership,timestamps ${datadir}/%p ${archive_dir}/%f"
       }
       else
       {
-        $archive_command="test ! -f ${archive_dir}/%f && chmod ${archive_dir_chmod} ${archive_dir} && cp -p ${datadir}/%p ${archive_dir}/%f"
+        $archive_command="test ! -f ${archive_dir}/%f && cp --no-preserve=mode,ownership,timestamps ${datadir}/%p ${archive_dir}/%f && chmod ${archive_dir_chmod} ${archive_dir}/*"
       }
     }
     else

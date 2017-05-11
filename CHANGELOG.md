@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.1.40
+
+* **archive_dir_chmod**: changed functionality to chmod all archived files
+
 ## 0.1.39
 
 * force datadir for **archive_command**
