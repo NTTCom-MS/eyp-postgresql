@@ -1,6 +1,18 @@
-# == Class: postgresql
+# @summary postgres installation class
 #
-# === postgresql documentation
+# @param version version to install
+# @param datadir datadir to use
+# @param initdb boolean, set it to true to create datadir's directies. In a standby server with streaming replication you want to set it to false
+# @param overcommit_memory modes available: undef: do not change it, 0: heuristic overcommit (this is the default), 1: always overcommit, never check, 2: always check, never
+# @param shmmax maximum size of shared memory segment
+# @param shmall total amount of shared memory available
+# @param manage_service set it to true to manage PostgreSQL's service
+# @param archive_command_custom custom archive command
+# @param archive_dir archive dir, if archive_command_custom is undef, it will be: test ! -f ${archive_dir}/%f && cp %p ${archive_dir}/%f
+# @param archive_dir_user archive dir user
+# @param archive_dir_group archive dir group
+# @param archive_dir_mode archive dir mode
+# @param archive_dir_chmod chmod to this mask if using archive_dir
 #
 class postgresql(
                   #general
@@ -11,6 +23,8 @@ class postgresql(
                   $overcommit_memory               = '2',
                   $shmmax                          = ceiling(sprintf('%f', $::memorysize_mb)*786432),
                   $shmall                          = ceiling(ceiling(sprintf('%f', $::memorysize_mb)*786432)/$::eyp_postgresql_pagesize),
+                  # service
+                  $manage_service                  = true,
                   # config
                   $listen                          = [ '*' ],
                   $port                            = $postgresql::params::port_default,
@@ -57,8 +71,6 @@ class postgresql(
                   $lc_time                         = 'en_US.UTF-8',
                   $default_text_search_config      = 'pg_catalog.english',
                   $shared_preload_libraries        = undef,
-                  # service
-                  $manage_service                  = true,
                 ) inherits postgresql::params {
 
   validate_array($listen)

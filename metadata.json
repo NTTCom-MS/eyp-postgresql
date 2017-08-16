@@ -5,7 +5,7 @@
   "summary": "manages postgresql",
   "license": "Apache-2.0",
   "source": "https://github.com/NTTCom-MS/eyp-postgresql",
-  "project_page": null,
+  "project_page": "https://github.com/NTTCom-MS/eyp-postgresql",
   "issues_url": "https://github.com/NTTCom-MS/eyp-postgresql/issues",
   "dependencies": [
     {"name":"puppetlabs/stdlib","version_requirement":">= 4.12.0"},
