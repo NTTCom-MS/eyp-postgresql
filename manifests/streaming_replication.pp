@@ -1,3 +1,6 @@
+#
+# @overview It requires to have **pg_basebackup** and the defined username already created on the master DB
+#
 class postgresql::streaming_replication (
                                           $masterhost      = undef,
                                           $masterusername  = undef,
