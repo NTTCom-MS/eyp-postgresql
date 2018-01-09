@@ -2,7 +2,7 @@
   "name": "eyp-postgresql",
   "version": "0.1.41",
   "author": "eyp",
-  "summary": "manages postgresql",
+  "summary": "postgresql installation and management",
   "license": "Apache-2.0",
   "source": "https://github.com/NTTCom-MS/eyp-postgresql",
   "project_page": "https://github.com/NTTCom-MS/eyp-postgresql",
