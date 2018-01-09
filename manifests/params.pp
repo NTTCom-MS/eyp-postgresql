@@ -21,6 +21,11 @@ class postgresql::params {
       $postgresgroup='postgres'
       $postgreshome='/var/lib/pgsql'
 
+      $datadir_default = {
+                            '9.2' => '/var/lib/pgsql/9.2/data',
+                            '9.6' => '/var/lib/pgsql/9.6/data',
+                        }
+
       $packagename= {
                       '9.2' => [ 'postgresql92', 'postgresql92-server' ],
                       '9.6' => [ 'postgresql96', 'postgresql96-server' ],
@@ -47,9 +52,6 @@ class postgresql::params {
           {
             /^6.*$/:
             {
-              #TODO: modificar segons versio
-              $datadir_default='/var/lib/pgsql/9.2/data'
-
               $reposource =  {
                               '9.2' => 'https://download.postgresql.org/pub/repos/yum/9.2/redhat/rhel-6-x86_64/pgdg-redhat92-9.2-8.noarch.rpm',
                               '9.6' => 'https://download.postgresql.org/pub/repos/yum/9.6/redhat/rhel-6-x86_64/pgdg-redhat96-9.6-3.noarch.rpm',
@@ -61,8 +63,6 @@ class postgresql::params {
             }
             /^7.*$/:
               {
-                #TODO: modificar segons versio
-                $datadir_default='/var/lib/pgsql/9.2/data'
                 $reposource =  {
                                 '9.2' => 'https://download.postgresql.org/pub/repos/yum/9.2/redhat/rhel-7-x86_64/pgdg-redhat92-9.2-3.noarch.rpm',
                                 '9.6' => 'https://download.postgresql.org/pub/repos/yum/9.6/redhat/rhel-7-x86_64/pgdg-redhat96-9.6-3.noarch.rpm',
@@ -81,8 +81,6 @@ class postgresql::params {
           {
             /^6.*$/:
             {
-              #TODO: modificar segons versio
-              $datadir_default='/var/lib/pgsql/9.2/data'
               $reposource =  {
                               '9.2' => 'http://download.postgresql.org/pub/repos/yum/9.2/redhat/rhel-6-x86_64/pgdg-centos92-9.2-7.noarch.rpm',
                               '9.6' => 'https://download.postgresql.org/pub/repos/yum/9.6/redhat/rhel-6-x86_64/pgdg-centos96-9.6-3.noarch.rpm',
@@ -95,8 +93,6 @@ class postgresql::params {
             }
             /^7.*$/:
             {
-              #TODO: modificar segons versio
-              $datadir_default='/var/lib/pgsql/9.2/data'
               $reposource =  {
                               '9.2' => 'https://download.postgresql.org/pub/repos/yum/9.2/redhat/rhel-7-x86_64/pgdg-centos92-9.2-3.noarch.rpm',
                               '9.6' => 'https://download.postgresql.org/pub/repos/yum/9.6/redhat/rhel-7-x86_64/pgdg-centos96-9.6-3.noarch.rpm',

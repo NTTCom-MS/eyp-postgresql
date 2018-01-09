@@ -22,7 +22,7 @@
 class postgresql(
                   #general
                   $version                         = $postgresql::params::version_default,
-                  $datadir                         = $postgresql::params::datadir_default,
+                  $datadir                         = undef,
                   # install
                   $initdb                          = true,
                   $overcommit_memory               = '2',
@@ -84,6 +84,15 @@ class postgresql(
     path => '/usr/sbin:/usr/bin:/sbin:/bin',
   }
 
+  if($datadir==undef)
+  {
+    $datadir_path=$postgresql::params::datadir_default[$version]
+  }
+  else
+  {
+    $datadir_path = $datadir
+  }
+
   if($shared_preload_libraries!=undef)
   {
     validate_array($shared_preload_libraries)
@@ -94,7 +103,7 @@ class postgresql(
     #tenim un munt de muntatge local, per exemple un NFS pels arvhivats
     validate_absolute_path($archive_dir)
 
-    exec { "mkdir -p ${archive_dir} postgres archive command ${version} ${datadir}":
+    exec { "mkdir -p ${archive_dir} postgres archive command ${version} ${datadir_path}":
       command => "mkdir -p ${archive_dir}",
       creates => $archive_dir,
       before  => Class['::postgresql::service'],
@@ -105,7 +114,7 @@ class postgresql(
       owner   => $archive_dir_user,
       group   => $archive_dir_group,
       mode    => $archive_dir_mode,
-      require => Exec["mkdir -p ${archive_dir} postgres archive command ${version} ${datadir}"],
+      require => Exec["mkdir -p ${archive_dir} postgres archive command ${version} ${datadir_path}"],
     }
 
     if($archive_dir!=undef and $archive_command_custom==undef)
@@ -113,11 +122,11 @@ class postgresql(
       #si no tenim un archive_command_custom definit, fem el default
       if($archive_dir_chmod==undef)
       {
-        $archive_command="test ! -f ${archive_dir}/%f && cp --no-preserve=mode,ownership,timestamps ${datadir}/%p ${archive_dir}/%f"
+        $archive_command="test ! -f ${archive_dir}/%f && cp --no-preserve=mode,ownership,timestamps ${datadir_path}/%p ${archive_dir}/%f"
       }
       else
       {
-        $archive_command="test ! -f ${archive_dir}/%f && cp --no-preserve=mode,ownership,timestamps ${datadir}/%p ${archive_dir}/%f && chmod ${archive_dir_chmod} ${archive_dir}/*"
+        $archive_command="test ! -f ${archive_dir}/%f && cp --no-preserve=mode,ownership,timestamps ${datadir_path}/%p ${archive_dir}/%f && chmod ${archive_dir_chmod} ${archive_dir}/*"
       }
     }
     else
@@ -159,7 +168,7 @@ class postgresql(
 
   class { '::postgresql::install':
     version           => $version,
-    datadir           => $datadir,
+    datadir           => $datadir_path,
     initdb            => $initdb,
     overcommit_memory => $overcommit_memory,
     shmmax            => $shmmax,
@@ -168,7 +177,7 @@ class postgresql(
 
   class { '::postgresql::config':
     version                         => $version,
-    datadir                         => $datadir,
+    datadir                         => $datadir_path,
     listen                          => $listen,
     port                            => $port,
     max_connections                 => $max_connections,
