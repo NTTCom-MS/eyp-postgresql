@@ -60,6 +60,10 @@ class postgresql::config(
     $datadir_path = $datadir
   }
 
+  # postgres >= 9.5
+  # max_wal_size = (3 * checkpoint_segments) * 16MB
+
+
   concat { "${datadir_path}/postgresql.conf":
     ensure => 'present',
     owner  => $postgresql::params::postgresuser,
