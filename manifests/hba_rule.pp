@@ -13,7 +13,7 @@ define postgresql::hba_rule (
 
   if($datadir==undef)
   {
-    $datadir_path=$postgresql::params::datadir_default[$version]
+    $datadir_path=$postgresql::params::datadir_default[$postgresql::version]
   }
   else
   {

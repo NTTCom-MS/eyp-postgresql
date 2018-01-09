@@ -1,5 +1,5 @@
 class postgresql::pgstatsstatements (
-                                      $version       = $postgresql::params::version_default,
+                                      $version       = $postgresql::version,
                                       $datadir       = $postgresql::datadir,
                                       $track_utility = true,
                                       $track         = 'all',

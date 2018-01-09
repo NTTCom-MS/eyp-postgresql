@@ -15,7 +15,7 @@ class postgresql::streaming_replication (
 
   if($datadir==undef)
   {
-    $datadir_path=$postgresql::params::datadir_default[$version]
+    $datadir_path=$postgresql::params::datadir_default[$postgresql::version]
   }
   else
   {
