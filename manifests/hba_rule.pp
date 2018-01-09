@@ -8,7 +8,8 @@ define postgresql::hba_rule (
                               $description = $name,
                               $order       = '01',
                             ) {
-
+  include ::postgresql
+  
   concat::fragment{ "rule pg_hba ${postgresql::datadir} ${user} ${description} ${address} ${database}":
     target  => "${postgresql::datadir}/pg_hba.conf",
     content => template("${module_name}/hba/rule.erb"),

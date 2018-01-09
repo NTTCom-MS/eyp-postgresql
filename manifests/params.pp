@@ -8,10 +8,37 @@ class postgresql::params {
   $timezone_default='Europe/Andorra'
   #fer 9.2 minim
 
+  $version_default='9.2'
+
   case $::osfamily
   {
     'redhat':
     {
+      $repoprovider = 'rpm'
+      $sysconfig=true
+
+      $postgresuser='postgres'
+      $postgresgroup='postgres'
+      $postgreshome='/var/lib/pgsql'
+
+      $packagename= {
+                      '9.2' => [ 'postgresql92', 'postgresql92-server' ],
+                      '9.6' => [ 'postgresql96', 'postgresql96-server' ],
+                    }
+
+      $servicename = {
+                        '9.2' => 'postgresql-9.2',
+                        '9.6' => 'postgresql-9.6',
+                      }
+      $initdb = {
+                  '9.2' => '/usr/pgsql-9.2/bin/initdb',
+                  '9.6' => '/usr/pgsql-9.6/bin/initdb',
+                }
+      $contrib = {
+                  '9.2' => 'postgresql92-contrib',
+                  '9.6' => 'postgresql96-contrib',
+                }
+
       case $::operatingsystem
       {
         'RedHat':
@@ -20,63 +47,30 @@ class postgresql::params {
           {
             /^6.*$/:
             {
-              #TODO: es centos only
-
-              $version_default='9.2'
               #TODO: modificar segons versio
               $datadir_default='/var/lib/pgsql/9.2/data'
-              $repoprovider = 'rpm'
+
               $reposource =  {
                               '9.2' => 'https://download.postgresql.org/pub/repos/yum/9.2/redhat/rhel-6-x86_64/pgdg-redhat92-9.2-8.noarch.rpm',
+                              '9.6' => 'https://download.postgresql.org/pub/repos/yum/9.6/redhat/rhel-6-x86_64/pgdg-redhat96-9.6-3.noarch.rpm',
                               }
               $reponame = {
                             '9.2' => 'pgdg-redhat92',
+                            '9.6' => 'pgdg-redhat96',
                           }
-              $packagename=[ 'postgresql92', 'postgresql92-server' ]
-              $servicename = {
-                                '9.2' => 'postgresql-9.2',
-                              }
-              $initdb = {
-                          '9.2' => '/usr/pgsql-9.2/bin/initdb',
-                        }
-              $contrib = {
-                          '9.2' => 'postgresql92-contrib',
-                        }
-              $postgresuser='postgres'
-              $postgresgroup='postgres'
-              $postgreshome='/var/lib/pgsql'
-
-              $sysconfig=true
             }
             /^7.*$/:
               {
-                #TODO: es centos only
-
-                $version_default='9.2'
                 #TODO: modificar segons versio
                 $datadir_default='/var/lib/pgsql/9.2/data'
-                $repoprovider = 'rpm'
                 $reposource =  {
                                 '9.2' => 'https://download.postgresql.org/pub/repos/yum/9.2/redhat/rhel-7-x86_64/pgdg-redhat92-9.2-3.noarch.rpm',
+                                '9.6' => 'https://download.postgresql.org/pub/repos/yum/9.6/redhat/rhel-7-x86_64/pgdg-redhat96-9.6-3.noarch.rpm',
                                 }
                 $reponame = {
                               '9.2' => 'pgdg-redhat92',
+                              '9.6' => 'pgdg-redhat96',
                             }
-                $packagename=[ 'postgresql92', 'postgresql92-server' ]
-                $servicename = {
-                                  '9.2' => 'postgresql-9.2',
-                                }
-                $initdb = {
-                            '9.2' => '/usr/pgsql-9.2/bin/initdb',
-                          }
-                $contrib = {
-                            '9.2' => 'postgresql92-contrib',
-                          }
-                $postgresuser='postgres'
-                $postgresgroup='postgres'
-                $postgreshome='/var/lib/pgsql'
-
-                $sysconfig=true
               }
             default: { fail("Unsupported RHEL version! - ${::operatingsystemrelease}")  }
           }
@@ -87,63 +81,30 @@ class postgresql::params {
           {
             /^6.*$/:
             {
-              #TODO: es centos only
-
-              $version_default='9.2'
               #TODO: modificar segons versio
               $datadir_default='/var/lib/pgsql/9.2/data'
-              $repoprovider = 'rpm'
               $reposource =  {
                               '9.2' => 'http://download.postgresql.org/pub/repos/yum/9.2/redhat/rhel-6-x86_64/pgdg-centos92-9.2-7.noarch.rpm',
+                              '9.6' => 'https://download.postgresql.org/pub/repos/yum/9.6/redhat/rhel-6-x86_64/pgdg-centos96-9.6-3.noarch.rpm',
                               }
               $reponame = {
                             '9.2' => 'pgdg-centos92',
+                            '9.6' => 'pgdg-centos96',
                           }
-              $packagename=[ 'postgresql92', 'postgresql92-server' ]
-              $servicename = {
-                                '9.2' => 'postgresql-9.2',
-                              }
-              $initdb = {
-                          '9.2' => '/usr/pgsql-9.2/bin/initdb',
-                        }
-              $contrib = {
-                          '9.2' => 'postgresql92-contrib',
-                        }
-              $postgresuser='postgres'
-              $postgresgroup='postgres'
-              $postgreshome='/var/lib/pgsql'
 
-              $sysconfig=true
             }
             /^7.*$/:
             {
-              #TODO: es centos only
-
-              $version_default='9.2'
               #TODO: modificar segons versio
               $datadir_default='/var/lib/pgsql/9.2/data'
-              $repoprovider = 'rpm'
               $reposource =  {
                               '9.2' => 'https://download.postgresql.org/pub/repos/yum/9.2/redhat/rhel-7-x86_64/pgdg-centos92-9.2-3.noarch.rpm',
+                              '9.6' => 'https://download.postgresql.org/pub/repos/yum/9.6/redhat/rhel-7-x86_64/pgdg-centos96-9.6-3.noarch.rpm',
                               }
               $reponame = {
                             '9.2' => 'pgdg-centos92',
+                            '9.6' => 'pgdg-centos96',
                           }
-              $packagename=[ 'postgresql92', 'postgresql92-server' ]
-              $servicename = {
-                                '9.2' => 'postgresql-9.2',
-                              }
-              $initdb = {
-                          '9.2' => '/usr/pgsql-9.2/bin/initdb',
-                        }
-              $contrib = {
-                          '9.2' => 'postgresql92-contrib',
-                        }
-              $postgresuser='postgres'
-              $postgresgroup='postgres'
-              $postgreshome='/var/lib/pgsql'
-
-              $sysconfig=true
             }
             default: { fail("Unsupported CentOS version! - ${::operatingsystemrelease}")  }
           }

@@ -19,10 +19,10 @@ class postgresql::install (
     ensure   => 'installed',
     source   => $postgresql::params::reposource[$version],
     provider => $postgresql::params::repoprovider,
-    before   => Package[$postgresql::params::packagename],
+    before   => Package[$postgresql::params::packagename[$version]],
   }
 
-  package { $postgresql::params::packagename:
+  package { $postgresql::params::packagename[$version]:
     ensure  => 'installed',
     require => Package[$postgresql::params::reponame[$version]],
   }
@@ -30,7 +30,7 @@ class postgresql::install (
   exec { "mkdir p ${datadir}":
     command => "mkdir -p ${datadir}",
     creates => $datadir,
-    require => Package[$postgresql::params::packagename],
+    require => Package[$postgresql::params::packagename[$version]],
   }
 
   # FATAL:  data directory "/var/lib/pgsql/9.2/data" has group or world access
@@ -65,7 +65,7 @@ class postgresql::install (
       environment => "PGDATA=${datadir}",
       user        => $postgresql::params::postgresuser,
       creates     => "${datadir}/pg_hba.conf",
-      require     => [File[$datadir], Package[$postgresql::params::packagename]],
+      require     => [File[$datadir], Package[$postgresql::params::packagename[$version]]],
     }
 
     $before_initdb=Exec['initdb postgresql']
