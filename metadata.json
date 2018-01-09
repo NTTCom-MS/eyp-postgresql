@@ -1,6 +1,6 @@
 {
   "name": "eyp-postgresql",
-  "version": "0.1.40",
+  "version": "0.1.41",
   "author": "eyp",
   "summary": "manages postgresql",
   "license": "Apache-2.0",
@@ -15,25 +15,17 @@
   "operatingsystem_support": [
     {
       "operatingsystem": "RedHat",
-      "operatingsystemrelease": [ "6" ]
-    },
-    {
-      "operatingsystem": "RedHat",
-      "operatingsystemrelease": [ "7" ]
+      "operatingsystemrelease": [ "6", "7" ]
     },
     {
       "operatingsystem": "CentOS",
-      "operatingsystemrelease": [ "6" ]
-    },
-    {
-      "operatingsystem": "CentOS",
-      "operatingsystemrelease": [ "7" ]
+      "operatingsystemrelease": [ "6", "7" ]
     }
   ],
   "requirements": [
     {
       "name": "puppet",
-      "version_requirement": ">= 3.0.0"
+      "version_requirement": ">= 3.8.0"
     }
   ]
 }
