@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.1.41
+
+* added support for **PostgreSQL 9.6**
+
 ## 0.1.40
 
 * **archive_dir_chmod**: changed functionality to chmod all archived files

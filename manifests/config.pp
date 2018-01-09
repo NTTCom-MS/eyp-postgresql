@@ -10,7 +10,7 @@
 # 80: pg_stats_statements
 class postgresql::config(
                           $version                         = $postgresql::params::version_default,
-                          $datadir                         = $postgresql::params::datadir_default,
+                          $datadir                         = undef,
                           $listen                          = '*',
                           $port                            = $postgresql::params::port_default,
                           $max_connections                 = '100',
@@ -51,28 +51,41 @@ class postgresql::config(
     port => $port,
   }
 
-  concat { "${datadir}/postgresql.conf":
+  if($datadir==undef)
+  {
+    $datadir_path=$postgresql::params::datadir_default[$version]
+  }
+  else
+  {
+    $datadir_path = $datadir
+  }
+
+  # postgres >= 9.5
+  # max_wal_size = (3 * checkpoint_segments) * 16MB
+
+
+  concat { "${datadir_path}/postgresql.conf":
     ensure => 'present',
     owner  => $postgresql::params::postgresuser,
     group  => $postgresql::params::postgresgroup,
     mode   => '0600',
   }
 
-  concat::fragment{ "base postgresql ${datadir}":
-    target  => "${datadir}/postgresql.conf",
+  concat::fragment{ "base postgresql ${datadir_path}":
+    target  => "${datadir_path}/postgresql.conf",
     content => template("${module_name}/postgresconf.erb"),
     order   => '00',
   }
 
-  concat { "${datadir}/pg_hba.conf":
+  concat { "${datadir_path}/pg_hba.conf":
     ensure => 'present',
     owner  => $postgresql::params::postgresuser,
     group  => $postgresql::params::postgresgroup,
     mode   => '0600',
   }
 
-  concat::fragment{ "header pg_hba ${datadir}":
-    target  => "${datadir}/pg_hba.conf",
+  concat::fragment{ "header pg_hba ${datadir_path}":
+    target  => "${datadir_path}/pg_hba.conf",
     content => template("${module_name}/hba/header.erb"),
     order   => '00',
   }

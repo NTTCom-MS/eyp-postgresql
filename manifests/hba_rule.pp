@@ -7,10 +7,21 @@ define postgresql::hba_rule (
                               $auth_option = undef, # TODO: sera clau valor, fer hash
                               $description = $name,
                               $order       = '01',
+                              $datadir     = $postgresql::datadir,
                             ) {
+  include ::postgresql
 
-  concat::fragment{ "rule pg_hba ${postgresql::datadir} ${user} ${description} ${address} ${database}":
-    target  => "${postgresql::datadir}/pg_hba.conf",
+  if($datadir==undef)
+  {
+    $datadir_path=$postgresql::params::datadir_default[$postgresql::version]
+  }
+  else
+  {
+    $datadir_path = $datadir
+  }
+
+  concat::fragment{ "rule pg_hba ${datadir_path} ${user} ${description} ${address} ${database}":
+    target  => "${postgresql::datadir_path}/pg_hba.conf",
     content => template("${module_name}/hba/rule.erb"),
     order   => $order,
   }

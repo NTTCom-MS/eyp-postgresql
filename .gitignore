@@ -6,3 +6,6 @@
 /spec/fixtures/manifests
 /spec/fixtures/modules
 /Gemfile.lock
+/.yardwarns
+/.yardoc
+/doc

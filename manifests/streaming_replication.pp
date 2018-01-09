@@ -1,13 +1,25 @@
+#
+# @overview It requires to have **pg_basebackup** and the defined username already created on the master DB
+#
 class postgresql::streaming_replication (
                                           $masterhost      = undef,
                                           $masterusername  = undef,
                                           $masterpassword  = undef,
                                           $masterport      = $postgresql::params::port_default,
-                                          $datadir         = $postgresql::params::datadir_default,
+                                          $datadir         = $postgresql::datadir,
                                           $restore_command = undef,
                                         ) inherits postgresql::params {
   Exec {
     path => '/usr/sbin:/usr/bin:/sbin:/bin',
+  }
+
+  if($datadir==undef)
+  {
+    $datadir_path=$postgresql::params::datadir_default[$postgresql::version]
+  }
+  else
+  {
+    $datadir_path = $datadir
   }
 
   if($masterhost==undef or $masterusername==undef or $masterpassword==undef)
@@ -27,14 +39,14 @@ class postgresql::streaming_replication (
   }
 
   exec { 'init streaming replication':
-    command => "bash -xc 'pg_basebackup -D ${datadir} -h ${masterhost} -p ${masterport} -U ${masterusername} -w -v -X stream > $(dirname ${datadir})/.streaming_replication_init.log 2>&1'",
+    command => "bash -xc 'pg_basebackup -D ${datadir_path} -h ${masterhost} -p ${masterport} -U ${masterusername} -w -v -X stream > $(dirname ${datadir_path})/.streaming_replication_init.log 2>&1'",
     user    => $postgresql::params::postgresuser,
-    creates => "${datadir}/recovery.conf",
+    creates => "${datadir_path}/recovery.conf",
     require => File["${postgresql::params::postgreshome}/.pgpass"],
     before  => Class['::postgresql::config'],
   }
 
-  file { "${datadir}/recovery.conf":
+  file { "${datadir_path}/recovery.conf":
     ensure  => 'present',
     owner   => $postgresql::params::postgresuser,
     group   => $postgresql::params::postgresgroup,

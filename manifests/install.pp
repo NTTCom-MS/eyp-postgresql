@@ -4,7 +4,7 @@
 #
 class postgresql::install (
                             $version           = $postgresql::params::version_default,
-                            $datadir           = $postgresql::params::datadir_default,
+                            $datadir           = $postgresql::datadir,
                             $initdb            = true,
                             $overcommit_memory = '2',
                             $shmmax            = ceiling(sprintf('%f', $::memorysize_mb)*786432),
@@ -15,22 +15,31 @@ class postgresql::install (
     path => '/usr/sbin:/usr/bin:/sbin:/bin',
   }
 
+  if($datadir==undef)
+  {
+    $datadir_path=$postgresql::params::datadir_default[$version]
+  }
+  else
+  {
+    $datadir_path = $datadir
+  }
+
   package { $postgresql::params::reponame[$version]:
     ensure   => 'installed',
     source   => $postgresql::params::reposource[$version],
     provider => $postgresql::params::repoprovider,
-    before   => Package[$postgresql::params::packagename],
+    before   => Package[$postgresql::params::packagename[$version]],
   }
 
-  package { $postgresql::params::packagename:
+  package { $postgresql::params::packagename[$version]:
     ensure  => 'installed',
     require => Package[$postgresql::params::reponame[$version]],
   }
 
-  exec { "mkdir p ${datadir}":
-    command => "mkdir -p ${datadir}",
-    creates => $datadir,
-    require => Package[$postgresql::params::packagename],
+  exec { "mkdir p ${datadir_path}":
+    command => "mkdir -p ${datadir_path}",
+    creates => $datadir_path,
+    require => Package[$postgresql::params::packagename[$version]],
   }
 
   # FATAL:  data directory "/var/lib/pgsql/9.2/data" has group or world access
@@ -46,12 +55,12 @@ class postgresql::install (
   # drwxr-xr-x  3 postgres postgres 4096 Apr 27 10:36 tablespaces
   # [root@evx2401660 9.2]# chmod 700 /var/lib/pgsql/9.2/data
 
-  file { $datadir:
+  file { $datadir_path:
     ensure  => 'directory',
     owner   => $postgresql::params::postgresuser,
     group   => $postgresql::params::postgresgroup,
     mode    => '0700',
-    require => Exec["mkdir p ${datadir}"],
+    require => Exec["mkdir p ${datadir_path}"],
   }
 
   if($initdb)
@@ -62,10 +71,10 @@ class postgresql::install (
     #creates => /var/lib/pgsql/9.2/data/pg_hba.conf
     exec { 'initdb postgresql':
       command     => $postgresql::params::initdb[$version],
-      environment => "PGDATA=${datadir}",
+      environment => "PGDATA=${datadir_path}",
       user        => $postgresql::params::postgresuser,
-      creates     => "${datadir}/pg_hba.conf",
-      require     => [File[$datadir], Package[$postgresql::params::packagename]],
+      creates     => "${datadir_path}/pg_hba.conf",
+      require     => [File[$datadir_path], Package[$postgresql::params::packagename[$version]]],
     }
 
     $before_initdb=Exec['initdb postgresql']
