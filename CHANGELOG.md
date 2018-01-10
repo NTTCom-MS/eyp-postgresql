@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.1.42
+
+* added ability to change owner to **postgresql::schema**
+
 ## 0.1.41
 
 * added support for **PostgreSQL 9.6**
