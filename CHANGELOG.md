@@ -22,7 +22,7 @@
 
 ## 0.1.37
 
-* added support for rhel-7 and  centos-7
+* added support for CentOS 7
 
 ## 0.1.36
 
@@ -32,7 +32,7 @@
 
 * added **archive_dir_chmod**, change mode after archiving WALs
 
-## 0.1.29 - 0.1.34
+## 0.1.34
 
 * added user, group and mode to **archive_dir**
 * bugfix dependencies
