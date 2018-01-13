@@ -1,9 +1,5 @@
 # postgresql
 
-![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)
-
-**NTTCom-MS/eyp-postgresql**: [![Build Status](https://travis-ci.org/NTTCom-MS/eyp-postgresql.png?branch=master)](https://travis-ci.org/NTTCom-MS/eyp-postgresql)
-
 #### Table of Contents
 
 1. [Overview](#overview)

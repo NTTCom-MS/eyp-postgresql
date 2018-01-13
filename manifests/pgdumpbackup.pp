@@ -31,7 +31,8 @@ define postgresql::pgdumpbackup (
     owner  => 'root',
     group  => $username,
     mode   => '0750',
-    source => "puppet:///modules/${module_name}/backup_pgdump.sh",
+    #source => "puppet:///modules/${module_name}/backup_pgdump.sh",
+    source => file("${module_name}/backup_pgdump.sh"),
   }
 
   file { "${basedir}/pgdumpbackup.config":
