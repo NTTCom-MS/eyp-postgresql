@@ -63,6 +63,13 @@ class postgresql::config(
   # postgres >= 9.5
   # max_wal_size = (3 * checkpoint_segments) * 16MB
 
+  if($postgresql::params::systemd)
+  {
+    systemd::service::dropin { $postgresql::params::servicename[$version]:
+      env_vars => [ "PGDATA=${datadir_path}" ],
+    }
+  }
+
 
   concat { "${datadir_path}/postgresql.conf":
     ensure => 'present',
