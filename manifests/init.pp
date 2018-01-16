@@ -106,6 +106,7 @@ class postgresql(
     exec { "mkdir -p ${archive_dir} postgres archive command ${version} ${datadir_path}":
       command => "mkdir -p ${archive_dir}",
       creates => $archive_dir,
+      require => Class['::postgresql::install'],
       before  => Class['::postgresql::service'],
     }
 
