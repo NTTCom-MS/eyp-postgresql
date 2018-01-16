@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.1.43
+
+* dependency bugfix for **postgresql::pgstatsstatements**
+
 ## 0.1.42
 
 * added ability to change owner to **postgresql::schema**
