@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.1.44
+
+* dependency bugfix archive command
+
 ## 0.1.43
 
 * dependency bugfix for **postgresql::pgstatsstatements**
