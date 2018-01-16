@@ -17,9 +17,9 @@ class postgresql::pgstatsstatements (
   if(!defined(Package[$postgresql::params::contrib[$version]]))
   {
     package { $postgresql::params::contrib[$version]:
-      ensure => 'installed',
+      ensure  => 'installed',
       require => Class['::postgresql::config']
-      before => Class['::postgresql::service'],
+      before  => Class['::postgresql::service'],
     }
   }
 
