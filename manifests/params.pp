@@ -52,6 +52,7 @@ class postgresql::params {
           {
             /^6.*$/:
             {
+              $systemd=false
               $reposource =  {
                               '9.2' => 'https://download.postgresql.org/pub/repos/yum/9.2/redhat/rhel-6-x86_64/pgdg-redhat92-9.2-8.noarch.rpm',
                               '9.6' => 'https://download.postgresql.org/pub/repos/yum/9.6/redhat/rhel-6-x86_64/pgdg-redhat96-9.6-3.noarch.rpm',
@@ -63,6 +64,7 @@ class postgresql::params {
             }
             /^7.*$/:
               {
+                $systemd=true
                 $reposource =  {
                                 '9.2' => 'https://download.postgresql.org/pub/repos/yum/9.2/redhat/rhel-7-x86_64/pgdg-redhat92-9.2-3.noarch.rpm',
                                 '9.6' => 'https://download.postgresql.org/pub/repos/yum/9.6/redhat/rhel-7-x86_64/pgdg-redhat96-9.6-3.noarch.rpm',
@@ -81,6 +83,7 @@ class postgresql::params {
           {
             /^6.*$/:
             {
+              $systemd=false
               $reposource =  {
                               '9.2' => 'http://download.postgresql.org/pub/repos/yum/9.2/redhat/rhel-6-x86_64/pgdg-centos92-9.2-7.noarch.rpm',
                               '9.6' => 'https://download.postgresql.org/pub/repos/yum/9.6/redhat/rhel-6-x86_64/pgdg-centos96-9.6-3.noarch.rpm',
@@ -93,6 +96,7 @@ class postgresql::params {
             }
             /^7.*$/:
             {
+              $systemd=true
               $reposource =  {
                               '9.2' => 'https://download.postgresql.org/pub/repos/yum/9.2/redhat/rhel-7-x86_64/pgdg-centos92-9.2-3.noarch.rpm',
                               '9.6' => 'https://download.postgresql.org/pub/repos/yum/9.6/redhat/rhel-7-x86_64/pgdg-centos96-9.6-3.noarch.rpm',
