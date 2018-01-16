@@ -66,7 +66,7 @@ class postgresql::config(
   if($postgresql::params::systemd)
   {
     systemd::service::dropin { $postgresql::params::servicename[$version]:
-      env_vars => [ 'PGDATA' => $datadir_path ],
+      env_vars => [ "PGDATA=${datadir_path}" ],
     }
   }
 
