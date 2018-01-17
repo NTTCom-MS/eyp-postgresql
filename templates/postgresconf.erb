@@ -50,7 +50,9 @@
 					# (change requires restart)
 
 # If external_pid_file is not explicitly set, no extra PID file is written.
-external_pid_file = '/var/lock/subsys/<%= @pidfilename %>'			# write an extra PID file
+<% if defined?(@pidfilename) -%>
+external_pid_file = '<%= @pidfilename %>'			# write an extra PID file
+<% end -%>
 
 
 #------------------------------------------------------------------------------

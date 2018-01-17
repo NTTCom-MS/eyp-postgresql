@@ -62,7 +62,7 @@ class postgresql::config(
 
   if($pidfile==undef)
   {
-    $pidfilename=$postgresql::params::servicename[$version]
+    $pidfilename=$postgresql::params::pidfile[$version]
   }
   else
   {
