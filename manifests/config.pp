@@ -64,6 +64,10 @@ class postgresql::config(
   {
     $pidfilename=$postgresql::params::servicename[$version]
   }
+  else
+  {
+    $pidfilename=$pidfile
+  }
 
   # postgres >= 9.5
   # max_wal_size = (3 * checkpoint_segments) * 16MB

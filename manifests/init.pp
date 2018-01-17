@@ -88,6 +88,10 @@ class postgresql(
   {
     $pidfilename=$postgresql::params::servicename[$version]
   }
+  else
+  {
+    $pidfilename=$pidfile
+  }
 
   if($datadir==undef)
   {
