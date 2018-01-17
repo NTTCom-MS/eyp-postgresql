@@ -60,7 +60,7 @@ class postgresql::config(
     $datadir_path = $datadir
   }
 
-  if($pidfile!=undef)
+  if($pidfile==undef)
   {
     $pidfilename=$postgresql::params::servicename[$version]
   }

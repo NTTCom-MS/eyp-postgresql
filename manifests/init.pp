@@ -84,7 +84,7 @@ class postgresql(
     path => '/usr/sbin:/usr/bin:/sbin:/bin',
   }
 
-  if($pidfile!=undef)
+  if($pidfile==undef)
   {
     $pidfilename=$postgresql::params::servicename[$version]
   }
