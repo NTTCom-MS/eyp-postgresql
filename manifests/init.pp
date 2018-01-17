@@ -39,7 +39,7 @@ class postgresql(
                   $checkpoint_segments             = '16',
                   $wal_keep_segments               = '0',
                   $hot_standby                     = false,
-                  $pidfile                         = $postgresql::params::servicename[$postgresql::params::version_default],
+                  $pidfile                         = undef,
                   $log_directory                   = $postgresql::params::log_directory_default,
                   $log_filename                    = $postgresql::params::log_filename_default,
                   $track_activities                = true,
@@ -82,6 +82,11 @@ class postgresql(
 
   Exec {
     path => '/usr/sbin:/usr/bin:/sbin:/bin',
+  }
+
+  if($pidfile!=undef)
+  {
+    $pidfilename=$postgresql::params::servicename[$version]
   }
 
   if($datadir==undef)
@@ -178,6 +183,7 @@ class postgresql(
 
   class { '::postgresql::config':
     version                         => $version,
+    pidfile                         => $pidfilename,
     datadir                         => $datadir_path,
     listen                          => $listen,
     port                            => $port,
