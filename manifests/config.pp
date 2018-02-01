@@ -29,6 +29,7 @@ class postgresql::config(
                           $autovacuum_vacuum_threshold     = '5000',
                           $autovacuum_analyze_scale_factor = '0.0',
                           $autovacuum_analyze_threshold    = '5000',
+                          $log_autovacuum_min_duration     = '-1',
                           $timezone                        = $postgresql::params::timezone_default,
                           $log_timezone                    = $postgresql::params::timezone_default,
                           $superuser_reserved_connections  = '5',

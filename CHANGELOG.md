@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.1.47
+
+* added **log_autovacuum_min_duration**
+
 ## 0.1.46
 
 * bugfix pidfile: wrong defalt filename
