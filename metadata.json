@@ -1,6 +1,6 @@
 {
   "name": "eyp-postgresql",
-  "version": "0.1.45",
+  "version": "0.1.46",
   "author": "eyp",
   "summary": "postgresql installation and management",
   "license": "Apache-2.0",

@@ -19,7 +19,7 @@ class postgresql::config(
                           $checkpoint_segments             = '3',
                           $wal_keep_segments               = '0',
                           $hot_standby                     = false,
-                          $pidfile                         = $postgresql::params::servicename[$postgresql::params::version_default],
+                          $pidfile                         = undef,
                           $log_directory                   = $postgresql::params::log_directory_default,
                           $log_filename                    = $postgresql::params::log_filename_default,
                           $track_activities                = true,
@@ -58,6 +58,15 @@ class postgresql::config(
   else
   {
     $datadir_path = $datadir
+  }
+
+  if($pidfile==undef)
+  {
+    $pidfilename=$postgresql::params::pidfile[$version]
+  }
+  else
+  {
+    $pidfilename=$pidfile
   }
 
   # postgres >= 9.5

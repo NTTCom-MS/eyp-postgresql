@@ -35,6 +35,11 @@ class postgresql::params {
                         '9.2' => 'postgresql-9.2',
                         '9.6' => 'postgresql-9.6',
                       }
+
+      $pidfile = {
+                        '9.2' => '/var/lock/subsys/postgresql-9.2',
+                        '9.6' => undef,
+                      }
       $initdb = {
                   '9.2' => '/usr/pgsql-9.2/bin/initdb',
                   '9.6' => '/usr/pgsql-9.6/bin/initdb',

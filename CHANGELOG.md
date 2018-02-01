@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.1.46
+
+* bugfix pidfile: wrong defalt filename
+
 ## 0.1.45
 
 * bugfix datadir on CentOS 7
