@@ -263,7 +263,8 @@ Options:
   * log_filename
   * track_activities
   * track_counts
-  * autovacuum
+  * autovacuum:
+    - cleanup is triggered whenever the number of dead tuples (which you can see as pg_stat_all_tables.n_dead_tup) exceeds **threshold + pg_class.reltuples * scale_facto**
   * autovacuum_vacuum_scale_factor
   * autovacuum_vacuum_threshold
   * autovacuum_analyze_scale_factor
