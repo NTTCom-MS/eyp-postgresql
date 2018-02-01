@@ -6,7 +6,7 @@
 
 ## 0.1.46
 
-* bugfix pidfile: wrong defalt filename
+* bugfix pidfile: wrong default filename
 
 ## 0.1.45
 
