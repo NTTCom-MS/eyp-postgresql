@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.1.48
+
+* added **autovacuum_freeze_max_age**
+
 ## 0.1.47
 
 * added **log_autovacuum_min_duration**
