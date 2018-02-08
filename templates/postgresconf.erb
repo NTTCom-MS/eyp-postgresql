@@ -449,7 +449,7 @@ track_counts = <%= scope.function_bool2onoff([@track_counts]) %>
 
 autovacuum = <%= scope.function_bool2onoff([@autovacuum]) %>			# Enable autovacuum subprocess?  'on'
 					# requires track_counts to also be on.
-#log_autovacuum_min_duration = -1	# -1 disables, 0 logs all actions and
+log_autovacuum_min_duration = <%= @log_autovacuum_min_duration %>	# -1 disables, 0 logs all actions and
 					# their durations, > 0 logs only
 					# actions running at least this number
 					# of milliseconds.
@@ -463,7 +463,9 @@ autovacuum_vacuum_scale_factor = <%= @autovacuum_vacuum_scale_factor %>	# fracti
 autovacuum_analyze_threshold = <%= @autovacuum_analyze_threshold %>	# min number of row updates before
 autovacuum_analyze_scale_factor = <%= @autovacuum_analyze_scale_factor %>	# fraction of table size before analyze
 					#
-#autovacuum_freeze_max_age = 200000000	# maximum XID age before forced vacuum
+<% if defined?(@autovacuum_freeze_max_age) -%>
+autovacuum_freeze_max_age = <%= @autovacuum_freeze_max_age %>	# maximum XID age before forced vacuum
+<% end -%>
 					# (change requires restart)
 #autovacuum_vacuum_cost_delay = 20ms	# default vacuum cost delay for
 					# autovacuum, in milliseconds;

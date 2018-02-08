@@ -1,8 +1,16 @@
 # CHANGELOG
 
+## 0.1.48
+
+* added **autovacuum_freeze_max_age**
+
+## 0.1.47
+
+* added **log_autovacuum_min_duration**
+
 ## 0.1.46
 
-* bugfix pidfile: wrong defalt filename
+* bugfix pidfile: wrong default filename
 
 ## 0.1.45
 
