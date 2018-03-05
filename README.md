@@ -23,7 +23,7 @@ manages postgresql:
 
 ## Module Description
 
-Installs and configures PostgreSQL on CentOS 6
+Installs and configures PostgreSQL on CentOS 6 and 7
 
 ## Setup
 
@@ -34,6 +34,7 @@ Installs and configures PostgreSQL on CentOS 6
   * postgres.conf
   * pg_hba
   * pg_stat_statements
+  * backup script using pg_dump
 * it can manage the following DB objects:
   * roles
   * schemas
@@ -49,7 +50,7 @@ installed. Mountpoints **must** be already in place (datadir, archive_dir...)
 
 ### Beginning with postgresql
 
-Currently, it only supports PostgreSQL 9.2 (check TODO list)
+Currently, it only supports PostgreSQL 9.2 and 9.6
 
 ## Usage
 
@@ -265,10 +266,11 @@ Options:
   * track_counts
   * autovacuum:
     - cleanup is triggered whenever the number of dead tuples (which you can see as pg_stat_all_tables.n_dead_tup) exceeds **threshold + pg_class.reltuples * scale_facto**
-  * autovacuum_vacuum_scale_factor
-  * autovacuum_vacuum_threshold
-  * autovacuum_analyze_scale_factor
-  * autovacuum_analyze_threshold
+  * autovacuum_vacuum_scale_factor (default: 0.0)
+  * autovacuum_vacuum_threshold (default: 5000)
+  * autovacuum_analyze_scale_factor (default: 0.0)
+  * autovacuum_analyze_threshold (default: 5000)
+  * autovacuum_freeze_max_age (default: undef)
   * timezone
   * log_timezone
   * superuser_reserved_connections
@@ -464,7 +466,7 @@ postgresql::pgdumpbackup { "backup logic":
 
 ## Limitations
 
-CentOS 6 only
+Only available in CentOS 6 and 7
 
 ## Development
 
@@ -474,7 +476,7 @@ have some tests to check both presence and absence of any feature
 ### TODO
 
 * Add more postgres versions
-* tablespaces management
+* tablespaces and databases management
 
 ### Contributing
 
