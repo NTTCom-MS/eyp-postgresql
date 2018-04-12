@@ -3,7 +3,7 @@ require_relative './version.rb'
 
 describe 'postgresql class' do
 
-  context 'basic setup' do
+  context 'basic setup postgres 92' do
     # Using puppet_apply as a helper
     it 'should work with no errors' do
       pp = <<-EOF
