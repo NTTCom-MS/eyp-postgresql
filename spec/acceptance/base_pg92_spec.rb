@@ -3,27 +3,27 @@ require_relative './version.rb'
 
 describe 'postgresql class' do
 
-  context 'basic setup' do
+  context 'basic setup postgres 92' do
     # Using puppet_apply as a helper
     it 'should work with no errors' do
       pp = <<-EOF
 
       class { 'postgresql':
-    		wal_level => 'hot_standby',
-    		max_wal_senders => '3',
+    		wal_level           => 'hot_standby',
+    		max_wal_senders     => '3',
     		checkpoint_segments => '8',
-    		wal_keep_segments => '8',
+    		wal_keep_segments   => '8',
     	}
 
     	postgresql::hba_rule { 'test':
-    		user => 'replicator',
+    		user     => 'replicator',
     		database => 'replication',
-    		address => '192.168.56.0/24',
+    		address  => '192.168.56.0/24',
     	}
 
     	postgresql::role { 'replicator':
     		replication => true,
-    		password => 'replicatorpassword',
+    		password    => 'replicatorpassword',
     	}
 
     	postgresql::schema { 'jordi':

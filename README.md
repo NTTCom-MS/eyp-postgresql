@@ -64,21 +64,21 @@ node 'pgm'
 	class { 'sysctl': }
 
 	class { 'postgresql':
-		wal_level => 'hot_standby',
-		max_wal_senders => '3',
+		wal_level           => 'hot_standby',
+		max_wal_senders     => '3',
 		checkpoint_segments => '8',
-		wal_keep_segments => '8',
+		wal_keep_segments   => '8',
 	}
 
 	postgresql::hba_rule { 'test':
-		user => 'replicator',
+		user     => 'replicator',
 		database => 'replication',
-		address => '192.168.56.0/24',
+		address  => '192.168.56.0/24',
 	}
 
 	postgresql::role { 'replicator':
 		replication => true,
-		password => 'replicatorpassword',
+		password    => 'replicatorpassword',
 	}
 
 	postgresql::schema { 'jordi':
@@ -94,12 +94,12 @@ node 'pgs'
 	class { 'sysctl': }
 
 	class { 'postgresql':
-		wal_level => 'hot_standby',
-		max_wal_senders => '3',
+		wal_level           => 'hot_standby',
+		max_wal_senders     => '3',
 		checkpoint_segments => '8',
-		wal_keep_segments => '8' ,
-		hot_standby => true,
-		initdb => false,
+		wal_keep_segments   => '8' ,
+		hot_standby         => true,
+		initdb              => false,
 	}
 
 	class { 'postgresql::streaming_replication':
@@ -115,8 +115,8 @@ backup configurtion:
 ```puppet
 postgresql::pgdumpbackup { "backup logic":
   destination => '/backup',
-  mailto => 'backup_notifications@systemadmin.es',
-  idhost => 'postgresmaster01',
+  mailto      => 'backup_notifications@systemadmin.es',
+  idhost      => 'postgresmaster01',
 }
 ```
 
