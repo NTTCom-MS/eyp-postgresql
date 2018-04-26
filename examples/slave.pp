@@ -6,6 +6,7 @@ class { 'postgresql':
 	wal_keep_segments   => '8' ,
 	hot_standby         => true,
 	initdb              => false,
+	version             => '9.6',
 }
 
 class { 'postgresql::streaming_replication':
