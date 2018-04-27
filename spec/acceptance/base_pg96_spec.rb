@@ -14,6 +14,7 @@ describe 'postgresql class' do
     		checkpoint_segments => '8',
     		wal_keep_segments   => '8',
         version             => '9.6',
+        port                => '5436'
     	}
 
     	postgresql::hba_rule { 'test':
@@ -25,10 +26,12 @@ describe 'postgresql class' do
     	postgresql::role { 'replicator':
     		replication => true,
     		password    => 'replicatorpassword',
+        port        => '5436'
     	}
 
     	postgresql::schema { 'jordi':
     		owner => 'replicator',
+        port  => '5436'
     	}
 
       EOF
