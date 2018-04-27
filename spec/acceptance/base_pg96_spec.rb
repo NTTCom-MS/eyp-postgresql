@@ -60,7 +60,7 @@ describe 'postgresql class' do
       its(:content) { should match 'max_connections = 100' }
       its(:content) { should match 'wal_level = hot_standby' }
       its(:content) { should match 'wal_keep_segments = 8' }
-      its(:content) { should match 'checkpoint_segments = 8' }
+      its(:content) { should_not match 'checkpoint_segments = 8' }
       its(:content) { should match 'max_wal_senders = 3' }
       its(:content) { should match 'puppet managed file' }
     end
