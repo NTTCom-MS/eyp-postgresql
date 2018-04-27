@@ -41,20 +41,20 @@ describe 'postgresql class' do
       expect(apply_manifest(pp).exit_code).to eq(0)
     end
 
-    describe package($packagename92) do
+    describe package($packagename96) do
       it { is_expected.to be_installed }
     end
 
-    describe service($servicename92) do
+    describe service($servicename96) do
       it { should be_enabled }
       it { is_expected.to be_running }
     end
 
-    describe port(5432) do
+    describe port(5436) do
       it { should be_listening }
     end
 
-    describe file($postgresconf92) do
+    describe file($postgresconf96) do
       it { should be_file }
       its(:content) { should match 'wal_level = hot_standby' }
       its(:content) { should match 'max_connections = 100' }
@@ -65,7 +65,7 @@ describe 'postgresql class' do
       its(:content) { should match 'puppet managed file' }
     end
 
-    describe file($pghba92) do
+    describe file($pghba96) do
       it { should be_file }
       its(:content) { should match '# rule: test' }
       its(:content) { should match 'host	replication	replicator	192.168.56.0/24			md5' }
@@ -74,12 +74,12 @@ describe 'postgresql class' do
 
     #echo "SELECT nspname FROM pg_namespace WHERE nspname='jordi'" | psql -U postgres | grep jordi
     it "schema jordi" do
-      expect(shell("echo \"SELECT nspname FROM pg_namespace WHERE nspname='jordi'\" | psql -U postgres | grep jordi").exit_code).to be_zero
+      expect(shell("echo \"SELECT nspname FROM pg_namespace WHERE nspname='jordi'\" | psql -U postgres -h 127.0.0.1 -p 5436 | grep jordi").exit_code).to be_zero
     end
 
     #SELECT rolname FROM pg_roles WHERE rolname=
     it "role replicator" do
-      expect(shell("echo \"SELECT rolname FROM pg_roles WHERE rolname='replicator'\" | psql -U postgres | grep replicator").exit_code).to be_zero
+      expect(shell("echo \"SELECT rolname FROM pg_roles WHERE rolname='replicator'\" | psql -U postgres -h 127.0.0.1 -p 5436 | grep replicator").exit_code).to be_zero
     end
 
   end
