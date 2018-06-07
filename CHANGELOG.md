@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.1.49
+
+* added **postgresql::db**
+
 ## 0.1.48
 
 * added **autovacuum_freeze_max_age**
