@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.1.50
+
+* bugfix: streaming replication ordering
+
 ## 0.1.49
 
 * added **postgresql::db**

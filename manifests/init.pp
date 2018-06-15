@@ -119,6 +119,7 @@ class postgresql(
       creates => $archive_dir,
       require => Class['::postgresql::install'],
       before  => Class['::postgresql::service'],
+      tag     => 'post-streaming_replication',
     }
 
     file { $archive_dir:
@@ -127,6 +128,7 @@ class postgresql(
       group   => $archive_dir_group,
       mode    => $archive_dir_mode,
       require => Exec["mkdir -p ${archive_dir} postgres archive command ${version} ${datadir_path}"],
+      tag     => 'post-streaming_replication',
     }
 
     if($archive_dir!=undef and $archive_command_custom==undef)
