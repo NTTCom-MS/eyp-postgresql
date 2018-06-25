@@ -45,6 +45,8 @@ class postgresql::streaming_replication (
     require => File["${postgresql::params::postgreshome}/.pgpass"],
     before  => Class['::postgresql::config'],
   }
+  -> Exec <| tag == 'post-streaming_replication' |>
+  -> File <| tag == 'post-streaming_replication' |>
 
   file { "${datadir_path}/recovery.conf":
     ensure  => 'present',
