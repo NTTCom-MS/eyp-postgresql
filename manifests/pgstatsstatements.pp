@@ -29,4 +29,6 @@ class postgresql::pgstatsstatements (
     order   => '80',
   }
 
+  postgresql::extension { 'pg_stats_statement': }
+
 }

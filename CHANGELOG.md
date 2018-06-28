@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.1.51
+
+* added extension management via **postgtresql::extension**
+
 ## 0.1.50
 
 * bugfix: streaming replication ordering
