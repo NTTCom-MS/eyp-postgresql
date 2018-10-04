@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.1.52
+
+* bugfix postgresql::pgdumpbackup
+
 ## 0.1.51
 
 * added extension management via **postgtresql::extension**
