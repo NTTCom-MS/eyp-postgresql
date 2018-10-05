@@ -58,7 +58,7 @@ class postgresql::install (
     ensure  => 'directory',
     owner   => $postgresql::params::postgresuser,
     group   => $postgresql::params::postgresgroup,
-    mode    => $postgres::datadir_mode,
+    mode    => $postgresql::datadir_mode,
     require => Exec["mkdir p ${datadir_path}"],
   }
 
