@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.1.53
+
+* added **datador_mode** to be able to set mode for datadir
+
 ## 0.1.52
 
 * bugfix postgresql::pgdumpbackup
