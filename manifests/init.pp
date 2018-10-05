@@ -23,6 +23,7 @@ class postgresql(
                   #general
                   $version                         = $postgresql::params::version_default,
                   $datadir                         = undef,
+                  $datadir_mode                    = '0700',
                   # install
                   $initdb                          = true,
                   $overcommit_memory               = '2',
