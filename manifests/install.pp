@@ -1,7 +1,3 @@
-# == Class: postgresql
-#
-# === postgresql::install documentation
-#
 class postgresql::install (
                             $version           = $postgresql::params::version_default,
                             $datadir           = $postgresql::datadir,
