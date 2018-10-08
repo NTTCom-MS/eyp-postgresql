@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.1.54
+
+* added **search_path** variable
+
 ## 0.1.53
 
 * minor feature clenaup

@@ -78,6 +78,7 @@ class postgresql(
                   $lc_time                         = 'en_US.UTF-8',
                   $default_text_search_config      = 'pg_catalog.english',
                   $shared_preload_libraries        = undef,
+                  $search_path                     = [ '"$user"', 'public' ],
                 ) inherits postgresql::params {
 
   validate_array($listen)
