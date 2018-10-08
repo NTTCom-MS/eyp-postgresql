@@ -2,7 +2,7 @@
 
 ## 0.1.53
 
-* added **datador_mode** to be able to set mode for datadir
+* minor feature clenaup
 
 ## 0.1.52
 

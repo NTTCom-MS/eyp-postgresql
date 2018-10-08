@@ -1,14 +1,11 @@
 class postgresql::params {
 
-  $port_default='5432'
+  $version_default='9.2'
 
+  $port_default='5432'
   $log_directory_default='pg_log'
   $log_filename_default='postgresql-%Y%m%d.log'
-
   $timezone_default='Europe/Andorra'
-  #fer 9.2 minim
-
-  $version_default='9.2'
 
   case $::osfamily
   {
