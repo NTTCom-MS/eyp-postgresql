@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.1.53
+
+* minor feature clenaup
+
 ## 0.1.52
 
 * bugfix postgresql::pgdumpbackup
