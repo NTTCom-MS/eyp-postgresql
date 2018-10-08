@@ -481,7 +481,9 @@ autovacuum_freeze_max_age = <%= @autovacuum_freeze_max_age %>	# maximum XID age 
 
 # - Statement Behavior -
 
-#search_path = '"$user",public'		# schema names
+<% if @search_path.any? -%>
+search_path = '<%= @search_path.join(',') %>'		# schema names
+<% end -%>
 #default_tablespace = ''		# a tablespace name, '' uses the default
 #temp_tablespaces = ''			# a list of tablespace names, '' uses
 					# only default tablespace
