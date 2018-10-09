@@ -229,6 +229,7 @@ class postgresql(
     lc_time                         => $lc_time,
     default_text_search_config      => $default_text_search_config,
     shared_preload_libraries        => $shared_preload_libraries,
+    search_path                     => $search_path,
   } ~>
 
   class { '::postgresql::service':
