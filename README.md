@@ -45,8 +45,8 @@ Installs and configures PostgreSQL on CentOS 6 and 7
 
 ### Setup Requirements
 
-This module requires pluginsync enabled and **optionally** *eyp/sysctl* module
-installed. Mountpoints **must** be already in place (datadir, archive_dir...)
+* This module requires pluginsync enabled and **optionally** *eyp/sysctl* module installed to be able to manage **kernel.shmmax**, **kernel.shmall** and **vm.overcommit_memory**
+* Mountpoints **must** be already in place (datadir, archive_dir...) and datadir **must be empty**
 
 ### Beginning with postgresql
 
@@ -54,7 +54,7 @@ Currently, it only supports PostgreSQL 9.2 and 9.6
 
 ## Usage
 
-streaming replication setup:
+### streaming replication setup
 
 ```puppet
 node 'pgm'
@@ -110,7 +110,7 @@ node 'pgs'
 }
 ```
 
-backup configurtion:
+### backup configurtion
 
 ```puppet
 postgresql::pgdumpbackup { "backup logic":
@@ -120,7 +120,7 @@ postgresql::pgdumpbackup { "backup logic":
 }
 ```
 
-postgresmaster using hiera:
+### postgresmaster using hiera
 
 ```hiera
 ---
@@ -158,7 +158,7 @@ postgresschemas:
     port: 60901
 ```
 
-postgres slave using hiera:
+### postgres slave using hiera
 
 ```hiera
 ---
@@ -183,7 +183,7 @@ postgresql::streaming_replication::masterusername: replicator
 postgresql::streaming_replication::masterpassword: af35dbf3394b2b961fea37db2b2bfb0c
 ```
 
-hba rules using hiera:
+### hba rules using hiera
 
 ```hiera
 ---
@@ -219,6 +219,19 @@ hbarules:
     address: '192.168.52.0/24'
 ```
 
+### change default schema
+
+
+```puppet
+class { 'postgresql':
+  wal_level           => 'hot_standby',
+  max_wal_senders     => '3',
+  checkpoint_segments => '8',
+  wal_keep_segments   => '8',
+  version             => '9.6',
+  search_path         => [ 'demoschema' ],
+}
+```
 
 ## Reference
 
@@ -476,7 +489,7 @@ have some tests to check both presence and absence of any feature
 ### TODO
 
 * Add more postgres versions
-* tablespaces and databases management
+* tablespaces management
 
 ### Contributing
 

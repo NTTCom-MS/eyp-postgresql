@@ -2,7 +2,6 @@ define postgresql::extension(
                               $extension_name = $name,
                               $port           = undef,
                             ) {
-
   Postgresql_psql {
     port => $port,
   }
