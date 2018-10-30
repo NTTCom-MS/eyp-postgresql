@@ -8,6 +8,7 @@ class postgresql::streaming_replication (
                                           $masterport      = $postgresql::params::port_default,
                                           $datadir         = $postgresql::datadir,
                                           $restore_command = undef,
+                                          $archive_cleanup_command = undef,
                                         ) inherits postgresql::params {
   Exec {
     path => '/usr/sbin:/usr/bin:/sbin:/bin',
