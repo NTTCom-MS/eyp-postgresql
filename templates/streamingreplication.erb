@@ -10,3 +10,6 @@ trigger_file = '/tmp/postgresql.enable_master_mode'
 <% if defined?(@restore_command) -%>
 restore_command='<%= @restore_command %>'
 <% end -%>
+<% if defined?(@archive_cleanup_command) -%>
+archive_cleanup_command='<%= @archive_cleanup_command %>'
+<% end -%>

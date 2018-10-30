@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.1.55
+
+* added **archive_cleanup_command**
+
 ## 0.1.54
 
 * added **search_path** variable
