@@ -1,3 +1,6 @@
+# TODO: log_min_duration_statement
+#
+#
 # @summary postgres installation class
 #
 # @param version version to install
