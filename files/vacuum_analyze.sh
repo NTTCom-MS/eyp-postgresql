@@ -16,21 +16,20 @@ else
 	fi
 fi
 
-if [ -z "${TABLES}" ];
+if [ -z "${DATABASES}" ];
 then
-  if [ -z "${DATABASES}" ];
-  then
-    DATABASES=$(echo "select datname as x5885c02fbd247232adb1438b52e6acd0 from pg_database;" | psql -U postgres | grep -v "No relations found" | grep "^ [^ ]*" | grep -v "x5885c02fbd247232adb1438b52e6acd0\|\btemplate0\b")
-  fi
-
-  TABLES=""
-  for DATABASE in $DATABASES;
-  do
-    TABLES="${TABLES} $(echo "select n.nspname || '.' || c.relname as x5885c02fbd247232adb1438b52e6acd0 from pg_catalog.pg_class c LEFT JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace WHERE c.relkind = 'r' AND n.nspname <> 'pg_catalog' AND n.nspname <> 'information_schema' AND n.nspname !~ '^pg_toast' AND pg_catalog.pg_table_is_visible(c.oid);" | psql -U postgres -d ${DATABASE} | grep -v "No relations found" | grep "^ [^ ]*" | grep -v "x5885c02fbd247232adb1438b52e6acd0")"
-  done
+  DATABASES=$(echo "select datname as x5885c02fbd247232adb1438b52e6acd0 from pg_database;" | psql -U postgres | grep -v "No relations found" | grep "^ [^ ]*" | grep -v "x5885c02fbd247232adb1438b52e6acd0\|\btemplate0\b")
 fi
 
-for TABLE in $TABLES;
+for DATABASE in $DATABASES;
 do
-  echo "VACUUM ANALYZE ${TABLE}"
+  if [ -z "${TABLES}" ];
+  then
+    TABLES="$(echo "select n.nspname || '.' || c.relname as x5885c02fbd247232adb1438b52e6acd0 from pg_catalog.pg_class c LEFT JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace WHERE c.relkind = 'r' AND n.nspname <> 'pg_catalog' AND n.nspname <> 'information_schema' AND n.nspname !~ '^pg_toast' AND pg_catalog.pg_table_is_visible(c.oid);" | psql -U postgres -d ${DATABASE} | grep -v "No relations found" | grep "^ [^ ]*" | grep -v "x5885c02fbd247232adb1438b52e6acd0")"
+  fi
+
+  for TABLE in $TABLES;
+  do
+    echo "VACUUM ANALYZE ${TABLE}" | psql -U postgres -d ${DATABASE}
+  done
 done
