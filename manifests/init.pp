@@ -1,3 +1,6 @@
+# TODO: log_min_duration_statement
+#
+#
 # @summary postgres installation class
 #
 # @param version version to install
@@ -42,6 +45,10 @@ class postgresql(
                   $pidfile                         = undef,
                   $log_directory                   = $postgresql::params::log_directory_default,
                   $log_filename                    = $postgresql::params::log_filename_default,
+                  $log_autovacuum_min_duration     = '-1',
+                  $log_timezone                    = $postgresql::params::timezone_default,
+                  $log_min_duration_statement      = '-1',
+                  $log_file_mode                   = '0600',
                   $track_activities                = true,
                   $track_counts                    = true,
                   $autovacuum                      = true,
@@ -50,9 +57,7 @@ class postgresql(
                   $autovacuum_analyze_scale_factor = '0.0',
                   $autovacuum_analyze_threshold    = '5000',
                   $autovacuum_freeze_max_age       = undef,
-                  $log_autovacuum_min_duration     = '-1',
                   $timezone                        = $postgresql::params::timezone_default,
-                  $log_timezone                    = $postgresql::params::timezone_default,
                   $superuser_reserved_connections  = '5',
                   $archive_mode                    = false,
                   $archive_command_custom          = undef,
@@ -230,6 +235,8 @@ class postgresql(
     default_text_search_config      => $default_text_search_config,
     shared_preload_libraries        => $shared_preload_libraries,
     search_path                     => $search_path,
+    log_min_duration_statement      => $log_min_duration_statement,
+    log_file_mode                   => $log_file_mode,
   } ~>
 
   class { '::postgresql::service':

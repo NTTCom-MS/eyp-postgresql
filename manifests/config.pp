@@ -48,6 +48,8 @@ class postgresql::config(
                           $default_text_search_config       = 'pg_catalog.english',
                           $shared_preload_libraries         = undef,
                           $search_path                      = [ '"$user"', 'public' ],
+                          $log_min_duration_statement       = '-1',
+                          $log_file_mode                    = '0600',
                         ) inherits postgresql::params {
 
   Postgresql_psql {
