@@ -310,7 +310,8 @@ log_directory = '<%= @log_directory %>'		# directory where log files are written
 					# can be absolute or relative to PGDATA
 log_filename = '<%= @log_filename %>'	# log file name pattern,
 					# can include strftime() escapes
-#log_file_mode = 0600			# creation mode for log files,
+log_file_mode = <%= @log_file_mode %>
+					# creation mode for log files,
 					# begin with 0 to use octal notation
 log_truncate_on_rotation = on		# If on, an existing log file with the
 					# same name as the new log file will be
