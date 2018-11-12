@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 0.1.56
+
+* added log related variables:
+  - log_min_duration_statement
+  - log_file_mode
+
 ## 0.1.55
 
 * added **archive_cleanup_command**

@@ -490,6 +490,7 @@ have some tests to check both presence and absence of any feature
 
 * Add more postgres versions
 * tablespaces management
+* Rewrite class relationships
 
 ### Contributing
 
