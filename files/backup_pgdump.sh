@@ -4,11 +4,24 @@
 
 # 0.1.42 - adaptat estil
 
+function echo_error()
+{
+  echo $(date +"%F %T %z") $@ 1>&2;
+  ERROR=1;
+}
+
+
+function echo_info()
+{
+  echo $(date +"%F %T %z") $@ 1>&2;
+}
+
+
 function checkdirs()
 {
   if [ ! -d "${BACKUPDIR}" ];
   then
-    error "Error: ${BACKUPDIR}/ does not exist";
+    echo_error "Error: ${BACKUPDIR}/ does not exist";
     exit 1;
   fi
 }
@@ -54,7 +67,7 @@ function dumpglobals()
 
   if [ -f "${FDEST}" ];
   then
-    error "Dumping instance ${INSTANCE}: dump file ${FDEST} exists. Refusing to overwrite.";
+    echo_error "Dumping instance ${INSTANCE}: dump file ${FDEST} exists. Refusing to overwrite.";
     return;
   fi
 
@@ -62,15 +75,10 @@ function dumpglobals()
 
   if [ "$?" -ne "0" ];
   then
-    error "Dumping instance ${INSTANCE}: an error has occurred dumping the globals from ${INSTANCE} to ${FDEST}. Please check ${FLOG}."
+    echo_error "Dumping instance ${INSTANCE}: an error has occurred dumping the globals from ${INSTANCE} to ${FDEST}. Please check ${FLOG}."
   fi
 }
 
-function error()
-{
-  echo $(date +"%F %T %z") $@ 1>&2;
-  ERROR=1;
-}
 
 function getalldblist()
 {
@@ -102,7 +110,7 @@ function mailer()
 
     if [ -e "${FDEST}" ];
     then
-      error "Dumping instance ${INSTANCE}, database ${DBASE}: file ${FDEST} already exists. Refusing to overwrite it. Please check.";
+      echo_error "ERROR while dumping instance ${INSTANCE}(${DBASE}): file ${FDEST} already exists";
       continue;
     fi
 
@@ -113,22 +121,17 @@ function mailer()
       continue;
     fi
 
-    TSTAMP="$(date +'%F %T %z') ->";
-    echo "$TSTAMP Dump de PostGreSQL: `hostname` Instance: $INSTANCE Database: $DBASE" 1>&2;
+    echo "$(date +'%F %T %z') - pgdump $INSTANCE - database: $DBASE" 1>&2;
 
     pg_dump --format=c --host="${PGDATA}" --file="${FDEST}" --verbose "${DBASE}";
 
     if [ "$?" -ne "0" ];
     then
-      error "Dumping instance ${INSTANCE}, database ${DBASE}: an error has occurred dumping database ${DBASE} in instance ${INSTANCE} to ${FDEST}. Please check ${FLOG}."
-      echo "${TSTAMP} Error : ${FDEST} mira ${FLOG}" 1>&2;
+      echo_error "An error has occurred dumping database ${DBASE} on instance ${INSTANCE} to ${FDEST}. Please check ${FLOG}."
     fi
 
-    # DUMPOK=`grep "PostgreSQL database dump complete" $FELOG |wc -l | awk '{print $1}'`
-
     SIZE=$(stat --format="%s" ${FDEST});
-    TSTAMP="$(date +'%F %T %z') ->"
-    echo "$TSTAMP Fin Dump instance ${INSTANCE} database ${DBASE} (size ${SIZE} bytes) de PostGreSQL" 1>&2
+    echo_info "pgdump completed - ${INSTANCE}(${DBASE}) - size ${SIZE} bytes"
   done
 
   if [ "$ERROR" -eq "1" ];
