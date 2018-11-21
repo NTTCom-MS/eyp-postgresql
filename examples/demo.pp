@@ -5,3 +5,7 @@ class { 'postgresql':
   wal_keep_segments   => '8',
   version             => '9.6',
 }
+
+postgresql::pgdumpbackup { 'demobackup':
+  destination => '/tmp',
+}
