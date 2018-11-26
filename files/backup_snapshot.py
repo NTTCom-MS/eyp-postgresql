@@ -17,7 +17,7 @@ def logAndExit(msg):
     logging.error(msg)
     sys.exit(msg+"\n")
 
-def getDisks(pv_disks, tranlate_aws=True)
+def getDisks(pv_disks, tranlate_aws=True):
     disks = []
     regex = re.compile(r"^xv")
     for pv_disk in pv_disks:
