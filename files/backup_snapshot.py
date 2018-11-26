@@ -50,6 +50,7 @@ def postgresBackupMode(enable = True, backup_name=""):
     linecount=0
     lastline=""
     for line in p.stdout.readlines():
+        logging.debug("postgresBackupMode: "+line)
         lastline = line.strip()
         linecount+=1
     retval = p.wait()
