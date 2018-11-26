@@ -3,6 +3,7 @@ import getopt
 import sys
 import subprocess
 import os.path
+from os import access, R_OK
 
 # thank god for stackoverflow - https://stackoverflow.com/questions/25283882/determining-the-filesystem-type-from-a-path-in-python
 def GetFSType(path):
