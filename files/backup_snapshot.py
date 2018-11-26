@@ -77,8 +77,7 @@ def getVG(lvm_disk):
                 logging.error('ERROR listing PV disks for: '+vg_name)
                 sys.exit('ERROR listing PV disks for: '+vg_name)
             else:
-                print pv_disks
-
+                return pv_disks
 
         else:
             logging.error('Corrupted output getting VG name: '+lastline)
@@ -160,11 +159,14 @@ rootLogger.addHandler(fileHandler)
 
 rootLogger.setLevel(0)
 
-print GetFSType(getDataDir())
+if not lvm_disk:
+    lvm_disk = GetFSType(getDataDir())[1]
+
+pv_disks = getVG(lvm_disk)
+
+print pv_disks
 
 sys.exit("FI")
-
-getVG(lvm_disk)
 
 if awscli:
     import boto3
