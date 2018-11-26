@@ -42,7 +42,7 @@ def postgresBackupMode(enable = True, backup_name=""):
     if enable:
         if not backup_name:
             backup_name = "snap."+datetime.datetime.fromtimestamp(time.time()).strftime('%Y%m%d')
-        backup_command ='select pg_start_backup("'+backup_name+'");'
+        backup_command ="select pg_start_backup('"+backup_name+"');"
     else:
         backup_command = "select pg_stop_backup();"
 
