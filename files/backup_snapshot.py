@@ -46,7 +46,7 @@ def postgresBackupMode(enable = True, backup_name=""):
     else:
         backup_command = "select pg_stop_backup();"
 
-    psql_command = "psql -U "+pgusername+" -c '"+backup_command+"'"
+    psql_command = "psql -U "+pgusername+' -c "'+backup_command+'"'
     logging.debug("postgresBackupMode: "+psql_command)
     p = subprocess.Popen(psql_command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     for line in p.stdout.readlines():
