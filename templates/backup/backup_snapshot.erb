@@ -1,1 +1,8 @@
-LVMDISK =
+[pgsnapshot]
+
+<% if defined?(@lvm_disk) -%>
+lvmdisk=<%= @lvm_disk %>
+<% end -%>
+aws=<%= @aws %>
+snapsize=<%= @snap_size %>
+pgusername=<%= @username %>

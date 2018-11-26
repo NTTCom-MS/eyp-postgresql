@@ -17,6 +17,48 @@ def logAndExit(msg):
     logging.error(msg)
     sys.exit(msg+"\n")
 
+def doLVMSnapshot(lvm_disk, snap_name, snap_size):
+    # [root@ip-172-31-46-9 ~]# lvcreate -s -n snap -L 5G /dev/vg/postgres
+    #   Logical volume "snap" created.
+    # [root@ip-172-31-46-9 ~]# echo $?
+    # 0
+    # [root@ip-172-31-46-9 ~]#
+    p = subprocess.Popen("lvcreate -s -n "+snap_name+" -L "+snap_size+" "+lvm_disk+"2>/dev/null", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    linecount=0
+    lastline=""
+    for line in p.stdout.readlines():
+        lastline = line.strip()
+        linecount+=1
+    retval = p.wait()
+
+    if retval==0 and linecount==1:
+        return snap_name
+    else:
+        logAndExit('Unable to create lvm snapshot: '+lastline)
+
+
+def postgresBackupMode(enable = True, backup_name=""):
+    global pgusername
+    if enable:
+        if not backup_name:
+            backup_name = datetime.datetime.fromtimestamp(time.time()).strftime('%Y%m%d')
+        backup_command ="select pg_start_backup('"+backup_name+"');"
+    else:
+        backup_command = "select pg_stop_backup();"
+
+    p = subprocess.Popen("psql -U "+pgusername+" -c '"+backup_command+"' | grep -A 1 -- --- | tail -n1", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    linecount=0
+    lastline=""
+    for line in p.stdout.readlines():
+        lastline = line.strip()
+        linecount+=1
+    retval = p.wait()
+
+    if retval==0 and linecount==1:
+        return backup_name
+    else:
+        logAndExit('Unable to start pg_backup')
+
 def getDisks(pv_disks, tranlate_aws=True):
     disks = []
     regex = re.compile(r"^xv")
@@ -57,8 +99,9 @@ def getFSType(path):
     return ("unkown","none")
 
 def getDataDir():
+    global pgusername
     #psql -U postgres -c 'SHOW data_directory;'
-    p = subprocess.Popen("psql -U postgres -c 'SHOW data_directory;' | grep -A 1 -- --- | tail -n1", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    p = subprocess.Popen("psql -U "+pgusername+" -c 'SHOW data_directory;' | grep -A 1 -- --- | tail -n1", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     linecount=0
     lastline=""
     for line in p.stdout.readlines():
@@ -107,10 +150,11 @@ def getPVs(lvm_disk):
         logAndExit('Invalid disk: '+lvm_disk)
 
 lvm_disk = ""
-snapshot_size = "10G"
+snapshot_size = "5G"
 awscli = False
 config_file = './postgres_snapshot.config'
 logdir = '.'
+pgusername = "postgres"
 
 # parse opts
 
@@ -125,7 +169,7 @@ for opt, arg in options:
     if opt in ('-l', '--lvm-disk'):
         lvm_disk = arg
     elif opt in ('-s', '--snapshot-size'):
-        snapshot_size = arg
+        snap_size = arg
     elif opt in ('-c', '--config'):
         config_file = arg
     elif opt in ('-a', '--aws'):
@@ -158,13 +202,13 @@ except Exception, e:
     sys.exit(1)
 
 try:
-    logdir=config.get('rsyncman', 'logdir').strip('"')
+    logdir=config.get('pgsnapshot', 'logdir').strip('"')
 except:
     logdir=os.path.dirname(os.path.abspath(config_file))
 
 ts = time.time()
 
-logFile = "{0}/{1}/{2}-{3}.log".format(logdir, datetime.datetime.fromtimestamp(ts).strftime('%Y%m%d'), 'rsyncman', datetime.datetime.fromtimestamp(ts).strftime('%Y%m%d-%H%M%S'))
+logFile = "{0}/{1}/{2}-{3}.log".format(logdir, datetime.datetime.fromtimestamp(ts).strftime('%Y%m%d'), 'pgsnapshot', datetime.datetime.fromtimestamp(ts).strftime('%Y%m%d-%H%M%S'))
 
 current_day_dirname = os.path.dirname(logFile)
 
@@ -179,18 +223,41 @@ rootLogger.addHandler(fileHandler)
 
 rootLogger.setLevel(0)
 
+try:
+    lvm_disk=config.get('pgsnapshot', 'lvmdisk').strip('"')
+except:
+    logging.debug('Using default value for lvm_disk')
+
+try:
+    snap_size=config.get('pgsnapshot', 'snapsize').strip('"')
+except:
+    logging.debug('Using default value for snap_size')
+
+try:
+    pgusername=config.get('pgsnapshot', 'pgusername').strip('"')
+except:
+    logging.debug('Using default value for pgusername')
+
+try:
+    awscli=config.getboolean('pgsnapshot', 'aws')
+except:
+    logging.debug('Using default value for awscli')
+
 if not lvm_disk:
     lvm_disk = getFSType(getDataDir())[1]
 
 pv_disks = getPVs(lvm_disk)
 
-print pv_disks
+disks = getDisks(pv_disks)
 
-print "=="
+backup_name = postgresBackupMode(True)
 
-print getDisks(pv_disks)
+print doLVMSnapshot(lvm_disk, backup_name, snap_size)
 
 
+
+## temporal
+postgresBackupMode(False)
 sys.exit("FI")
 
 if awscli:

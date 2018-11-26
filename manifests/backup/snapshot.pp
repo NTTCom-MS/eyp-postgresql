@@ -7,6 +7,9 @@ define postgresql::backup::snapshot (
                                       $mailto           = undef,
                                       $idhost           = undef,
                                       $basedir          = '/usr/local/bin',
+                                      $lvm_disk         = undef,
+                                      $aws              = false,
+                                      $snap_size        = '10G',
                                       #cron
                                       $setcronjob       = true,
                                       $hour_cronjob     = '2',
