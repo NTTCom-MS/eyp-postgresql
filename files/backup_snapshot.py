@@ -116,6 +116,13 @@ for opt, arg in options:
     else:
       sys.exit("unrecoginzed option: ".opt)
 
+logFormatter = logging.Formatter("%(asctime)s [%(threadName)-12.12s] [%(levelname)-5.5s]  %(message)s")
+rootLogger = logging.getLogger()
+
+consoleHandler = logging.StreamHandler()
+consoleHandler.setFormatter(logFormatter)
+rootLogger.addHandler(consoleHandler)
+
 if not os.path.isfile(config_file):
     logging.error("Error - config file NOT FOUND ("+config_file+")")
     sys.exit(1)
