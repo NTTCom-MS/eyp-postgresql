@@ -40,7 +40,6 @@ def getDataDir():
     retval = p.wait()
 
     if retval==0 and linecount==1:
-        print lastline
         return lastline
     else:
         logging.error('Error getting datadir')
@@ -161,7 +160,7 @@ rootLogger.addHandler(fileHandler)
 
 rootLogger.setLevel(0)
 
-GetFSType(getDataDir())
+print GetFSType(getDataDir())
 
 sys.exit("FI")
 
