@@ -46,16 +46,14 @@ def postgresBackupMode(enable = True, backup_name=""):
     else:
         backup_command = "select pg_stop_backup();"
 
-    p = subprocess.Popen("psql -U "+pgusername+" -c '"+backup_command+"' | grep -A 1 -- --- | tail -n1", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    linecount=0
-    lastline=""
+    psql_command = "psql -U "+pgusername+" -c '"+backup_command+"'"
+    logging.debug("postgresBackupMode: "+psql_command)
+    p = subprocess.Popen(psql_command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     for line in p.stdout.readlines():
         logging.debug("postgresBackupMode: "+line)
-        lastline = line.strip()
-        linecount+=1
     retval = p.wait()
 
-    if retval==0 and linecount==1:
+    if retval==0:
         return backup_name
     else:
         logAndExit('Unable to start pg_backup: '+lastline)
