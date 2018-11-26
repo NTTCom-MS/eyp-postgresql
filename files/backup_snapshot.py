@@ -36,6 +36,7 @@ def getDisks(pv_disks, tranlate_aws=True):
                 disks.append("/dev/"+lastline)
         else:
             logAndExit('Error getting disk from PV')
+    return disks
 
 
 # thank god for stackoverflow - https://stackoverflow.com/questions/25283882/determining-the-filesystem-type-from-a-path-in-python
