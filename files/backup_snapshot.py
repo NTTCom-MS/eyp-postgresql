@@ -6,14 +6,40 @@ import os.path
 import smtplib
 import datetime, time
 import psutil, os
+import re
 from os import access, R_OK
 from ConfigParser import SafeConfigParser
 from subprocess import Popen,PIPE,STDOUT
 from email.MIMEMultipart import MIMEMultipart
 from email.MIMEText import MIMEText
 
+def logAndExit(msg):
+    logging.error(msg)
+    sys.exit(msg+"\n")
+
+def getDisks(pv_disks, tranlate_aws=true)
+    disks = []
+    regex = re.compile(r"^xv")
+    for pv_disk in pv_disks:
+        p = subprocess.Popen("lsblk -no pkname "+pv_disk+" | head -n1", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        linecount=0
+        lastline=""
+        for line in p.stdout.readlines():
+            lastline = line.strip()
+            linecount+=1
+        retval = p.wait()
+
+        if retval==0 and linecount==1:
+            if tranlate_aws:
+                disks.append("/dev/"+regex.sub('s', lastline))
+            else:
+                disks.append("/dev/"+lastline)
+        else:
+            logAndExit('Error getting disk from PV')
+
+
 # thank god for stackoverflow - https://stackoverflow.com/questions/25283882/determining-the-filesystem-type-from-a-path-in-python
-def GetFSType(path):
+def getFSType(path):
     partition = {}
     for part in psutil.disk_partitions(True):
         partition[part.mountpoint] = (part.fstype, part.device)
@@ -42,13 +68,10 @@ def getDataDir():
     if retval==0 and linecount==1:
         return lastline
     else:
-        logging.error('Error getting datadir')
-        sys.exit('Error getting datadir')
+        logAndExit('Error getting datadir')
 
-
-def getVG(lvm_disk):
-    # busquem vg del lv
-
+def getPVs(lvm_disk):
+    # busquem vg del lv, dsp pv del vg
     p = subprocess.Popen('lvdisplay '+lvm_disk+' 2>/dev/null | grep "VG Name"', shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     linecount=0
     lastline=""
@@ -69,22 +92,18 @@ def getVG(lvm_disk):
                 if line_split[0]=="PV" and line_split[1]=="Name":
                     pv_disks.append(line_split[2])
                 else:
-                    logging.error('Corrupted output getting PV disk for '+vg_name)
-                    sys.exit('Corrupted output getting PV disk for '+vg_name+':\n'+line)
+                    logAndExit('Corrupted output getting PV disk for '+vg_name)
             retval = p.wait()
 
             if retval!=0:
-                logging.error('ERROR listing PV disks for: '+vg_name)
-                sys.exit('ERROR listing PV disks for: '+vg_name)
+                logAndExit('ERROR listing PV disks for: '+vg_name)
             else:
                 return pv_disks
 
         else:
-            logging.error('Corrupted output getting VG name: '+lastline)
-            sys.exit('Corrupted output getting VG name: '+lastline)
+            logAndExit('Corrupted output getting VG name: '+lastline)
     else:
-        logging.error('Invalid disk: '+lvm_disk)
-        sys.exit('Invalid disk: '+lvm_disk)
+        logAndExit('Invalid disk: '+lvm_disk)
 
 lvm_disk = ""
 snapshot_size = "10G"
@@ -160,11 +179,16 @@ rootLogger.addHandler(fileHandler)
 rootLogger.setLevel(0)
 
 if not lvm_disk:
-    lvm_disk = GetFSType(getDataDir())[1]
+    lvm_disk = getFSType(getDataDir())[1]
 
-pv_disks = getVG(lvm_disk)
+pv_disks = getPVs(lvm_disk)
 
 print pv_disks
+
+print "=="
+
+print getDisks(pv_disk)
+
 
 sys.exit("FI")
 
