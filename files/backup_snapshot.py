@@ -1,3 +1,4 @@
+import logging
 import getopt
 import sys
 import subprocess
