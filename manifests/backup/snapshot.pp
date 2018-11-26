@@ -19,6 +19,8 @@ define postgresql::backup::snapshot (
   Exec {
     path => '/usr/sbin:/usr/bin:/sbin:/bin',
   }
+  # python-pip
+  # pip psutil
 
   validate_absolute_path($basedir)
   validate_absolute_path($destination)
