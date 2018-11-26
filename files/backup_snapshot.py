@@ -5,7 +5,6 @@ import subprocess
 import os.path
 import smtplib
 import datetime, time
-import psutil,os
 from os import access, R_OK
 from ConfigParser import SafeConfigParser
 from subprocess import Popen,PIPE,STDOUT
