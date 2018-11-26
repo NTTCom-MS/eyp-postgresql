@@ -1,15 +1,12 @@
 define postgresql::backup::snapshot (
                                       $destination,
+                                      $ensure           = 'present',
+                                      $username         = 'postgres',
                                       $backupname       = $name,
-                                      $pgroot           = undef,
-                                      $instance         = undef,
                                       $retention        = '7',
-                                      $dbs              = 'ALL',
                                       $mailto           = undef,
                                       $idhost           = undef,
                                       $basedir          = '/usr/local/bin',
-                                      $ensure           = 'present',
-                                      $username         = 'postgres',
                                       #cron
                                       $setcronjob       = true,
                                       $hour_cronjob     = '2',
