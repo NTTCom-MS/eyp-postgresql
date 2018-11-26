@@ -57,7 +57,7 @@ def postgresBackupMode(enable = True, backup_name=""):
     if retval==0 and linecount==1:
         return backup_name
     else:
-        logAndExit('Unable to start pg_backup')
+        logAndExit('Unable to start pg_backup: '+lastline)
 
 def getDisks(pv_disks, tranlate_aws=True):
     disks = []
@@ -253,8 +253,6 @@ disks = getDisks(pv_disks)
 backup_name = postgresBackupMode(True)
 
 print doLVMSnapshot(lvm_disk, backup_name, snap_size)
-
-
 
 ## temporal
 postgresBackupMode(False)
