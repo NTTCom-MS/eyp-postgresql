@@ -187,7 +187,7 @@ print pv_disks
 
 print "=="
 
-print getDisks(pv_disk)
+print getDisks(pv_disks)
 
 
 sys.exit("FI")
