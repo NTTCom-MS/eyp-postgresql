@@ -216,6 +216,8 @@ def getPVs(vg_name):
     else:
         return pv_disks
 
+def getInstanceID():
+    return urllib2.urlopen('http://169.254.169.254/latest/meta-data/instance-id').read()
 
 lvm_disk = ""
 snap_size = "5G"
@@ -348,7 +350,7 @@ if awscli:
     try:
         import boto3
 
-        instance_id = urllib2.urlopen('http://169.254.169.254/latest/meta-data/instance-id').read()
+        instance_id = getInstanceID()
 
         print instance_id
 
