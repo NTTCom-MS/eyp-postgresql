@@ -223,6 +223,7 @@ awscli = False
 config_file = './postgres_snapshot.config'
 logdir = '.'
 pgusername = "postgres"
+delete_lvm_snap = True
 
 # parse opts
 
@@ -312,6 +313,11 @@ except:
     logging.debug('Using default value for awscli')
 
 try:
+    delete_lvm_snap=config.getboolean('pgsnapshot', 'deletesnapshot')
+except:
+    logging.debug('Using default value for delete_lvm_snap')
+
+try:
     to_addr=config.get('pgsnapshot', 'to').strip('"')
 except:
     to_addr=''
@@ -358,4 +364,5 @@ if awscli:
 
 postgresBackupMode(False)
 
-removeLVMSnapshot('/dev/'+vg_name+'/'+snap_name)
+if delete_lvm_snap:
+    removeLVMSnapshot('/dev/'+vg_name+'/'+snap_name)

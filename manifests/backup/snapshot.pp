@@ -10,6 +10,7 @@ define postgresql::backup::snapshot (
                                       $lvm_disk         = undef,
                                       $aws              = false,
                                       $snap_size        = '10G',
+                                      $deletesnapshot   = true,
                                       #cron
                                       $setcronjob       = true,
                                       $hour_cronjob     = '2',
