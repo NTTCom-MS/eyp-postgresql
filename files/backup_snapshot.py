@@ -372,12 +372,12 @@ if awscli:
 
         volumes = []
         for disk in disks:
-            volumes.append(instance_devices[disk]['Ebs']['VolumeId'])
+            volumes.append(getattr(instance_devices,disk).Ebs.VolumeId)
 
         print volumes
 
-    except:
-        logAndExit('error using AWS API')
+    except Exception as e:
+        logAndExit('error using AWS API: '+e)
 
 postgresBackupMode(False)
 
