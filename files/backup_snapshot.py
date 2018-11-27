@@ -35,7 +35,20 @@ def logAndExit(msg):
     logging.error(msg)
     sys.exit(msg+"\n")
 
-def
+def removeLVMSnapshot(lv_snap):
+    p = subprocess.Popen("lvremove "+lv_snap+" -y", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    linecount=0
+    lastline=""
+    for line in p.stdout.readlines():
+        lastline = line.strip()
+        linecount+=1
+    retval = p.wait()
+
+    if retval==0 and linecount==1:
+        logging.debug("removed snapshot:"+lv_snap)
+        return snap_name
+    else:
+        logAndExit('Unable to create lvm snapshot: '+lastline)
 
 def doLVMSnapshot(lvm_disk, snap_name, snap_size='5G'):
     # [root@ip-172-31-46-9 ~]# lvcreate -s -n snap -L 5G /dev/vg/postgres
@@ -52,6 +65,7 @@ def doLVMSnapshot(lvm_disk, snap_name, snap_size='5G'):
     retval = p.wait()
 
     if retval==0 and linecount==1:
+        logging.debug("created snapshot:"+snap_name)
         return snap_name
     else:
         logAndExit('Unable to create lvm snapshot: '+lastline)
@@ -133,7 +147,7 @@ def getDataDir():
     else:
         logAndExit('Error getting datadir')
 
-def getPVs(lvm_disk):
+def getVG(lvm_disk):
     # busquem vg del lv, dsp pv del vg
     p = subprocess.Popen('lvdisplay '+lvm_disk+' 2>/dev/null | grep "VG Name"', shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     linecount=0
@@ -146,27 +160,29 @@ def getPVs(lvm_disk):
     if retval==0 and linecount==1:
         line_split = lastline.split()
         if line_split[0]=="VG" and line_split[1]=="Name":
-            vg_name = line_split[2]
-            pv_disks = []
-
-            p = subprocess.Popen('vgdisplay '+vg_name+' -vv 2>/dev/null  | grep "PV Name"', shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-            for line in p.stdout.readlines():
-                line_split = line.split()
-                if line_split[0]=="PV" and line_split[1]=="Name":
-                    pv_disks.append(line_split[2])
-                else:
-                    logAndExit('Corrupted output getting PV disk for '+vg_name)
-            retval = p.wait()
-
-            if retval!=0:
-                logAndExit('ERROR listing PV disks for: '+vg_name)
-            else:
-                return pv_disks
-
+            return line_split[2]
         else:
             logAndExit('Corrupted output getting VG name: '+lastline)
     else:
         logAndExit('Invalid disk: '+lvm_disk)
+
+def getPVs(vg_name):
+    pv_disks = []
+
+    p = subprocess.Popen('vgdisplay '+vg_name+' -vv 2>/dev/null  | grep "PV Name"', shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    for line in p.stdout.readlines():
+        line_split = line.split()
+        if line_split[0]=="PV" and line_split[1]=="Name":
+            pv_disks.append(line_split[2])
+        else:
+            logAndExit('Corrupted output getting PV disk for '+vg_name)
+    retval = p.wait()
+
+    if retval!=0:
+        logAndExit('ERROR listing PV disks for: '+vg_name)
+    else:
+        return pv_disks
+
 
 lvm_disk = ""
 snap_size = "5G"
@@ -265,7 +281,9 @@ except:
 if not lvm_disk:
     lvm_disk = getFSType(getDataDir())[1]
 
-pv_disks = getPVs(lvm_disk)
+vg_name = getVG(lvm_disk)
+
+pv_disks = getPVs(vg_name)
 
 disks = getDisks(pv_disks)
 
@@ -289,3 +307,5 @@ if awscli:
     print(instance.block_device_mappings)
 
 postgresBackupMode(False)
+
+removeLVMSnapshot('/dev/'+vg_name+'/'+snap_name)
