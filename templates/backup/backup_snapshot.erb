@@ -6,3 +6,9 @@ lvmdisk=<%= @lvm_disk %>
 aws=<%= @aws %>
 snapsize=<%= @snap_size %>
 pgusername=<%= @username %>
+<% if defined?(@mailto) -%>
+to=<%= @mailto %>
+<% end -%>
+<% if defined?(@idhost) -%>
+host-id=<%= @idhost %>
+<% end -%>

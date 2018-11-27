@@ -13,6 +13,30 @@ from subprocess import Popen,PIPE,STDOUT
 from email.MIMEMultipart import MIMEMultipart
 from email.MIMEText import MIMEText
 
+def sendReportEmail(to_addr, id_host):
+    global error_count
+    global logFile
+
+    from_addr=getpass.getuser()+'@'+socket.gethostname()
+
+    msg = MIMEMultipart()
+    msg['From'] = from_addr
+    msg['To'] = to_addr
+    if error_count > 0:
+        msg['Subject'] = id_host+"-RSYNCMAN-ERROR"
+    else:
+        msg['Subject'] = id_host+"-RSYNCMAN-OK"
+
+    body = "please check "+logFile+" on "+socket.gethostname()
+    msg.attach(MIMEText(body, 'plain'))
+
+    server = smtplib.SMTP('localhost')
+    text = msg.as_string()
+    server.sendmail(from_addr, to_addr, text)
+    server.quit()
+
+    logging.info("sent report to "+to_addr)
+
 def logAndExit(msg):
     # check if it is un backup mode
     # psql -U postgres -c 'select pg_backup_start_time();' | grep -A 1 -- --- | tail -n1
@@ -33,6 +57,10 @@ def logAndExit(msg):
     else:
         logging.error('Unable check if postgres is un backup mode: '+lastline)
     logging.error(msg)
+
+    if to_addr:
+        sendReportEmail(to_addr, id_host)
+
     sys.exit(msg+"\n")
 
 def removeLVMSnapshot(lv_snap):
@@ -277,6 +305,20 @@ try:
     awscli=config.getboolean('pgsnapshot', 'aws')
 except:
     logging.debug('Using default value for awscli')
+
+try:
+    to_addr=config.get('pgsnapshot', 'to').strip('"')
+except:
+    to_addr=''
+
+try:
+    id_host=config.get('pgsnapshot', 'host-id').strip('"')
+except:
+    id_host=socket.gethostname()
+
+#
+# ACTIONS
+#
 
 if not lvm_disk:
     lvm_disk = getFSType(getDataDir())[1]
