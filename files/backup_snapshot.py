@@ -365,7 +365,18 @@ if awscli:
 
         instance = ec2.Instance(instance_id)
 
-        print(instance.block_device_mappings)
+        instance_devices = instance.block_device_mappings
+
+        print disks
+        print instance_devices
+
+        volumes = []
+        for instance_device in instance_devices
+            if instance_device['DeviceName'] in disks:
+                volumes.append(instance_device['VolumeId'])
+
+        print volumes
+
     except:
         logAndExit('error using AWS API')
 
