@@ -23,7 +23,7 @@ def doLVMSnapshot(lvm_disk, snap_name, snap_size='5G'):
     # [root@ip-172-31-46-9 ~]# echo $?
     # 0
     # [root@ip-172-31-46-9 ~]#
-    p = subprocess.Popen("lvcreate -s -n "+snap_name+" -L "+snap_size+" "+lvm_disk+"2>/dev/null", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    p = subprocess.Popen("lvcreate -s -n "+snap_name+" -L "+snap_size+" "+lvm_disk+" 2>/dev/null", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     linecount=0
     lastline=""
     for line in p.stdout.readlines():
