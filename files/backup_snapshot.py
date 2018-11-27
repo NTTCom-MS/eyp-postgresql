@@ -14,8 +14,7 @@ from subprocess import Popen,PIPE,STDOUT
 from email.MIMEMultipart import MIMEMultipart
 from email.MIMEText import MIMEText
 
-def sendReportEmail(to_addr, id_host):
-    global error_count
+def sendReportEmail(status, to_addr, id_host):
     global logFile
 
     from_addr=getpass.getuser()+'@'+socket.gethostname()
@@ -23,10 +22,10 @@ def sendReportEmail(to_addr, id_host):
     msg = MIMEMultipart()
     msg['From'] = from_addr
     msg['To'] = to_addr
-    if error_count > 0:
-        msg['Subject'] = id_host+"-RSYNCMAN-ERROR"
+    if status:
+        msg['Subject'] = id_host+"-PGSNAPSHOT-ERROR"
     else:
-        msg['Subject'] = id_host+"-RSYNCMAN-OK"
+        msg['Subject'] = id_host+"-PGSNAPSHOT-OK"
 
     body = "please check "+logFile+" on "+socket.gethostname()
     msg.attach(MIMEText(body, 'plain'))
@@ -64,7 +63,7 @@ def logAndExit(msg):
     logging.error(msg)
 
     if to_addr:
-        sendReportEmail(to_addr, id_host)
+        sendReportEmail(False, to_addr, id_host)
 
     sys.exit(msg+"\n")
 
