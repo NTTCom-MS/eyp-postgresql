@@ -371,7 +371,7 @@ if awscli:
         print instance_devices
 
         volumes = []
-        for instance_device in instance_devices
+        for instance_device in instance_devices:
             if instance_device['DeviceName'] in disks:
                 volumes.append(instance_device['VolumeId'])
 
