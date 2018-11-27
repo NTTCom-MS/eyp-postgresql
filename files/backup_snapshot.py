@@ -350,6 +350,8 @@ if awscli:
 
         instance_id = urllib2.urlopen('http://169.254.169.254/latest/meta-data/instance-id').read()
 
+        print instance_id
+
         if not instance_id:
           logAndExit("error getting instance_id")
 
