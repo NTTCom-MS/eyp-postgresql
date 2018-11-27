@@ -377,7 +377,7 @@ if awscli:
         print volumes
 
     except Exception as e:
-        logAndExit('error using AWS API: '+e)
+        logAndExit('error using AWS API: '+str(e))
 
 postgresBackupMode(False)
 
