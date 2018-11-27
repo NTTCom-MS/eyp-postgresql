@@ -119,7 +119,7 @@ def postgresBackupMode(enable = True, backup_name=""):
     if retval==0:
         return backup_name
     else:
-        logAndExit('Unable to start pg_backup: '+lastline)
+        logAndExit('Unable to start pg_backup')
 
 def getDisks(pv_disks, tranlate_aws=True):
     disks = []
