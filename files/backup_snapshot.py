@@ -340,7 +340,7 @@ if awscli:
     instance_id = urllib2.urlopen('http://169.254.169.254/latest/meta-data/instance-id').read()
 
     if not instance_id:
-      sys.exit("error getting instance_id")
+      logAndExit("error getting instance_id")
 
     ec2 = boto3.resource('ec2')
 
