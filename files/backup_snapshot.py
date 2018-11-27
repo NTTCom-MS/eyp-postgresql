@@ -350,6 +350,10 @@ if awscli:
     try:
         import boto3
 
+        logging.getLogger('boto3').setLevel(logging.CRITICAL)
+        logging.getLogger('botocore').setLevel(logging.CRITICAL)
+        logging.getLogger('nose').setLevel(logging.CRITICAL)
+
         instance_id = getInstanceID()
 
         print instance_id
