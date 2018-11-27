@@ -339,19 +339,22 @@ backup_name = postgresBackupMode(True)
 snap_name = doLVMSnapshot(lvm_disk, backup_name, snap_size)
 
 if awscli:
-    import boto3
-    import urllib2
+    try:
+        import boto3
+        import urllib2
 
-    instance_id = urllib2.urlopen('http://169.254.169.254/latest/meta-data/instance-id').read()
+        instance_id = urllib2.urlopen('http://169.254.169.254/latest/meta-data/instance-id').read()
 
-    if not instance_id:
-      logAndExit("error getting instance_id")
+        if not instance_id:
+          logAndExit("error getting instance_id")
 
-    ec2 = boto3.resource('ec2')
+        ec2 = boto3.resource('ec2')
 
-    instance = ec2.Instance(instance_id)
+        instance = ec2.Instance(instance_id)
 
-    print(instance.block_device_mappings)
+        print(instance.block_device_mappings)
+    except:
+        logAndExit('error using AWS API')
 
 postgresBackupMode(False)
 
