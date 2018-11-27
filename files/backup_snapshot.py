@@ -14,8 +14,28 @@ from email.MIMEMultipart import MIMEMultipart
 from email.MIMEText import MIMEText
 
 def logAndExit(msg):
+    # check if it is un backup mode
+    # psql -U postgres -c 'select pg_backup_start_time();' | grep -A 1 -- --- | tail -n1
+    p = subprocess.Popen("psql -U postgres -c 'select pg_backup_start_time();' | grep -A 1 -- --- | tail -n1", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    linecount=0
+    lastline=""
+    for line in p.stdout.readlines():
+        lastline = line.strip()
+        linecount+=1
+    retval = p.wait()
+
+    if retval==0 and linecount==1:
+        if lastline:
+            logging.debug("postgres in backup mode, disabling backup mode")
+            postgresBackupMode(False)
+        else:
+            logging.debug("postgres is not un backup mode")
+    else:
+        logging.error('Unable check if postgres is un backup mode: '+lastline)
     logging.error(msg)
     sys.exit(msg+"\n")
+
+def
 
 def doLVMSnapshot(lvm_disk, snap_name, snap_size='5G'):
     # [root@ip-172-31-46-9 ~]# lvcreate -s -n snap -L 5G /dev/vg/postgres
@@ -251,11 +271,7 @@ disks = getDisks(pv_disks)
 
 backup_name = postgresBackupMode(True)
 
-print doLVMSnapshot(lvm_disk, backup_name, snap_size)
-
-## temporal
-postgresBackupMode(False)
-sys.exit("FI")
+snap_name = doLVMSnapshot(lvm_disk, backup_name, snap_size)
 
 if awscli:
     import boto3
@@ -271,3 +287,5 @@ if awscli:
     instance = ec2.Instance(instance_id)
 
     print(instance.block_device_mappings)
+
+postgresBackupMode(False)
