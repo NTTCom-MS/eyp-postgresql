@@ -8,6 +8,7 @@ import datetime, time
 import psutil, os
 import re
 import socket
+import urllib2
 from os import access, R_OK
 from ConfigParser import SafeConfigParser
 from subprocess import Popen,PIPE,STDOUT
@@ -346,7 +347,6 @@ snap_name = doLVMSnapshot(lvm_disk, backup_name, snap_size)
 if awscli:
     try:
         import boto3
-        import urllib2
 
         instance_id = urllib2.urlopen('http://169.254.169.254/latest/meta-data/instance-id').read()
 
