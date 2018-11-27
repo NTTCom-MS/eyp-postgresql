@@ -38,7 +38,7 @@ def sendReportEmail(to_addr, id_host):
 
     logging.info("sent report to "+to_addr)
 
-def logAndExit(msg):
+def isPostgresInBackupMode():
     # check if it is un backup mode
     # psql -U postgres -c 'select pg_backup_start_time();' | grep -A 1 -- --- | tail -n1
     p = subprocess.Popen("psql -U postgres -c 'select pg_backup_start_time();' | grep -A 1 -- --- | tail -n1", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -50,13 +50,17 @@ def logAndExit(msg):
     retval = p.wait()
 
     if retval==0 and linecount==1:
-        if lastline:
-            logging.debug("postgres in backup mode, disabling backup mode")
-            postgresBackupMode(False)
-        else:
-            logging.debug("postgres is not un backup mode")
+        return bool(lastline)
     else:
         logging.error('Unable check if postgres is un backup mode: '+lastline)
+
+def logAndExit(msg):
+    if isPostgresInBackupMode():
+        logging.debug("postgres in backup mode, disabling backup mode")
+        postgresBackupMode(False)
+    else:
+        logging.debug("postgres is not un backup mode")
+
     logging.error(msg)
 
     if to_addr:
