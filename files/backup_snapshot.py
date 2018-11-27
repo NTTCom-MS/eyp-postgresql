@@ -17,7 +17,7 @@ def logAndExit(msg):
     logging.error(msg)
     sys.exit(msg+"\n")
 
-def doLVMSnapshot(lvm_disk, snap_name, snap_size):
+def doLVMSnapshot(lvm_disk, snap_name, snap_size='5G'):
     # [root@ip-172-31-46-9 ~]# lvcreate -s -n snap -L 5G /dev/vg/postgres
     #   Logical volume "snap" created.
     # [root@ip-172-31-46-9 ~]# echo $?
@@ -149,7 +149,7 @@ def getPVs(lvm_disk):
         logAndExit('Invalid disk: '+lvm_disk)
 
 lvm_disk = ""
-snapshot_size = "5G"
+snap_size = "5G"
 awscli = False
 config_file = './postgres_snapshot.config'
 logdir = '.'
