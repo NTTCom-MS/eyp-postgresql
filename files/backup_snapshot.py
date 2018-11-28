@@ -68,21 +68,6 @@ def logAndExit(msg):
 
     sys.exit(msg+"\n")
 
-def purgeOldSnapshots(vg_name, lv_name, keep):
-    snaps = {}
-    p = subprocess.Popen("lvdisplay /dev/vg/postgres | awk '/LV snapshot/,/LV Status/' | grep -v LV | awk '{ print $1 }'", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    linecount=0
-    for line in p.stdout.readlines():
-        ts = time.mktime(datetime.datetime.strptime(line.strip(), snapshotbasename+'.'+timeformat).timetuple())
-        snaps[ts] = line.strip()
-    retval = p.wait()
-
-    if retval==0:
-        print snaps
-        return True
-    else:
-        logAndExit('Unable to create purge old snapshots ')
-
 def removeLVMSnapshot(lv_snap):
     p = subprocess.Popen("lvremove "+lv_snap+" -y", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     linecount=0
@@ -97,6 +82,27 @@ def removeLVMSnapshot(lv_snap):
         return snap_name
     else:
         logAndExit('Unable to create lvm snapshot: '+lastline)
+
+def purgeOldSnapshots(vg_name, lv_name, keep):
+    snaps = {}
+    p = subprocess.Popen("lvdisplay /dev/"+vg_name+"/"+lv_name+" | awk '/LV snapshot/,/LV Status/' | grep -v LV | awk '{ print $1 }'", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    linecount=0
+    for line in p.stdout.readlines():
+        ts = time.mktime(datetime.datetime.strptime(line.strip(), snapshotbasename+'.'+timeformat).timetuple())
+        snaps[ts] = line.strip()
+    retval = p.wait()
+
+    if retval==0:
+        keylist = snaps.keys().sort(reverse=True)
+        to_delete = len(keylist)-keep
+        for key in keylist:
+            if to_delete==0:
+                return True
+            print key+": "+snaps[key]
+            removeLVMSnapshot("/dev/"+vg_name+"/"+snaps[key])
+        return True
+    else:
+        logAndExit('Unable to create purge old snapshots ')
 
 def doLVMSnapshot(lvm_disk, snap_name, snap_size='5G'):
     # [root@ip-172-31-46-9 ~]# lvcreate -s -n snap -L 5G /dev/vg/postgres
