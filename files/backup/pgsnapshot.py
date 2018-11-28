@@ -504,7 +504,7 @@ if awscli:
                 logging.debug('created AWS snapshot for '+volume_id)
             else:
                 error_count+=0
-                logging.debug('error creating snapshor for '+volume_id)
+                logging.debug('error creating snapshot for '+volume_id)
 
         if purge:
             aws_snapshots = getAWSsnapshot(lvm_disk, snap_name)
