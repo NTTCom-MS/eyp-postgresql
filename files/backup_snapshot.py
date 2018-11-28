@@ -68,6 +68,21 @@ def logAndExit(msg):
 
     sys.exit(msg+"\n")
 
+def purgeOldSnapshots(vg_name, lv_name, keep):
+    snaps = {}
+    p = subprocess.Popen("lvdisplay /dev/vg/postgres | awk '/LV snapshot/,/LV Status/' | grep -v LV | awk '{ print $1 }'", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    linecount=0
+    for line in p.stdout.readlines():
+        ts = time.mktime(datetime.datetime.strptime(line.strip(), snapshotbasename+'.'+timeformat).timetuple())
+        snaps[ts] = line.strip()
+    retval = p.wait()
+
+    if retval==0:
+        print snaps
+        return True
+    else:
+        logAndExit('Unable to create purge old snapshots ')
+
 def removeLVMSnapshot(lv_snap):
     p = subprocess.Popen("lvremove "+lv_snap+" -y", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     linecount=0
@@ -106,9 +121,10 @@ def doLVMSnapshot(lvm_disk, snap_name, snap_size='5G'):
 
 def postgresBackupMode(enable = True, backup_name=""):
     global pgusername
+    global snapshotbasename
     if enable:
         if not backup_name:
-            backup_name = "snap."+datetime.datetime.fromtimestamp(time.time()).strftime('%Y%m%d%H%M%S')
+            backup_name = snapshotbasename+"."+datetime.datetime.fromtimestamp(time.time()).strftime(timeformat)
         backup_command ="select pg_start_backup('"+backup_name+"');"
     else:
         backup_command = "select pg_stop_backup();"
@@ -219,13 +235,15 @@ def getPVs(vg_name):
 def getInstanceID():
     return urllib2.urlopen('http://169.254.169.254/latest/meta-data/instance-id').read()
 
+timeformat = '%Y%m%d%H%M%S'
 lvm_disk = ""
 snap_size = "5G"
 awscli = False
 config_file = './postgres_snapshot.config'
 logdir = '.'
 pgusername = "postgres"
-delete_lvm_snap = True
+keep_lvm_snaps = 2
+snapshotbasename='snap'
 
 # parse opts
 
@@ -310,14 +328,22 @@ except:
     logging.debug('Using default value for pgusername')
 
 try:
+    snapshotbasename=config.get('pgsnapshot', 'snapshotbasename').strip('"')
+except:
+    logging.debug('Using default value for snapshotbasename')
+
+try:
     awscli=config.getboolean('pgsnapshot', 'aws')
 except:
     logging.debug('Using default value for awscli')
 
 try:
-    delete_lvm_snap=config.getboolean('pgsnapshot', 'deletesnapshot')
+    keep_lvm_snaps=config.getboolean('pgsnapshot', 'keeplvmsnaps')
 except:
-    logging.debug('Using default value for delete_lvm_snap')
+    if awscli:
+        keep_lvm_snaps=0
+    else:
+        keep_lvm_snaps=1
 
 try:
     to_addr=config.get('pgsnapshot', 'to').strip('"')
@@ -382,5 +408,7 @@ if awscli:
 
 postgresBackupMode(False)
 
-if delete_lvm_snap:
+if keep_lvm_snaps==0:
     removeLVMSnapshot('/dev/'+vg_name+'/'+snap_name)
+else:
+    purgeOldSnapshots(vg_name, snap_name, keep_lvm_snaps)
