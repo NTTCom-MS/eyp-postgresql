@@ -507,6 +507,8 @@ if awscli:
         if purge:
             aws_snapshots = getAWSsnapshot(ec2, lvm_disk, snap_name)
 
+            print aws_snapshots
+
 
     except Exception as e:
         logAndExit('error using AWS API: '+str(e))
