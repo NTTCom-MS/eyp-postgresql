@@ -105,7 +105,7 @@ def purgeOldSnapshots(vg_name, lv_name, keep):
             if to_delete<=0:
                 return True
             logging.debug("purging snapshot: "+str(key)+": "+snaps[key])
-            # removeLVMSnapshot("/dev/"+vg_name+"/"+snaps[key])
+            removeLVMSnapshot("/dev/"+vg_name+"/"+snaps[key])
             to_delete-=1
         return True
     else:
