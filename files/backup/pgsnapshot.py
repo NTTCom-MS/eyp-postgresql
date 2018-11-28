@@ -517,4 +517,4 @@ if purge:
     purgeOldSnapshots(vg_name, lv_name, keep_lvm_snaps, awscli)
 
 if to_addr:
-    sendReportEmail(error_count!=0, to_addr, id_host):
+    sendReportEmail(error_count!=0, to_addr, id_host)
