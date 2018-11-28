@@ -101,7 +101,7 @@ def purgeOldSnapshots(vg_name, lv_name, keep):
         for key in keylist:
             if to_delete<=0:
                 return True
-            logging.debug("purging snapshot: "+key+": "+snaps[key])
+            logging.debug("purging snapshot: "+str(key)+": "+snaps[key])
             removeLVMSnapshot("/dev/"+vg_name+"/"+snaps[key])
         return True
     else:
@@ -371,7 +371,7 @@ except:
     if awscli:
         keep_lvm_snaps=0
     else:
-        keep_lvm_snaps=1
+        keep_lvm_snaps=2
 
 try:
     to_addr=config.get('pgsnapshot', 'to').strip('"')
