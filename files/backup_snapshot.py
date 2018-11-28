@@ -96,7 +96,7 @@ def purgeOldSnapshots(vg_name, lv_name, keep):
         keylist = snaps.keys()
         keylist.sort(reverse=True)
         to_delete = len(keylist)-keep
-        logging.debug("snapshots: "+len(keylist)+" keeping: "+keep+" deleting: "+to_delete)
+        logging.debug("snapshots: "+str(len(keylist))+" keeping: "+str(keep)+" deleting: "+str(to_delete))
         for key in keylist:
             if to_delete==0:
                 return True
