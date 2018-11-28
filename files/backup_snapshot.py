@@ -93,7 +93,8 @@ def purgeOldSnapshots(vg_name, lv_name, keep):
     retval = p.wait()
 
     if retval==0:
-        keylist = snaps.keys().sort(reverse=True)
+        keylist = snaps.keys()
+        keylist.sort(reverse=True)
         to_delete = len(keylist)-keep
         for key in keylist:
             if to_delete==0:
