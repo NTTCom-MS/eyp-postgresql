@@ -98,7 +98,7 @@ def purgeOldSnapshots(vg_name, lv_name, keep):
         for key in keylist:
             if to_delete==0:
                 return True
-            logging.debug("purging snapshot: "key+": "+snaps[key])
+            logging.debug("purging snapshot: "+key+": "+snaps[key])
             removeLVMSnapshot("/dev/"+vg_name+"/"+snaps[key])
         return True
     else:
