@@ -128,7 +128,7 @@ def doLVMSnapshot(lvm_disk, snap_name, snap_size='5G'):
         linecount+=1
     retval = p.wait()
 
-    if retval==0 and linecount==1:
+    if retval==0:
         logging.debug("created snapshot:"+snap_name)
         return snap_name
     else:
@@ -350,27 +350,27 @@ rootLogger.setLevel(0)
 try:
     lvm_disk=config.get('pgsnapshot', 'lvmdisk').strip('"')
 except:
-    logging.debug('Using default value for lvm_disk')
+    logging.debug('Using default value for lvm_disk: "'+lvm_disk+'"')
 
 try:
     snap_size=config.get('pgsnapshot', 'snapsize').strip('"')
 except:
-    logging.debug('Using default value for snap_size')
+    logging.debug('Using default value for snap_size: '+str(snap_size))
 
 try:
     pgusername=config.get('pgsnapshot', 'pgusername').strip('"')
 except:
-    logging.debug('Using default value for pgusername')
+    logging.debug('Using default value for pgusername: '+pgusername)
 
 try:
     snapshotbasename=config.get('pgsnapshot', 'snapshotbasename').strip('"')
 except:
-    logging.debug('Using default value for snapshotbasename')
+    logging.debug('Using default value for snapshotbasename: '+snapshotbasename)
 
 try:
     awscli=config.getboolean('pgsnapshot', 'aws')
 except:
-    logging.debug('Using default value for awscli')
+    logging.debug('Using default value for awscli: '+str(awscli))
 
 try:
     keep_lvm_snaps=config.getboolean('pgsnapshot', 'keeplvmsnaps')
