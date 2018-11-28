@@ -298,9 +298,10 @@ def createAWSsnapshot(ec2, volume_id, lvm_disk, snap_name):
     except:
         return False
 
-def getAWSsnapshot(ec2, lvm_disk, snap_name):
+def getAWSsnapshot(lvm_disk, snap_name):
     global id_host
     try:
+        ec2 = boto3.client('ec2')
         response = ec2.describe_snapshots( Filters=[{ 'Key': 'pgsnapshot-lvm_disk', 'Value': lvm_disk },{ 'Key': 'pgsnapshot-host', 'Value': id_host },{ 'Key': 'pgsnapshot-snap_name', 'Value': snap_name }])
 
         return response
@@ -505,7 +506,7 @@ if awscli:
                 logging.debug('error creating snapshor for '+volume_id)
 
         if purge:
-            aws_snapshots = getAWSsnapshot(ec2, lvm_disk, snap_name)
+            aws_snapshots = getAWSsnapshot(lvm_disk, snap_name)
 
             print aws_snapshots
 
