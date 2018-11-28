@@ -84,7 +84,7 @@ def removeLVMSnapshot(lv_snap):
     else:
         logAndExit('Unable to remove lvm snapshot: (retcode: '+str(retval)+')'+lastline)
 
-def purgeOldSnapshots(vg_name, lv_name, keep):
+def purgeOldLVMSnapshots(vg_name, lv_name, keep):
     snaps = {}
     p = subprocess.Popen("lvdisplay /dev/"+vg_name+"/"+lv_name+" | awk '/LV snapshot/,/LV Status/' | grep -v LV | awk '{ print $1 }'", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     linecount=0
@@ -158,7 +158,7 @@ def postgresBackupMode(enable = True, backup_name=""):
         logAndExit('Unable to start pg_backup')
 
 def getDisks(pv_disks, tranlate_aws=True):
-    disks = []
+    disks = set()
     regex = re.compile(r"^xv")
     for pv_disk in pv_disks:
         p = subprocess.Popen("lsblk -no pkname "+pv_disk+" | head -n1", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -171,9 +171,9 @@ def getDisks(pv_disks, tranlate_aws=True):
 
         if retval==0 and linecount==1:
             if tranlate_aws:
-                disks.append("/dev/"+regex.sub('s', lastline))
+                disks.add("/dev/"+regex.sub('s', lastline))
             else:
-                disks.append("/dev/"+lastline)
+                disks.add("/dev/"+lastline)
         else:
             logAndExit('Error getting disk from PV')
     return disks
@@ -426,6 +426,8 @@ snap_name = doLVMSnapshot(lvm_disk, backup_name, snap_size)
 
 logging.debug("snap_name: "+snap_name)
 
+postgresBackupMode(False)
+
 if awscli:
     try:
         import boto3
@@ -436,30 +438,27 @@ if awscli:
 
         instance_id = getInstanceID()
 
-        print instance_id
+        logging.debug('instance_id: '+instance_id)
 
         if not instance_id:
           logAndExit("error getting instance_id")
 
         ec2 = boto3.resource('ec2')
-
         instance = ec2.Instance(instance_id)
 
         instance_devices = instance.block_device_mappings
 
-        print disks
-        print instance_devices
+        logging.debug('disks: '+str(disks))
+        logging.debug('instance_devices: '+str(instance_devices))
 
         volumes = []
         for instance_device in instance_devices:
             if instance_device['DeviceName'] in disks:
                 volumes.append(instance_device['Ebs']['VolumeId'])
 
-        print volumes
+        logging.debug('volumes: '+str(volumes))
 
     except Exception as e:
         logAndExit('error using AWS API: '+str(e))
 
-postgresBackupMode(False)
-
-purgeOldSnapshots(vg_name, lv_name, keep_lvm_snaps)
+purgeOldLVMSnapshots(vg_name, lv_name, keep_lvm_snaps)
