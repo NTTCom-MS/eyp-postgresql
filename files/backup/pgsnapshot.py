@@ -16,7 +16,7 @@ from subprocess import Popen,PIPE,STDOUT
 from email.MIMEMultipart import MIMEMultipart
 from email.MIMEText import MIMEText
 
-def sendReportEmail(status, to_addr, id_host):
+def sendReportEmail(errors, to_addr, id_host):
     global logFile
 
     from_addr=getpass.getuser()+'@'+socket.gethostname()
@@ -24,7 +24,7 @@ def sendReportEmail(status, to_addr, id_host):
     msg = MIMEMultipart()
     msg['From'] = from_addr
     msg['To'] = to_addr
-    if status:
+    if errors:
         msg['Subject'] = id_host+"-PGSNAPSHOT-ERROR"
     else:
         msg['Subject'] = id_host+"-PGSNAPSHOT-OK"
@@ -56,6 +56,8 @@ def isPostgresInBackupMode():
         logging.error('Unable check if postgres is un backup mode: '+lastline)
 
 def logAndExit(msg):
+    global purge
+    global keep_lvm_snaps
     if isPostgresInBackupMode():
         logging.debug("postgres in backup mode, disabling backup mode")
         postgresBackupMode(False)
@@ -63,6 +65,9 @@ def logAndExit(msg):
         logging.debug("postgres is not un backup mode")
 
     logging.error(msg)
+
+    if purge and keep_lvm_snaps==0:
+        purgeOldSnapshots(vg_name, lv_name, keep_lvm_snaps, awscli)
 
     if to_addr:
         sendReportEmail(False, to_addr, id_host)
@@ -84,7 +89,7 @@ def removeLVMSnapshot(lv_snap):
     else:
         logAndExit('Unable to remove lvm snapshot: (retcode: '+str(retval)+')'+lastline)
 
-def purgeOldLVMSnapshots(vg_name, lv_name, keep):
+def purgeOldSnapshots(vg_name, lv_name, keep, awscli):
     snaps = {}
     p = subprocess.Popen("lvdisplay /dev/"+vg_name+"/"+lv_name+" | awk '/LV snapshot/,/LV Status/' | grep -v LV | awk '{ print $1 }'", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     linecount=0
@@ -110,7 +115,11 @@ def purgeOldLVMSnapshots(vg_name, lv_name, keep):
             to_delete-=1
         return True
     else:
-        logAndExit('Unable to purge old snapshots ')
+        # not using longAndExit because we could end up in a recurse loop
+        if to_addr:
+            sendReportEmail(False, to_addr, id_host)
+
+        sys.exit('Unable to purge old snapshots'+"\n")
 
 def doLVMSnapshot(lvm_disk, snap_name, snap_size='5G'):
     # [root@ip-172-31-46-9 ~]# lvcreate -s -n snap -L 5G /dev/vg/postgres
@@ -270,23 +279,55 @@ def getPVs(vg_name):
 def getInstanceID():
     return urllib2.urlopen('http://169.254.169.254/latest/meta-data/instance-id').read()
 
+def getAWSVolumes(instance_devices):
+    volumes = []
+    for instance_device in instance_devices:
+        if instance_device['DeviceName'] in disks:
+            volumes.append(instance_device['Ebs']['VolumeId'])
+    return volumes
+
+def createAWSsnapshot(ec2, volume_id, lvm_disk, snap_name):
+    global id_host
+    try:
+        # Create snapshot
+        response = ec2.create_snapshot(VolumeId=volume[volume_id],Description="pgsnapshot for "+snap_name)
+        result = response[volume_id]
+        ec.create_tags(Resources=[result],Tags=[{ 'Key': 'pgsnapshot-lvm_disk', 'Value': lvm_disk },{ 'Key': 'pgsnapshot-host', 'Value': id_host },{ 'Key': 'pgsnapshot-snap_name', 'Value': snap_name }])
+
+        return True
+    except:
+        return False
+
+def getAWSsnapshot(ec2, lvm_disk, snap_name):
+    global id_host
+    try:
+        response = ec2.describe_snapshots( Filters=[{ 'Key': 'pgsnapshot-lvm_disk', 'Value': lvm_disk },{ 'Key': 'pgsnapshot-host', 'Value': id_host },{ 'Key': 'pgsnapshot-snap_name', 'Value': snap_name }])
+
+        return response
+    except:
+        logAndExit('error getting AWS snapshot list')
+
+
 timeformat = '%Y%m%d%H%M%S'
 lvm_disk = ""
 snap_size = "5G"
 awscli = False
+purge = True
 config_file = './postgres_snapshot.config'
 logdir = '/var/log/pgsnapshot'
 pgusername = "postgres"
 keep_lvm_snaps = 2
 snapshotbasename='snap'
+error_count=0
 
 # parse opts
 
-options, remainder = getopt.getopt(sys.argv[1:], 'l:s:ac:', [
+options, remainder = getopt.getopt(sys.argv[1:], 'l:s:ac:d', [
                                                             'lvm-disk=',
                                                             "config="
                                                             'snapshot-size=',
-                                                            'aws'
+                                                            'aws',
+                                                            'dontpurge'
                                                          ])
 
 for opt, arg in options:
@@ -298,6 +339,8 @@ for opt, arg in options:
         config_file = arg
     elif opt in ('-a', '--aws'):
         awscli = True
+    elif opt in ('-d', '--dontpurge'):
+        purge = False
     elif opt in ('-l', '--logdir'):
         logdir = arg
     else:
@@ -448,17 +491,28 @@ if awscli:
 
         instance_devices = instance.block_device_mappings
 
-        logging.debug('disks: '+str(disks))
         logging.debug('instance_devices: '+str(instance_devices))
 
-        volumes = []
-        for instance_device in instance_devices:
-            if instance_device['DeviceName'] in disks:
-                volumes.append(instance_device['Ebs']['VolumeId'])
+        volumes = getAWSVolumes(instance_devices)
 
         logging.debug('volumes: '+str(volumes))
+
+        for volume_id in volumes:
+            if createAWSsnapshot(ec2, volume_id, snap_name):
+                logging.debug('created AWS snapshot for '+volume_id)
+            else:
+                error_count+=0
+                logging.debug('error creating snapshor for '+volume_id)
+
+        if purge:
+            aws_snapshots = getAWSsnapshot(ec2, lvm_disk, snap_name)
+
 
     except Exception as e:
         logAndExit('error using AWS API: '+str(e))
 
-purgeOldLVMSnapshots(vg_name, lv_name, keep_lvm_snaps)
+if purge:
+    purgeOldSnapshots(vg_name, lv_name, keep_lvm_snaps, awscli)
+
+if to_addr:
+    sendReportEmail(error_count!=0, to_addr, id_host):
