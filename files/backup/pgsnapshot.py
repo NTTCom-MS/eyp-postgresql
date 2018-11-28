@@ -395,19 +395,36 @@ except:
 #
 
 if not lvm_disk:
-    lvm_disk = getFSType(getDataDir())[1]
+    logging.debug("lvm_disk undefined, searching datadir")
+    datadir = getDataDir()
+    logging.debug("postgres datadir: "+datadir)
+    lvm_disk = getFSType(datadir)[1]
+
+logging.debug("lvm_disk: "+lvm_disk)
 
 lv_name = getLV(lvm_disk)
 
+logging.debug("lv_name: "+lv_name)
+
 vg_name = getVG(lvm_disk)
+
+logging.debug("vg_name: "+vg_name)
 
 pv_disks = getPVs(vg_name)
 
+logging.debug("pv_disks: "+pv_disks)
+
 disks = getDisks(pv_disks)
+
+logging.debug("disks: "+disks)
 
 backup_name = postgresBackupMode(True)
 
+logging.debug("backup_name: "+backup_name)
+
 snap_name = doLVMSnapshot(lvm_disk, backup_name, snap_size)
+
+logging.debug("snap_name: "+snap_name)
 
 if awscli:
     try:
