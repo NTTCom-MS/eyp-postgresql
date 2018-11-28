@@ -158,7 +158,7 @@ def postgresBackupMode(enable = True, backup_name=""):
     logging.debug("postgresBackupMode: "+psql_command)
     p = subprocess.Popen(psql_command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     for line in p.stdout.readlines():
-        logging.debug("postgresBackupMode: "+line)
+        logging.debug("postgresBackupMode: "+line.strip())
     retval = p.wait()
 
     if retval==0:
