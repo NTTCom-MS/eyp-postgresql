@@ -412,11 +412,11 @@ logging.debug("vg_name: "+vg_name)
 
 pv_disks = getPVs(vg_name)
 
-logging.debug("pv_disks: "+pv_disks)
+logging.debug("pv_disks: "+str(pv_disks))
 
 disks = getDisks(pv_disks)
 
-logging.debug("disks: "+disks)
+logging.debug("disks: "+str(disks))
 
 backup_name = postgresBackupMode(True)
 
