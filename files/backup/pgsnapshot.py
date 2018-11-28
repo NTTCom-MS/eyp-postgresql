@@ -498,7 +498,7 @@ if awscli:
         logging.debug('volumes: '+str(volumes))
 
         for volume_id in volumes:
-            if createAWSsnapshot(ec2, volume_id, snap_name):
+            if createAWSsnapshot(ec2, volume_id, lvm_disk, snap_name):
                 logging.debug('created AWS snapshot for '+volume_id)
             else:
                 error_count+=0
