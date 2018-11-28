@@ -1,4 +1,4 @@
-define postgresql::backup::snapshot (
+define postgresql::backup::pgsnapshot (
                                       $destination,
                                       $ensure            = 'present',
                                       $username          = 'postgres',
@@ -9,9 +9,10 @@ define postgresql::backup::snapshot (
                                       $basedir           = '/usr/local/bin',
                                       $lvm_disk          = undef,
                                       $aws               = false,
-                                      $snap_size         = '10G',
+                                      $snap_size         = '5G',
                                       $keeplvmsnaps      = '2',
                                       $snapshot_basename = 'pgsnap',
+                                      $logdir            = '/var/log/pgsnapshot'
                                       #cron
                                       $setcronjob        = true,
                                       $hour_cronjob      = '2',
@@ -31,12 +32,12 @@ define postgresql::backup::snapshot (
   validate_absolute_path($destination)
 
   #source => "puppet:///modules/${module_name}/backup_pgdump.sh",
-  file { "${basedir}/postgres_snapshot.py":
+  file { "${basedir}/pgsnapshot.py":
     ensure  => $ensure,
     owner   => 'root',
     group   => $username,
     mode    => '0750',
-    content => file("${module_name}/backup_snapshot.py"),
+    content => file("${module_name}/backup/pgsnapshot.py"),
   }
 
   file { "${basedir}/postgres_snapshot.config":
@@ -44,7 +45,7 @@ define postgresql::backup::snapshot (
     owner   => 'root',
     group   => $username,
     mode    => '0640',
-    content => template("${module_name}/backup/backup_pgdump_config.erb"),
+    content => template("${module_name}/backup/config_pgsnapshot.erb"),
   }
 
   exec { "mkdir p ${destination} backup":
@@ -58,6 +59,19 @@ define postgresql::backup::snapshot (
     group   => $username,
     mode    => '0770',
     require => Exec["mkdir p ${destination} backup"],
+  }
+
+  exec { "mkdir p ${logdir} backup":
+    command => "mkdir -p ${logdir}",
+    creates => $logdir,
+  }
+
+  file { $logdir:
+    ensure  => 'directory',
+    owner   => 'root',
+    group   => $username,
+    mode    => '0770',
+    require => Exec["mkdir p ${logdir} backup"],
   }
 
   if($setcronjob)
