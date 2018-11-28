@@ -304,8 +304,8 @@ def getAWSsnapshot(ec2, lvm_disk, snap_name):
         response = ec2.describe_snapshots( Filters=[{ 'Key': 'pgsnapshot-lvm_disk', 'Value': lvm_disk },{ 'Key': 'pgsnapshot-host', 'Value': id_host },{ 'Key': 'pgsnapshot-snap_name', 'Value': snap_name }])
 
         return response
-    except:
-        logAndExit('error getting AWS snapshot list')
+    except Exception as e:
+        logAndExit('error getting AWS snapshot list: '+str(e))
 
 
 timeformat = '%Y%m%d%H%M%S'
