@@ -88,7 +88,10 @@ def purgeOldSnapshots(vg_name, lv_name, keep):
     p = subprocess.Popen("lvdisplay /dev/"+vg_name+"/"+lv_name+" | awk '/LV snapshot/,/LV Status/' | grep -v LV | awk '{ print $1 }'", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     linecount=0
     for line in p.stdout.readlines():
-        ts = time.mktime(datetime.datetime.strptime(line.strip(), snapshotbasename+'.'+timeformat).timetuple())
+        try:
+            ts = time.mktime(datetime.datetime.strptime(line.strip(), snapshotbasename+'.'+timeformat).timetuple())
+        except:
+            continue
         snaps[ts] = line.strip()
     retval = p.wait()
 
