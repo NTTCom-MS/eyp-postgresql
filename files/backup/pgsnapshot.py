@@ -294,9 +294,10 @@ def createAWSsnapshot(ec2, volume_id, lvm_disk, snap_name):
         result = response[volume_id]
         ec.create_tags(Resources=[result],Tags=[{ 'Key': 'pgsnapshot-lvm_disk', 'Value': lvm_disk },{ 'Key': 'pgsnapshot-host', 'Value': id_host },{ 'Key': 'pgsnapshot-snap_name', 'Value': snap_name }])
 
-        return ""
+        return True
     except Exception as e:
-        return str(e)
+        logging.error(str(e))
+        return False
 
 def getAWSsnapshot(lvm_disk, snap_name):
     global id_host
@@ -499,12 +500,11 @@ if awscli:
         logging.debug('volumes: '+str(volumes))
 
         for volume_id in volumes:
-            error_create_snapshot = createAWSsnapshot(ec2, volume_id, lvm_disk, snap_name)
-            if noterror_create_snapshot:
+            if createAWSsnapshot(ec2, volume_id, lvm_disk, snap_name):
                 logging.debug('created AWS snapshot for '+volume_id)
             else:
                 error_count+=0
-                logging.debug('error creating snapshor for '+volume_id+": "+)
+                logging.debug('error creating snapshor for '+volume_id)
 
         if purge:
             aws_snapshots = getAWSsnapshot(lvm_disk, snap_name)
