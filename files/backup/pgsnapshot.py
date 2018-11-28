@@ -373,7 +373,7 @@ except:
     logging.debug('Using default value for awscli: '+str(awscli))
 
 try:
-    keep_lvm_snaps=config.getboolean('pgsnapshot', 'keeplvmsnaps')
+    keep_lvm_snaps=config.get('pgsnapshot', 'keeplvmsnaps')
 except:
     if awscli:
         keep_lvm_snaps=0
