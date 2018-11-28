@@ -293,7 +293,7 @@ def createAWSsnapshot(ec2, volume_id, lvm_disk, snap_name):
         # response = ec2.create_snapshot(VolumeId=volume_id, Description="pgsnapshot for "+snap_name)
         # result = response[volume_id]
         # ec2.create_tags(Resources=[result],Tags=[{ 'Key': 'pgsnapshot-lvm_disk', 'Value': lvm_disk },{ 'Key': 'pgsnapshot-host', 'Value': id_host },{ 'Key': 'pgsnapshot-snap_name', 'Value': snap_name }])
-        snapshot = ec2.create_snapshot(VolumeId=volume_id, Description="pgsnapshot for "+snap_name, TagSpecification = [{
+        snapshot = ec2.create_snapshot(VolumeId=volume_id, Description="pgsnapshot for "+snap_name, TagSpecifications = [{
         'ResourceType': 'snapshot',
         'Tags': [
             { 'Key': 'pgsnapshot-lvm_disk', 'Value': lvm_disk },{ 'Key': 'pgsnapshot-host', 'Value': id_host },{ 'Key': 'pgsnapshot-snap_name', 'Value': snap_name }        ]
