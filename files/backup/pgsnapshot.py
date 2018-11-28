@@ -296,14 +296,13 @@ def createAWSsnapshot(ec2, volume_id, lvm_disk, snap_name):
         snapshot = ec2.create_snapshot(VolumeId=volume_id, Description="pgsnapshot for "+snap_name)
         #snapshot.add_tags({ 'Key': 'pgsnapshot-lvm_disk', 'Value': lvm_disk },{ 'Key': 'pgsnapshot-host', 'Value': id_host },{ 'Key': 'pgsnapshot-snap_name', 'Value': snap_name })
         ec2.create_tags(
-            Resources=[
-                snapshot['SnapshotId'],
-            ],
-            Tags=[
-                { 'Key': 'pgsnapshot-lvm_disk', 'Value': lvm_disk },{ 'Key': 'pgsnapshot-host', 'Value': id_host },{ 'Key': 'pgsnapshot-snap_name', 'Value': snap_name }
-            ]
- )
-
+                            Resources=[
+                                snapshot['SnapshotId'],
+                            ],
+                            Tags=[
+                                { 'Key': 'pgsnapshot-lvm_disk', 'Value': lvm_disk },{ 'Key': 'pgsnapshot-host', 'Value': id_host },{ 'Key': 'pgsnapshot-snap_name', 'Value': snap_name }
+                            ]
+                        )
         return True
     except Exception as e:
         logging.error(str(e))
