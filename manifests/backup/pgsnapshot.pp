@@ -12,7 +12,7 @@ define postgresql::backup::pgsnapshot (
                                       $snap_size         = '5G',
                                       $keeplvmsnaps      = '2',
                                       $snapshot_basename = 'pgsnap',
-                                      $logdir            = '/var/log/pgsnapshot'
+                                      $logdir            = '/var/log/pgsnapshot',
                                       #cron
                                       $setcronjob        = true,
                                       $hour_cronjob      = '2',
