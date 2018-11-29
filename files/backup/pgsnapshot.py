@@ -313,34 +313,39 @@ def createAWSsnapshot(ec2, volume_id, lvm_disk, snap_name):
         return False
 
 def getAWSsnapshot(id_host, lvm_disk, snap_name):
+    # tag :<key> - The key/value combination of a tag assigned to the resource. Use the tag key in the filter name and the tag value as the filter value.
+    # For example, to find all resources that have a tag with the key Owner and the value TeamA , specify tag:Owner for the filter name and TeamA for the filter value.
     try:
         ec2 = boto3.client('ec2')
+        filter = [
+                    {
+                        'Name': 'tag:pgsnapshot-lvm_disk',
+                        'Values': [
+                            lvm_disk,
+                        ]
+                    },
+                    {
+                        'Name': 'tag:pgsnapshot-host',
+                        'Values': [
+                            id_host,
+                        ]
+                    },
+                ]
+
+        if snap_name:
+            filter.append(
+                            {
+                                'Name': 'tag:pgsnapshot-snap_name',
+                                'Values': [
+                                    snap_name,
+                                ]
+                            }
+                        )
         response = ec2.describe_snapshots(
-        # tag :<key> - The key/value combination of a tag assigned to the resource. Use the tag key in the filter name and the tag value as the filter value.
-        # For example, to find all resources that have a tag with the key Owner and the value TeamA , specify tag:Owner for the filter name and TeamA for the filter value.
-            Filters=[
-                        {
-                            'Name': 'tag:pgsnapshot-lvm_disk',
-                            'Values': [
-                                lvm_disk,
-                            ]
-                        },
-                        {
-                            'Name': 'tag:pgsnapshot-host',
-                            'Values': [
-                                id_host,
-                            ]
-                        },
-                        {
-                            'Name': 'tag:pgsnapshot-snap_name',
-                            'Values': [
-                                snap_name,
-                            ]
-                        },
-                    ]
+            Filters=filter
         )
 
-        return response
+        return response['Snapshots']
     except Exception as e:
         logAndExit('error getting AWS snapshot list: '+str(e))
 
@@ -543,6 +548,8 @@ if awscli:
 
         if purge:
             aws_snapshots = getAWSsnapshot(id_host, lvm_disk, snap_name)
+
+
 
             print aws_snapshots
 
