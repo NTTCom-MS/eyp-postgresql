@@ -59,6 +59,7 @@ def isPostgresInBackupMode():
 def logAndExit(msg):
     global purge
     global keep_lvm_snaps
+    logging.debug("** EXIT MODE **")
     if isPostgresInBackupMode():
         logging.debug("** postgres in backup mode, disabling backup mode")
         postgresBackupMode(False)
