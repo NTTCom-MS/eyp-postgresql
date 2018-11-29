@@ -10,6 +10,7 @@ import re
 import socket
 import urllib2
 import getpass
+import timezone
 from os import access, R_OK
 from ConfigParser import SafeConfigParser
 from subprocess import Popen,PIPE,STDOUT
@@ -289,9 +290,6 @@ def getAWSVolumes(instance_devices):
 
 def createAWSsnapshot(ec2, volume_id, lvm_disk, snap_name):
     global id_host
-    logging.getLogger('boto3').setLevel(logging.CRITICAL)
-    logging.getLogger('botocore').setLevel(logging.CRITICAL)
-    logging.getLogger('nose').setLevel(logging.CRITICAL)
     try:
         # Create snapshot
         # response = ec2.create_snapshot(VolumeId=volume_id, Description="pgsnapshot for "+snap_name)
@@ -319,9 +317,6 @@ def createAWSsnapshot(ec2, volume_id, lvm_disk, snap_name):
 def getAWSsnapshot(id_host, lvm_disk, snap_name):
     # tag :<key> - The key/value combination of a tag assigned to the resource. Use the tag key in the filter name and the tag value as the filter value.
     # For example, to find all resources that have a tag with the key Owner and the value TeamA , specify tag:Owner for the filter name and TeamA for the filter value.
-    logging.getLogger('boto3').setLevel(logging.CRITICAL)
-    logging.getLogger('botocore').setLevel(logging.CRITICAL)
-    logging.getLogger('nose').setLevel(logging.CRITICAL)
     try:
         ec2 = boto3.client('ec2')
         filter = [
