@@ -356,7 +356,7 @@ def purgeOldAWSsnapshots(id_host, lvm_disk, keep_days):
     logging.debug("purging old AWS snapshots, keep days: "+str(keep_days))
     aws_snapshots = getAWSsnapshot(id_host, lvm_disk, "")
 
-    target_date = datetime.datetime.now(tz=timezone.utc) - datetime.timedelta(days=keep_days)
+    target_date = datetime.datetime.now(tz=datetime.timezone.utc) - datetime.timedelta(days=keep_days)
     # {'ResponseMetadata': {'RetryAttempts': 0, 'HTTPStatusCode': 200, 'RequestId': '5177d80b-fe23-4df7-a650-3ebedf26e230', 'HTTPHeaders': {'date': 'Thu, 29 Nov 2018 09:32:30 GMT', 'content-type': 'text/xml;charset=UTF-8', 'content-length': '2253', 'vary': 'Accept-Encoding', 'server': 'AmazonEC2'}},
     # u'Snapshots': [
     # {u'Description': 'pgsnapshot for snap.20181129093229',
