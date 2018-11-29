@@ -26,6 +26,16 @@ define postgresql::backup::pgsnapshot (
   Exec {
     path => '/usr/sbin:/usr/bin:/sbin:/bin',
   }
+
+  include python
+
+  pythonpip { 'psutil':
+    ensure => 'present',
+  }
+
+  pythonpip { 'boto3':
+    ensure => 'present',
+  }
   # python-pip
   # pip psutil
 
@@ -79,7 +89,7 @@ define postgresql::backup::pgsnapshot (
   {
     cron { "cronjob logical postgres backup: ${backupname}":
       ensure   => $ensure,
-      command  => "${basedir}/pgdumbackup_snapshotpbackup.py",
+      command  => "${basedir}/pgsnapshot.py -c ${basedir}/postgres_snapshot.config",
       user     => $username,
       hour     => $hour_cronjob,
       minute   => $minute_cronjob,
@@ -87,7 +97,7 @@ define postgresql::backup::pgsnapshot (
       monthday => $monthday_cronjob,
       weekday  => $weekday_cronjob,
       require  => File[ [ "${basedir}/postgres_snapshot.config",
-                          "${basedir}/postgres_snapshot.py"
+                          "${basedir}/pgsnapshot.py"
                       ] ],
     }
   }
