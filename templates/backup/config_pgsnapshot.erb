@@ -1,0 +1,18 @@
+[pgsnapshot]
+
+<% if defined?(@lvm_disk) -%>
+lvmdisk=<%= @lvm_disk %>
+<% end -%>
+aws=<%= @aws %>
+snapsize=<%= @snap_size %>
+pgusername=<%= @username %>
+<% if defined?(@mailto) -%>
+to=<%= @mailto %>
+<% end -%>
+<% if defined?(@idhost) -%>
+host-id=<%= @idhost %>
+<% end -%>
+keeplvmsnaps=<%= @keeplvmsnaps %>
+snapshotbasename=<%= @snapshot_basename %>
+logdir=<%= @logdir %>
+keepAWSsnapdays=<%= @keep_aws_snaps_days %>

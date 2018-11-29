@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.1.57
+
+* added pgsnapshot.py as backup method
+
 ## 0.1.56
 
 * added log related variables:
