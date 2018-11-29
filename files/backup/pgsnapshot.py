@@ -371,7 +371,7 @@ def purgeOldAWSsnapshots(id_host, lvm_disk, keep_days):
     #   u'Progress': '28%', u'OwnerId': '237822962101', u'SnapshotId': 'snap-01e1ade665d6316cb'},
     # {u'Description': 'pgsnapshot for snap.20181129093229', u'Tags': [{u'Value': '/dev/mapper/vg-postgres', u'Key': 'pgsnapshot-lvm_disk'}, {u'Value': 'snap.20181129093229', u'Key': 'pgsnapshot-snap_name'}, {u'Value': 'ip-172-31-46-9.eu-west-1.compute.internal', u'Key': 'pgsnapshot-host'}], u'Encrypted': False, u'VolumeId': 'vol-0f1d6ecbf9c97c1bc', u'State': 'pending', u'VolumeSize': 10, u'StartTime': datetime.datetime(2018, 11, 29, 9, 32, 30, tzinfo=tzlocal()), u'Progress': '11%', u'OwnerId': '237822962101', u'SnapshotId': 'snap-0e9131a46617028e7'}]}
 
-    old_snaps = [s for s in aws_snapshots if time.mktime(s['StartTime'].timetuple()) < target_date_ts]
+    old_snaps = [s for s in aws_snapshots if time.mktime(s['StartTime'].timetuple()) > target_date_ts]
     logging.debug("snapts to delete: "+str(aws_snapshots))
     for aws_snapshot in old_snaps:
         logging.debug("purging: "+aws_snapshot['SnapshotId'])
@@ -392,12 +392,13 @@ error_count=0
 
 # parse opts
 
-options, remainder = getopt.getopt(sys.argv[1:], 'l:s:ac:d', [
+options, remainder = getopt.getopt(sys.argv[1:], 'l:s:ac:dk:', [
                                                             'lvm-disk=',
                                                             "config="
                                                             'snapshot-size=',
                                                             'aws',
-                                                            'dontpurge'
+                                                            'dontpurge',
+                                                            'keep_aws_snaps_days='
                                                          ])
 
 for opt, arg in options:
@@ -405,6 +406,8 @@ for opt, arg in options:
         lvm_disk = arg
     elif opt in ('-s', '--snapshot-size'):
         snap_size = arg
+    elif opt in ('-k', '--keep_aws_snaps_days'):
+        keep_aws_snaps_days = arg
     elif opt in ('-c', '--config'):
         config_file = arg
     elif opt in ('-a', '--aws'):
