@@ -319,9 +319,9 @@ def getAWSsnapshot(id_host, lvm_disk, snap_name):
         # tag :<key> - The key/value combination of a tag assigned to the resource. Use the tag key in the filter name and the tag value as the filter value.
         # For example, to find all resources that have a tag with the key Owner and the value TeamA , specify tag:Owner for the filter name and TeamA for the filter value.
             Filters=[
-                { 'tag:pgsnapshot-lvm_disk': lvm_disk },
-                { 'tag:pgsnapshot-host': id_host },
-                { 'tag:pgsnapshot-snap_name': snap_name }
+                { 'tag:pgsnapshot-lvm_disk': lvm_disk,
+                'tag:pgsnapshot-host': id_host,
+                'tag:pgsnapshot-snap_name': snap_name }
             ],
 
         []
