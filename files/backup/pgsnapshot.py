@@ -421,7 +421,7 @@ for opt, arg in options:
     elif opt in ('-s', '--snapshot-size'):
         snap_size = arg
     elif opt in ('-k', '--keep_aws_snaps_days'):
-        keep_aws_snaps_days = arg
+        keep_aws_snaps_days = int(arg)
     elif opt in ('-c', '--config'):
         config_file = arg
     elif opt in ('-a', '--aws'):
