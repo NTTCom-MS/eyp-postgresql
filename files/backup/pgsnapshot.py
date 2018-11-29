@@ -374,9 +374,9 @@ def purgeOldAWSsnapshots(id_host, lvm_disk, keep_days):
     logging.debug("list of snaps: "+str(old_snaps))
     logging.debug("==")
     old_snaps = []
-    for aws_snapshot in aws_snapshots
+    for aws_snapshot in aws_snapshots:
         logging.debug("inspecting "+aws_snapshot['SnapshotId'])
-        if time.mktime(aws_snapshot['StartTime'].timetuple()) > target_date_ts
+        if time.mktime(aws_snapshot['StartTime'].timetuple()) > target_date_ts:
             logging.debug("old: "+aws_snapshot['SnapshotId'])
             old_snaps.append(aws_snapshot)
         else:
