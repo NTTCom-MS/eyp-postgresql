@@ -352,6 +352,7 @@ def getAWSsnapshot(id_host, lvm_disk, snap_name):
 
 
 def purgeOldAWSsnapshots(id_host, lvm_disk, keep_days):
+    logging.debug("purging old AWS snapshots, keep days: "+str(keep_days))
     aws_snapshots = getAWSsnapshot(id_host, lvm_disk, "")
     # {'ResponseMetadata': {'RetryAttempts': 0, 'HTTPStatusCode': 200, 'RequestId': '5177d80b-fe23-4df7-a650-3ebedf26e230', 'HTTPHeaders': {'date': 'Thu, 29 Nov 2018 09:32:30 GMT', 'content-type': 'text/xml;charset=UTF-8', 'content-length': '2253', 'vary': 'Accept-Encoding', 'server': 'AmazonEC2'}},
     # u'Snapshots': [
@@ -377,6 +378,7 @@ config_file = './postgres_snapshot.config'
 logdir = '/var/log/pgsnapshot'
 pgusername = "postgres"
 keep_lvm_snaps = 2
+keep_aws_snaps_days = 7
 snapshotbasename='snap'
 error_count=0
 
@@ -484,6 +486,11 @@ except:
         keep_lvm_snaps=2
 
 try:
+    keep_aws_snaps_days=int(config.get('pgsnapshot', 'keepAWSsnapdays'))
+except:
+    logging.debug('Using default value for awscli: '+str(keep_aws_snaps_days))
+
+try:
     to_addr=config.get('pgsnapshot', 'to').strip('"')
 except:
     to_addr=''
@@ -585,7 +592,7 @@ if awscli:
                 error_count+=1
 
         if purge:
-            purgeOldAWSsnapshots(id_host, lvm_disk, keep_days)
+            purgeOldAWSsnapshots(id_host, lvm_disk, keep_aws_snaps_days)
 
 
     except Exception as e:
