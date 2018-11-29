@@ -316,7 +316,7 @@ def getAWSsnapshot(lvm_disk, snap_name):
     global id_host
     try:
         ec2 = boto3.client('ec2')
-        response = ec2.describe_snapshots( Filters= [{ 'Name': 'pgsnapshot-lvm_disk', ['Values': lvm_disk] },{ 'Name': 'pgsnapshot-host', ['Values': id_host] },{ 'Name': 'pgsnapshot-snap_name', ['Values': snap_name] }])
+        response = ec2.describe_snapshots( Filters= [{ 'Name': 'pgsnapshot-lvm_disk', 'Values': [lvm_disk] },{ 'Name': 'pgsnapshot-host', 'Values': [id_host] },{ 'Name': 'pgsnapshot-snap_name', 'Values': [snap_name] }])
 
         return response
     except Exception as e:
