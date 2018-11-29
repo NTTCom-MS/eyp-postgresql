@@ -15,6 +15,7 @@ from ConfigParser import SafeConfigParser
 from subprocess import Popen,PIPE,STDOUT
 from email.MIMEMultipart import MIMEMultipart
 from email.MIMEText import MIMEText
+from random import randint
 
 def sendReportEmail(errors, to_addr, id_host):
     global logFile
@@ -67,7 +68,7 @@ def logAndExit(msg):
     logging.error(msg)
 
     if purge and keep_lvm_snaps==0:
-        purgeOldSnapshots(vg_name, lv_name, keep_lvm_snaps, awscli)
+        purgeOldLVMSnapshots(vg_name, lv_name, keep_lvm_snaps, awscli)
 
     if to_addr:
         sendReportEmail(False, to_addr, id_host)
@@ -89,7 +90,7 @@ def removeLVMSnapshot(lv_snap):
     else:
         logAndExit('Unable to remove lvm snapshot: (retcode: '+str(retval)+')'+lastline)
 
-def purgeOldSnapshots(vg_name, lv_name, keep, awscli):
+def purgeOldLVMSnapshots(vg_name, lv_name, keep, awscli):
     snaps = {}
     p = subprocess.Popen("lvdisplay /dev/"+vg_name+"/"+lv_name+" | awk '/LV snapshot/,/LV Status/' | grep -v LV | awk '{ print $1 }'", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     linecount=0
@@ -350,6 +351,22 @@ def getAWSsnapshot(id_host, lvm_disk, snap_name):
         logAndExit('error getting AWS snapshot list: '+str(e))
 
 
+def purgeOldAWSsnapshots(id_host, lvm_disk, keep_days):
+    aws_snapshots = getAWSsnapshot(id_host, lvm_disk, "")
+    # {'ResponseMetadata': {'RetryAttempts': 0, 'HTTPStatusCode': 200, 'RequestId': '5177d80b-fe23-4df7-a650-3ebedf26e230', 'HTTPHeaders': {'date': 'Thu, 29 Nov 2018 09:32:30 GMT', 'content-type': 'text/xml;charset=UTF-8', 'content-length': '2253', 'vary': 'Accept-Encoding', 'server': 'AmazonEC2'}},
+    # u'Snapshots': [
+    # {u'Description': 'pgsnapshot for snap.20181129093229',
+    # u'Tags': [{u'Value': 'ip-172-31-46-9.eu-west-1.compute.internal', u'Key': 'pgsnapshot-host'}, {u'Value': '/dev/mapper/vg-postgres', u'Key': 'pgsnapshot-lvm_disk'}, {u'Value': 'snap.20181129093229', u'Key': 'pgsnapshot-snap_name'}],
+    #  u'Encrypted': False, u'VolumeId': 'vol-037ee28bd9bb1b9ac',
+    #  u'State': 'pending', u'VolumeSize': 20,
+    #  u'StartTime': datetime.datetime(2018, 11, 29, 9, 32, 30, tzinfo=tzlocal()),
+    #   u'Progress': '28%', u'OwnerId': '237822962101', u'SnapshotId': 'snap-01e1ade665d6316cb'},
+    # {u'Description': 'pgsnapshot for snap.20181129093229', u'Tags': [{u'Value': '/dev/mapper/vg-postgres', u'Key': 'pgsnapshot-lvm_disk'}, {u'Value': 'snap.20181129093229', u'Key': 'pgsnapshot-snap_name'}, {u'Value': 'ip-172-31-46-9.eu-west-1.compute.internal', u'Key': 'pgsnapshot-host'}], u'Encrypted': False, u'VolumeId': 'vol-0f1d6ecbf9c97c1bc', u'State': 'pending', u'VolumeSize': 10, u'StartTime': datetime.datetime(2018, 11, 29, 9, 32, 30, tzinfo=tzlocal()), u'Progress': '11%', u'OwnerId': '237822962101', u'SnapshotId': 'snap-0e9131a46617028e7'}]}
+    snaps = {}
+    for aws_snapshot in aws_snapshots:
+        print aws_snapshot['StartTime']
+
+
 timeformat = '%Y%m%d%H%M%S'
 lvm_disk = ""
 snap_size = "5G"
@@ -546,23 +563,33 @@ if awscli:
                 error_count+=0
                 logging.debug('error creating snapshot for '+volume_id)
 
-        if purge:
-            # {'ResponseMetadata': {'RetryAttempts': 0, 'HTTPStatusCode': 200, 'RequestId': '5177d80b-fe23-4df7-a650-3ebedf26e230', 'HTTPHeaders': {'date': 'Thu, 29 Nov 2018 09:32:30 GMT', 'content-type': 'text/xml;charset=UTF-8', 'content-length': '2253', 'vary': 'Accept-Encoding', 'server': 'AmazonEC2'}},
-            # u'Snapshots': [
-            # {u'Description': 'pgsnapshot for snap.20181129093229', u'Tags': [{u'Value': 'ip-172-31-46-9.eu-west-1.compute.internal', u'Key': 'pgsnapshot-host'}, {u'Value': '/dev/mapper/vg-postgres', u'Key': 'pgsnapshot-lvm_disk'}, {u'Value': 'snap.20181129093229', u'Key': 'pgsnapshot-snap_name'}], u'Encrypted': False, u'VolumeId': 'vol-037ee28bd9bb1b9ac', u'State': 'pending', u'VolumeSize': 20, u'StartTime': datetime.datetime(2018, 11, 29, 9, 32, 30, tzinfo=tzlocal()), u'Progress': '28%', u'OwnerId': '237822962101', u'SnapshotId': 'snap-01e1ade665d6316cb'},
-            # {u'Description': 'pgsnapshot for snap.20181129093229', u'Tags': [{u'Value': '/dev/mapper/vg-postgres', u'Key': 'pgsnapshot-lvm_disk'}, {u'Value': 'snap.20181129093229', u'Key': 'pgsnapshot-snap_name'}, {u'Value': 'ip-172-31-46-9.eu-west-1.compute.internal', u'Key': 'pgsnapshot-host'}], u'Encrypted': False, u'VolumeId': 'vol-0f1d6ecbf9c97c1bc', u'State': 'pending', u'VolumeSize': 10, u'StartTime': datetime.datetime(2018, 11, 29, 9, 32, 30, tzinfo=tzlocal()), u'Progress': '11%', u'OwnerId': '237822962101', u'SnapshotId': 'snap-0e9131a46617028e7'}]}
+        # wait for snapshots to be created
+        aws_snapshots_pending=99
+        while aws_snapshots_pending!=0:
             aws_snapshots = getAWSsnapshot(id_host, lvm_disk, snap_name)
+            aws_snapshots_pending=0
+            for aws_snapshot in aws_snapshots:
+                if aws_snapshot['State']=='pending':
+                    aws_snapshots_pending+=1
+            if aws_snapshots_pending!=0:
+                random_sleep = randint(10,100)
+                logging.debug("waiting for AWS snapshot for "+random_sleep+" seconds - current status: "+str(aws_snapshots))
+                sleep(random_sleep)
 
+        # validacio snapshots
+        for aws_snapshot in aws_snapshots:
+            if aws_snapshot['State']=='error':
+                error_count+=1
 
-
-            print aws_snapshots
+        if purge:
+            purgeOldAWSsnapshots
 
 
     except Exception as e:
         logAndExit('error using AWS API: '+str(e))
 
 if purge:
-    purgeOldSnapshots(vg_name, lv_name, keep_lvm_snaps, awscli)
+    purgeOldLVMSnapshots(vg_name, lv_name, keep_lvm_snaps, awscli)
 
 if to_addr:
     sendReportEmail(error_count!=0, to_addr, id_host)
