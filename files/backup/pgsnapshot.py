@@ -573,7 +573,7 @@ if awscli:
                     aws_snapshots_pending+=1
             if aws_snapshots_pending!=0:
                 random_sleep = randint(10,100)
-                logging.debug("waiting for AWS snapshot for "+random_sleep+" seconds - current status: "+str(aws_snapshots))
+                logging.debug("waiting for AWS snapshot for "+str(random_sleep)+" seconds - current status: "+str(aws_snapshots))
                 sleep(random_sleep)
 
         # validacio snapshots
