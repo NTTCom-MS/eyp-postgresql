@@ -363,6 +363,7 @@ def purgeOldAWSsnapshots(id_host, lvm_disk, keep_days):
     #   u'Progress': '28%', u'OwnerId': '237822962101', u'SnapshotId': 'snap-01e1ade665d6316cb'},
     # {u'Description': 'pgsnapshot for snap.20181129093229', u'Tags': [{u'Value': '/dev/mapper/vg-postgres', u'Key': 'pgsnapshot-lvm_disk'}, {u'Value': 'snap.20181129093229', u'Key': 'pgsnapshot-snap_name'}, {u'Value': 'ip-172-31-46-9.eu-west-1.compute.internal', u'Key': 'pgsnapshot-host'}], u'Encrypted': False, u'VolumeId': 'vol-0f1d6ecbf9c97c1bc', u'State': 'pending', u'VolumeSize': 10, u'StartTime': datetime.datetime(2018, 11, 29, 9, 32, 30, tzinfo=tzlocal()), u'Progress': '11%', u'OwnerId': '237822962101', u'SnapshotId': 'snap-0e9131a46617028e7'}]}
     snaps = {}
+    print aws_snapshots
     for aws_snapshot in aws_snapshots:
         print aws_snapshot['StartTime']
 
@@ -568,12 +569,14 @@ if awscli:
         while aws_snapshots_pending!=0:
             aws_snapshots = getAWSsnapshot(id_host, lvm_disk, snap_name)
             aws_snapshots_pending=0
+            current_status = {}
             for aws_snapshot in aws_snapshots:
                 if aws_snapshot['State']=='pending':
                     aws_snapshots_pending+=1
+                    current_status[aws_snapshot['SnapshotId']]=aws_snapshot['State']
             if aws_snapshots_pending!=0:
                 random_sleep = randint(10,100)
-                logging.debug("waiting for AWS snapshot for "+str(random_sleep)+" seconds - current status: "+str(aws_snapshots))
+                logging.debug("waiting for AWS snapshot for "+str(random_sleep)+" seconds - current status: "+str(current_status))
                 time.sleep(random_sleep)
 
         # validacio snapshots
@@ -582,7 +585,7 @@ if awscli:
                 error_count+=1
 
         if purge:
-            purgeOldAWSsnapshots
+            purgeOldAWSsnapshots(id_host, lvm_disk, keep_days)
 
 
     except Exception as e:
