@@ -60,12 +60,12 @@ def logAndExit(msg):
     global purge
     global keep_lvm_snaps
     if isPostgresInBackupMode():
-        logging.debug("postgres in backup mode, disabling backup mode")
+        logging.debug("** postgres in backup mode, disabling backup mode")
         postgresBackupMode(False)
     else:
-        logging.debug("postgres is not un backup mode")
+        logging.debug("** postgres is not un backup mode")
 
-    logging.error(msg)
+    logging.error("** "+msg)
 
     if purge and keep_lvm_snaps==0:
         purgeOldLVMSnapshots(vg_name, lv_name, keep_lvm_snaps, awscli)
