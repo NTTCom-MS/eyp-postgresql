@@ -111,7 +111,7 @@ def purgeOldLVMSnapshots(vg_name, lv_name, keep, awscli):
         for key in keylist:
             if to_delete<=0:
                 return True
-            logging.debug("purging snapshot: "+str(key)+": "+snaps[key])
+            logging.debug("purging LVM snapshot: "+str(key)+": "+snaps[key])
             removeLVMSnapshot("/dev/"+vg_name+"/"+snaps[key])
             to_delete-=1
         return True
@@ -373,8 +373,12 @@ def purgeOldAWSsnapshots(id_host, lvm_disk, keep_days):
 
     old_snaps = [s for s in aws_snapshots if time.mktime(s['StartTime'].timetuple()) > target_date_ts]
     logging.debug("snapts to delete: "+str(aws_snapshots))
+
+    ec2 = boto3.client('ec2')
+
     for aws_snapshot in old_snaps:
-        logging.debug("purging: "+aws_snapshot['SnapshotId'])
+        logging.debug("purging AWS snapshot: "+aws_snapshot['SnapshotId'])
+        # ec2.delete_snapshot(SnapshotId=aws_snapshot['SnapshotId'])
 
 
 timeformat = '%Y%m%d%H%M%S'
