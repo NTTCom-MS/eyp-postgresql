@@ -354,6 +354,7 @@ def getAWSsnapshot(id_host, lvm_disk, snap_name):
 def purgeOldAWSsnapshots(id_host, lvm_disk, keep_days):
     logging.debug("purging old AWS snapshots, keep days: "+str(keep_days))
     aws_snapshots = getAWSsnapshot(id_host, lvm_disk, "")
+    target_date = datetime.today() - timedelta(days=keep_days)
     # {'ResponseMetadata': {'RetryAttempts': 0, 'HTTPStatusCode': 200, 'RequestId': '5177d80b-fe23-4df7-a650-3ebedf26e230', 'HTTPHeaders': {'date': 'Thu, 29 Nov 2018 09:32:30 GMT', 'content-type': 'text/xml;charset=UTF-8', 'content-length': '2253', 'vary': 'Accept-Encoding', 'server': 'AmazonEC2'}},
     # u'Snapshots': [
     # {u'Description': 'pgsnapshot for snap.20181129093229',
@@ -363,10 +364,10 @@ def purgeOldAWSsnapshots(id_host, lvm_disk, keep_days):
     #  u'StartTime': datetime.datetime(2018, 11, 29, 9, 32, 30, tzinfo=tzlocal()),
     #   u'Progress': '28%', u'OwnerId': '237822962101', u'SnapshotId': 'snap-01e1ade665d6316cb'},
     # {u'Description': 'pgsnapshot for snap.20181129093229', u'Tags': [{u'Value': '/dev/mapper/vg-postgres', u'Key': 'pgsnapshot-lvm_disk'}, {u'Value': 'snap.20181129093229', u'Key': 'pgsnapshot-snap_name'}, {u'Value': 'ip-172-31-46-9.eu-west-1.compute.internal', u'Key': 'pgsnapshot-host'}], u'Encrypted': False, u'VolumeId': 'vol-0f1d6ecbf9c97c1bc', u'State': 'pending', u'VolumeSize': 10, u'StartTime': datetime.datetime(2018, 11, 29, 9, 32, 30, tzinfo=tzlocal()), u'Progress': '11%', u'OwnerId': '237822962101', u'SnapshotId': 'snap-0e9131a46617028e7'}]}
-    snaps = {}
-    print aws_snapshots
-    for aws_snapshot in aws_snapshots:
-        print aws_snapshot['StartTime']
+    old_snaps = [s for s in aws_snapshots if s['StartTime'] < target_date]
+    logging.debug("snapts to delete: "+str(aws_snapshots))
+    for aws_snapshot in old_snaps:
+        logging.debug("purging: "+aws_snapshot['SnapshotId'])
 
 
 timeformat = '%Y%m%d%H%M%S'
