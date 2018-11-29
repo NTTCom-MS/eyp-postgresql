@@ -10,7 +10,6 @@ import re
 import socket
 import urllib2
 import getpass
-import timezone
 from os import access, R_OK
 from ConfigParser import SafeConfigParser
 from subprocess import Popen,PIPE,STDOUT
