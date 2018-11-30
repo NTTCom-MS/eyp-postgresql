@@ -463,7 +463,7 @@ except Exception, e:
 try:
     logdir=config.get('pgsnapshot', 'logdir').strip('"')
 except:
-    logdir=os.path.dirname(os.path.abspath(config_file))
+    logging.debug('Using default value for logdir: '+logdir)
 
 ts = time.time()
 
