@@ -72,7 +72,7 @@ def logAndExit(msg):
         purgeOldLVMSnapshots(vg_name, lv_name, keep_lvm_snaps, awscli)
 
     if to_addr:
-        sendReportEmail(False, to_addr, id_host)
+        sendReportEmail(True, to_addr, id_host)
 
     sys.exit(msg+"\n")
 
@@ -119,7 +119,7 @@ def purgeOldLVMSnapshots(vg_name, lv_name, keep, awscli):
     else:
         # not using longAndExit because we could end up in a recurse loop
         if to_addr:
-            sendReportEmail(False, to_addr, id_host)
+            sendReportEmail(True, to_addr, id_host)
 
         sys.exit('Unable to purge old snapshots'+"\n")
 
@@ -249,9 +249,11 @@ def getVG(lvm_disk):
     p = subprocess.Popen('lvdisplay '+lvm_disk+' 2>/dev/null | grep "VG Name"', shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     linecount=0
     lastline=""
+    output=""output=""
     for line in p.stdout.readlines():
         lastline = line
         linecount+=1
+        output+=line
     retval = p.wait()
 
     if retval==0 and linecount==1:
@@ -261,7 +263,7 @@ def getVG(lvm_disk):
         else:
             logAndExit('Corrupted output getting VG name: '+lastline)
     else:
-        logAndExit('Invalid disk: '+lvm_disk)
+        logAndExit('Invalid disk '+lvm_disk+": "+output)
 
 def getPVs(vg_name):
     pv_disks = []
