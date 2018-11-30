@@ -389,7 +389,7 @@ def purgeOldAWSsnapshots(id_host, lvm_disk, keep_days):
 
     for aws_snapshot in old_snaps:
         logging.debug("purging AWS snapshot: "+aws_snapshot['SnapshotId'])
-        # ec2.delete_snapshot(SnapshotId=aws_snapshot['SnapshotId'])
+        ec2.delete_snapshot(SnapshotId=aws_snapshot['SnapshotId'])
 
 
 timeformat = '%Y%m%d%H%M%S'
