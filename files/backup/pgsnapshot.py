@@ -228,9 +228,11 @@ def getLV(lvm_disk):
     p = subprocess.Popen('lvdisplay '+lvm_disk+' 2>/dev/null | grep "LV Name"', shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     linecount=0
     lastline=""
+    output=""
     for line in p.stdout.readlines():
         lastline = line
         linecount+=1
+        output+=line
     retval = p.wait()
 
     if retval==0 and linecount==1:
@@ -240,7 +242,7 @@ def getLV(lvm_disk):
         else:
             logAndExit('Corrupted output getting LV name: '+lastline)
     else:
-        logAndExit('Invalid disk: '+lvm_disk)
+        logAndExit('Invalid disk '+lvm_disk+": "+output)
 
 def getVG(lvm_disk):
     # busquem vg del lv, dsp pv del vg
