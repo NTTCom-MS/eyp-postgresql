@@ -412,8 +412,13 @@ def launchAWSInstanceBasedOnInstance(base_instance_id):
     aws_base_instance = getInstance(base_instance_id)
 
     sgs=[]
+    count=1
     for security_group in aws_base_instance.security_groups:
+        logging.debug("SG"+count+": "+security_group['GroupName']+" ("security_group['GroupId']+")")
         sgs.append(security_group['GroupName'])
+        count+=1
+
+    logging.debug("ImageID: "+aws_base_instance.image_id)
 
     ec2.create_instances(ImageId=aws_base_instance.image_id, MinCount=1, MaxCount=1, SecurityGroupIds=sgs)
 
