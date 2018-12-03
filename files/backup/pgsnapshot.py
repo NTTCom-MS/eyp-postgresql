@@ -420,8 +420,15 @@ def launchAWSInstanceBasedOnInstance(base_instance_id):
 
     logging.debug("* ImageID: "+aws_base_instance.image_id)
     logging.debug("* InstanceType: "+aws_base_instance.instance_type)
+    logging.debug("* KeyName: "+aws_base_instance.key_name)
 
-    ec2.create_instances(ImageId=aws_base_instance.image_id, InstanceType=aws_base_instance.instance_type, SecurityGroupIds=sgs, MinCount=1, MaxCount=1)
+    ec2.create_instances(
+                            ImageId=aws_base_instance.image_id,
+                            InstanceType=aws_base_instance.instance_type,
+                            KeyName=aws_base_instance.key_name,
+                            SecurityGroupIds=sgs,
+                            MinCount=1, MaxCount=1
+                        )
 
 
 timeformat = '%Y%m%d%H%M%S'
