@@ -473,7 +473,7 @@ for opt, arg in options:
     elif opt in ('-d', '--dontpurge'):
         purge = False
     elif opt in ('-L', '--list-backups'):
-        list_backups = False
+        list_backups = True
     elif opt in ('-l', '--logdir'):
         logdir = arg
     elif opt in ('-r', '--restore-to-vm'):
