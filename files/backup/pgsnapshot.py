@@ -443,6 +443,23 @@ def launchAWSInstanceBasedOnInstance(base_instance_id):
                         )
 
 
+def listAWSsnapshots():
+    aws_snapshots = getAWSsnapshot(id_host, lvm_disk, "")
+
+    logging.debug("snapshots: "+str(aws_snapshots))
+
+    avaiable_backups={}
+
+    for aws_snapshot in aws_snapshots:
+        for aws_snapshot_tag in aws_snapshot['Tags']:
+            if aws_snapshot_tag['Key']==pgsnapshot-snap_name:
+                if aws_snapshot_tag['Value'] in avaiable_backups:
+                    avaiable_backups[aws_snapshot_tag['Value']].append(aws_snapshot['SnapshotId'])
+                else:
+                    avaiable_backups[aws_snapshot_tag['Value']]=[aws_snapshot['SnapshotId']]
+
+    return avaiable_backups
+
 timeformat = '%Y%m%d%H%M%S'
 lvm_disk = ""
 snap_size = "5G"
@@ -622,9 +639,10 @@ if list_backups:
     if aws:
         logging.debug("== LIST AWS BACKUPS ==")
 
-        aws_snapshots = getAWSsnapshot(id_host, lvm_disk, "")
+        available_backups = listAWSsnapshots()
 
-        logging.debug("snapshots: "+str(aws_snapshots))
+        logging.debug("list of available backups: "+str(available_backups))
+
     else:
         logging.debug("== LIST LVM BACKUPS ==")
 elif restore_to_vm:
