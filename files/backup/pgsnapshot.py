@@ -639,11 +639,11 @@ if list_backups:
     if aws:
         logging.debug("== LIST AWS BACKUPS ==")
 
-        listAWSsnapshots = listAWSsnapshots()
+        avaiable_backups = listAWSsnapshots()
 
-        logging.debug("list of available backups: "+str(available_backups))
+        logging.debug("list of available backups: "+str(avaiable_backups))
 
-        for backup in keys(listAWSsnapshots):
+        for backup in keys(avaiable_backups):
             print(" * "+backup+"\n")
 
     else:
