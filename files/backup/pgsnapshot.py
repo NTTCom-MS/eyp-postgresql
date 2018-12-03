@@ -403,6 +403,9 @@ def initAWS():
     logging.getLogger('botocore').setLevel(logging.CRITICAL)
     logging.getLogger('nose').setLevel(logging.CRITICAL)
 
+def getInstance(instance_id):
+    ec2 = boto3.resource('ec2')
+    return ec2.Instance(instance_id)
 
 timeformat = '%Y%m%d%H%M%S'
 lvm_disk = ""
@@ -608,10 +611,9 @@ else:
             if not instance_id:
               logAndExit("error getting instance_id")
 
-            ec2 = boto3.resource('ec2')
-            instance = ec2.Instance(instance_id)
+            aws_instance = getInstance(instance_id)
 
-            instance_devices = instance.block_device_mappings
+            instance_devices = aws_instance.block_device_mappings
 
             logging.debug('instance_devices: '+str(instance_devices))
 
