@@ -297,6 +297,9 @@ def createAWSsnapshot(volume_id, lvm_disk, snap_name):
     global id_host
     try:
         ec2 = boto3.resource('ec2')
+        logging.getLogger('boto3').setLevel(logging.CRITICAL)
+        logging.getLogger('botocore').setLevel(logging.CRITICAL)
+        logging.getLogger('nose').setLevel(logging.CRITICAL)
         # Create snapshot
         # response = ec2.create_snapshot(VolumeId=volume_id, Description="pgsnapshot for "+snap_name)
         # result = response[volume_id]
@@ -325,6 +328,9 @@ def getAWSsnapshot(id_host, lvm_disk, snap_name):
     # For example, to find all resources that have a tag with the key Owner and the value TeamA , specify tag:Owner for the filter name and TeamA for the filter value.
     try:
         ec2 = boto3.client('ec2')
+        logging.getLogger('boto3').setLevel(logging.CRITICAL)
+        logging.getLogger('botocore').setLevel(logging.CRITICAL)
+        logging.getLogger('nose').setLevel(logging.CRITICAL)
         filter = [
                     {
                         'Name': 'tag:pgsnapshot-lvm_disk',
@@ -393,21 +399,26 @@ def purgeOldAWSsnapshots(id_host, lvm_disk, keep_days):
 
     ec2 = boto3.client('ec2')
 
-    for aws_snapshot in old_snaps:
-        logging.debug("purging AWS snapshot: "+aws_snapshot['SnapshotId'])
-        ec2.delete_snapshot(SnapshotId=aws_snapshot['SnapshotId'])
-
-def initAWS():
     logging.getLogger('boto3').setLevel(logging.CRITICAL)
     logging.getLogger('botocore').setLevel(logging.CRITICAL)
     logging.getLogger('nose').setLevel(logging.CRITICAL)
 
+    for aws_snapshot in old_snaps:
+        logging.debug("purging AWS snapshot: "+aws_snapshot['SnapshotId'])
+        ec2.delete_snapshot(SnapshotId=aws_snapshot['SnapshotId'])
+
 def getInstance(instance_id):
     ec2 = boto3.resource('ec2')
+    logging.getLogger('boto3').setLevel(logging.CRITICAL)
+    logging.getLogger('botocore').setLevel(logging.CRITICAL)
+    logging.getLogger('nose').setLevel(logging.CRITICAL)
     return ec2.Instance(instance_id)
 
 def launchAWSInstanceBasedOnInstance(base_instance_id):
     ec2 = boto3.resource('ec2')
+    logging.getLogger('boto3').setLevel(logging.CRITICAL)
+    logging.getLogger('botocore').setLevel(logging.CRITICAL)
+    logging.getLogger('nose').setLevel(logging.CRITICAL)
 
     aws_base_instance = getInstance(base_instance_id)
 
@@ -622,8 +633,6 @@ elif restore_to_vm:
         #
         logging.debug("== RESTORE TO VM MODE ==")
 
-        initAWS()
-
         instance_id = getInstanceID()
 
         logging.debug('instance_id: '+instance_id)
@@ -650,7 +659,9 @@ else:
 
     if aws:
         try:
-            initAWS()
+            logging.getLogger('boto3').setLevel(logging.CRITICAL)
+            logging.getLogger('botocore').setLevel(logging.CRITICAL)
+            logging.getLogger('nose').setLevel(logging.CRITICAL)
 
             instance_id = getInstanceID()
 
