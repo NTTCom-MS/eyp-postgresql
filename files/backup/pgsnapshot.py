@@ -355,6 +355,7 @@ def getAWSsnapshot(id_host, lvm_disk, snap_name):
                                 ]
                             }
                         )
+        logging.debug("getAWSsnapshot::filter: "+str(filter))
         response = ec2.describe_snapshots(
             Filters=filter
         )
