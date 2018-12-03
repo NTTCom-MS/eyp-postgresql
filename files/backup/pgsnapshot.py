@@ -407,6 +407,14 @@ def getInstance(instance_id):
     ec2 = boto3.resource('ec2')
     return ec2.Instance(instance_id)
 
+def launchAWSInstanceBasedOnInstance(base_instance_id):
+    ec2 = boto3.resource('ec2')
+
+    aws_base_instance = getInstance(base_instance_id)
+
+    ec2.create_instances(ImageId=aws_base_instance.image_id, MinCount=1, MaxCount=1, SecurityGroupIds==aws_base_instance.security_groups)
+
+
 timeformat = '%Y%m%d%H%M%S'
 lvm_disk = ""
 snap_size = "5G"
@@ -563,7 +571,6 @@ if restore_to_vm and aws:
 
     logging.debug('instance_id: '+instance_id)
 
-    aws_instance = getInstance(instance_id)
 
 
 else:
