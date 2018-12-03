@@ -571,7 +571,7 @@ if restore_to_vm and aws:
 
     logging.debug('instance_id: '+instance_id)
 
-
+    launchAWSInstanceBasedOnInstance(instance_id)
 
 else:
     #
