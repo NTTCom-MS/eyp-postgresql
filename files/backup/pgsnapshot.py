@@ -548,6 +548,9 @@ except:
 #
 # ACTIONS
 #
+
+logging.debug(">> ACTIONS <<")
+
 if restore_to_vm and aws:
     #
     # RESTORE TO VM MODE
@@ -559,6 +562,8 @@ if restore_to_vm and aws:
     instance_id = getInstanceID()
 
     logging.debug('instance_id: '+instance_id)
+
+    aws_instance = getInstance(instance_id)
 
 
 else:
