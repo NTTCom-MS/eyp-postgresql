@@ -249,7 +249,7 @@ def getVG(lvm_disk):
     p = subprocess.Popen('lvdisplay '+lvm_disk+' 2>/dev/null | grep "VG Name"', shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     linecount=0
     lastline=""
-    output=""output=""
+    output=""
     for line in p.stdout.readlines():
         lastline = line
         linecount+=1
