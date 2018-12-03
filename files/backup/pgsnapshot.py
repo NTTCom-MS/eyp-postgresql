@@ -414,7 +414,7 @@ def launchAWSInstanceBasedOnInstance(base_instance_id):
     sgs=[]
     count=1
     for security_group in aws_base_instance.security_groups:
-        logging.debug("SG"+count+": "+security_group['GroupName']+" ("security_group['GroupId']+")")
+        logging.debug("SG"+count+": "+security_group['GroupName']+" ("+security_group['GroupId']+")")
         sgs.append(security_group['GroupName'])
         count+=1
 
