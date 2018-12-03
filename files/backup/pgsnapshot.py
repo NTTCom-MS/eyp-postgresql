@@ -412,7 +412,7 @@ def launchAWSInstanceBasedOnInstance(base_instance_id):
 
     aws_base_instance = getInstance(base_instance_id)
 
-    ec2.create_instances(ImageId=aws_base_instance.image_id, MinCount=1, MaxCount=1, SecurityGroupIds==aws_base_instance.security_groups)
+    ec2.create_instances(ImageId=aws_base_instance.image_id, MinCount=1, MaxCount=1, SecurityGroupIds=aws_base_instance.security_groups)
 
 
 timeformat = '%Y%m%d%H%M%S'
