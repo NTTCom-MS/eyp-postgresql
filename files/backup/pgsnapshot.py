@@ -452,7 +452,7 @@ def listAWSsnapshots():
 
     for aws_snapshot in aws_snapshots:
         for aws_snapshot_tag in aws_snapshot['Tags']:
-            if aws_snapshot_tag['Key']==pgsnapshot-snap_name:
+            if aws_snapshot_tag['Key']=='pgsnapshot-snap_name':
                 if aws_snapshot_tag['Value'] in avaiable_backups:
                     avaiable_backups[aws_snapshot_tag['Value']].append(aws_snapshot['SnapshotId'])
                 else:
