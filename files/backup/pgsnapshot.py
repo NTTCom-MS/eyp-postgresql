@@ -292,9 +292,10 @@ def getAWSVolumes(instance_devices):
             volumes.append(instance_device['Ebs']['VolumeId'])
     return volumes
 
-def createAWSsnapshot(ec2, volume_id, lvm_disk, snap_name):
+def createAWSsnapshot(volume_id, lvm_disk, snap_name):
     global id_host
     try:
+        ec2 = boto3.resource('ec2')
         # Create snapshot
         # response = ec2.create_snapshot(VolumeId=volume_id, Description="pgsnapshot for "+snap_name)
         # result = response[volume_id]
@@ -619,7 +620,7 @@ else:
             logging.debug('volumes: '+str(volumes))
 
             for volume_id in volumes:
-                if createAWSsnapshot(ec2, volume_id, lvm_disk, snap_name):
+                if createAWSsnapshot(volume_id, lvm_disk, snap_name):
                     logging.debug('created AWS snapshot for '+volume_id)
                 else:
                     error_count+=0
