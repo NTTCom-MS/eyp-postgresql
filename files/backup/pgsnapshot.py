@@ -639,9 +639,12 @@ if list_backups:
     if aws:
         logging.debug("== LIST AWS BACKUPS ==")
 
-        available_backups = listAWSsnapshots()
+        listAWSsnapshots = listAWSsnapshots()
 
         logging.debug("list of available backups: "+str(available_backups))
+
+        for backup in keys(listAWSsnapshots):
+            print(" * "+backup+"\n")
 
     else:
         logging.debug("== LIST LVM BACKUPS ==")
