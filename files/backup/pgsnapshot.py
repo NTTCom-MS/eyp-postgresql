@@ -10,6 +10,7 @@ import re
 import socket
 import urllib2
 import getpass
+import boto3
 from os import access, R_OK
 from ConfigParser import SafeConfigParser
 from subprocess import Popen,PIPE,STDOUT
@@ -397,8 +398,6 @@ def purgeOldAWSsnapshots(id_host, lvm_disk, keep_days):
         ec2.delete_snapshot(SnapshotId=aws_snapshot['SnapshotId'])
 
 def initAWS():
-    import boto3
-
     logging.getLogger('boto3').setLevel(logging.CRITICAL)
     logging.getLogger('botocore').setLevel(logging.CRITICAL)
     logging.getLogger('nose').setLevel(logging.CRITICAL)
@@ -412,7 +411,11 @@ def launchAWSInstanceBasedOnInstance(base_instance_id):
 
     aws_base_instance = getInstance(base_instance_id)
 
-    ec2.create_instances(ImageId=aws_base_instance.image_id, MinCount=1, MaxCount=1, SecurityGroupIds=aws_base_instance.security_groups)
+    sgs=[]
+    for security_group in aws_base_instance.security_groups:
+        sgs.append(security_group['GroupName'])
+
+    ec2.create_instances(ImageId=aws_base_instance.image_id, MinCount=1, MaxCount=1, SecurityGroupIds=sgs)
 
 
 timeformat = '%Y%m%d%H%M%S'
