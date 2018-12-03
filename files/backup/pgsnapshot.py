@@ -443,18 +443,20 @@ keep_lvm_snaps = 2
 keep_aws_snaps_days = 7
 snapshotbasename='snap'
 error_count=0
-restore_to_vm=False
+restore_to_vm=""
+list_backups=False
 
 # parse opts
 
-options, remainder = getopt.getopt(sys.argv[1:], 'l:s:ac:dk:r', [
+options, remainder = getopt.getopt(sys.argv[1:], 'l:s:ac:dk:r:L', [
                                                             'lvm-disk=',
                                                             "config="
                                                             'snapshot-size=',
                                                             'aws',
                                                             'dontpurge',
                                                             'keep_aws_snaps_days=',
-                                                            'restore-to-vm'
+                                                            'restore-to-vm=',
+                                                            'list-backups'
                                                          ])
 
 for opt, arg in options:
@@ -470,10 +472,12 @@ for opt, arg in options:
         aws = True
     elif opt in ('-d', '--dontpurge'):
         purge = False
+    elif opt in ('-L', '--list-backups'):
+        list_backups = False
     elif opt in ('-l', '--logdir'):
         logdir = arg
     elif opt in ('-r', '--restore-to-vm'):
-        restore_to_vm = True
+        restore_to_vm = arg
     else:
       sys.exit("unrecoginzed option: ".opt)
 
@@ -575,48 +579,64 @@ except:
 
 logging.debug(">> ACTIONS <<")
 
-if restore_to_vm and aws:
+if not lvm_disk:
+    logging.debug("lvm_disk undefined, searching datadir")
+    datadir = getDataDir()
+    logging.debug("postgres datadir: "+datadir)
+    lvm_disk = getFSType(datadir)[1]
+
+logging.debug("lvm_disk: "+lvm_disk)
+
+lv_name = getLV(lvm_disk)
+
+logging.debug("lv_name: "+lv_name)
+
+vg_name = getVG(lvm_disk)
+
+logging.debug("vg_name: "+vg_name)
+
+pv_disks = getPVs(vg_name)
+
+logging.debug("pv_disks: "+str(pv_disks))
+
+disks = getDisks(pv_disks)
+
+logging.debug("disks: "+str(disks))
+
+if list_backups:
     #
-    # RESTORE TO VM MODE
+    # LIST AVAILABLE BACKUPS
     #
-    logging.debug("== RESTORE TO VM MODE ==")
+    if aws:
+        logging.debug("== LIST AWS BACKUPS ==")
 
-    initAWS()
+        aws_snapshots = getAWSsnapshot(id_host, lvm_disk, "")
 
-    instance_id = getInstanceID()
+        logging.debug("snapshots: "+str(aws_snapshots))
+    else:
+        logging.debug("== LIST LVM BACKUPS ==")
+elif restore_to_vm:
+    if aws:
+        #
+        # RESTORE TO VM MODE
+        #
+        logging.debug("== RESTORE TO VM MODE ==")
 
-    logging.debug('instance_id: '+instance_id)
+        initAWS()
 
-    launchAWSInstanceBasedOnInstance(instance_id)
+        instance_id = getInstanceID()
+
+        logging.debug('instance_id: '+instance_id)
+
+        launchAWSInstanceBasedOnInstance(instance_id)
+    else:
+        logAndExit("unable to restore LVM backup to VM")
 
 else:
     #
     # BACKUP MODE
     #
     logging.debug("== BACKUP MODE ==")
-    if not lvm_disk:
-        logging.debug("lvm_disk undefined, searching datadir")
-        datadir = getDataDir()
-        logging.debug("postgres datadir: "+datadir)
-        lvm_disk = getFSType(datadir)[1]
-
-    logging.debug("lvm_disk: "+lvm_disk)
-
-    lv_name = getLV(lvm_disk)
-
-    logging.debug("lv_name: "+lv_name)
-
-    vg_name = getVG(lvm_disk)
-
-    logging.debug("vg_name: "+vg_name)
-
-    pv_disks = getPVs(vg_name)
-
-    logging.debug("pv_disks: "+str(pv_disks))
-
-    disks = getDisks(pv_disks)
-
-    logging.debug("disks: "+str(disks))
 
     backup_name = postgresBackupMode(True)
 
