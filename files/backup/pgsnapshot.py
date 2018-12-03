@@ -69,7 +69,7 @@ def logAndExit(msg):
     logging.error("** "+msg)
 
     if purge and keep_lvm_snaps==0:
-        purgeOldLVMSnapshots(vg_name, lv_name, keep_lvm_snaps, awscli)
+        purgeOldLVMSnapshots(vg_name, lv_name, keep_lvm_snaps, aws)
 
     if to_addr:
         sendReportEmail(True, to_addr, id_host)
@@ -91,7 +91,7 @@ def removeLVMSnapshot(lv_snap):
     else:
         logAndExit('Unable to remove lvm snapshot: (retcode: '+str(retval)+')'+lastline)
 
-def purgeOldLVMSnapshots(vg_name, lv_name, keep, awscli):
+def purgeOldLVMSnapshots(vg_name, lv_name, keep, aws):
     snaps = {}
     p = subprocess.Popen("lvdisplay /dev/"+vg_name+"/"+lv_name+" | awk '/LV snapshot/,/LV Status/' | grep -v LV | awk '{ print $1 }'", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     linecount=0
@@ -395,11 +395,18 @@ def purgeOldAWSsnapshots(id_host, lvm_disk, keep_days):
         logging.debug("purging AWS snapshot: "+aws_snapshot['SnapshotId'])
         ec2.delete_snapshot(SnapshotId=aws_snapshot['SnapshotId'])
 
+def initAWS():
+    import boto3
+
+    logging.getLogger('boto3').setLevel(logging.CRITICAL)
+    logging.getLogger('botocore').setLevel(logging.CRITICAL)
+    logging.getLogger('nose').setLevel(logging.CRITICAL)
+
 
 timeformat = '%Y%m%d%H%M%S'
 lvm_disk = ""
 snap_size = "5G"
-awscli = False
+aws = False
 purge = True
 config_file = './postgres_snapshot.config'
 logdir = '/var/log/pgsnapshot'
@@ -408,16 +415,18 @@ keep_lvm_snaps = 2
 keep_aws_snaps_days = 7
 snapshotbasename='snap'
 error_count=0
+restore_to_vm=False
 
 # parse opts
 
-options, remainder = getopt.getopt(sys.argv[1:], 'l:s:ac:dk:', [
+options, remainder = getopt.getopt(sys.argv[1:], 'l:s:ac:dk:r', [
                                                             'lvm-disk=',
                                                             "config="
                                                             'snapshot-size=',
                                                             'aws',
                                                             'dontpurge',
-                                                            'keep_aws_snaps_days='
+                                                            'keep_aws_snaps_days=',
+                                                            'restore-to-vm'
                                                          ])
 
 for opt, arg in options:
@@ -430,11 +439,13 @@ for opt, arg in options:
     elif opt in ('-c', '--config'):
         config_file = arg
     elif opt in ('-a', '--aws'):
-        awscli = True
+        aws = True
     elif opt in ('-d', '--dontpurge'):
         purge = False
     elif opt in ('-l', '--logdir'):
         logdir = arg
+    elif opt in ('-r', '--restore-to-vm'):
+        restore_to_vm = True
     else:
       sys.exit("unrecoginzed option: ".opt)
 
@@ -503,14 +514,14 @@ except:
     logging.debug('Using default value for snapshotbasename: '+snapshotbasename)
 
 try:
-    awscli=config.getboolean('pgsnapshot', 'aws')
+    aws=config.getboolean('pgsnapshot', 'aws')
 except:
-    logging.debug('Using default value for awscli: '+str(awscli))
+    logging.debug('Using default value for aws: '+str(aws))
 
 try:
     keep_lvm_snaps=int(config.get('pgsnapshot', 'keeplvmsnaps'))
 except:
-    if awscli:
+    if aws:
         keep_lvm_snaps=0
     else:
         keep_lvm_snaps=2
@@ -518,7 +529,7 @@ except:
 try:
     keep_aws_snaps_days=int(config.get('pgsnapshot', 'keepAWSsnapdays'))
 except:
-    logging.debug('Using default value for awscli: '+str(keep_aws_snaps_days))
+    logging.debug('Using default value for aws: '+str(keep_aws_snaps_days))
 
 try:
     to_addr=config.get('pgsnapshot', 'to').strip('"')
@@ -533,103 +544,120 @@ except:
 #
 # ACTIONS
 #
+if restore_to_vm and aws:
+    #
+    # RESTORE TO VM MODE
+    #
+    logging.debug("== RESTORE TO VM MODE ==")
 
-if not lvm_disk:
-    logging.debug("lvm_disk undefined, searching datadir")
-    datadir = getDataDir()
-    logging.debug("postgres datadir: "+datadir)
-    lvm_disk = getFSType(datadir)[1]
+    initAWS()
 
-logging.debug("lvm_disk: "+lvm_disk)
+    instance_id = getInstanceID()
 
-lv_name = getLV(lvm_disk)
+    logging.debug('instance_id: '+instance_id)
 
-logging.debug("lv_name: "+lv_name)
 
-vg_name = getVG(lvm_disk)
+else:
+    #
+    # BACKUP MODE
+    #
+    logging.debug("== BACKUP MODE ==")
+    if not lvm_disk:
+        logging.debug("lvm_disk undefined, searching datadir")
+        datadir = getDataDir()
+        logging.debug("postgres datadir: "+datadir)
+        lvm_disk = getFSType(datadir)[1]
 
-logging.debug("vg_name: "+vg_name)
+    logging.debug("lvm_disk: "+lvm_disk)
 
-pv_disks = getPVs(vg_name)
+    lv_name = getLV(lvm_disk)
 
-logging.debug("pv_disks: "+str(pv_disks))
+    logging.debug("lv_name: "+lv_name)
 
-disks = getDisks(pv_disks)
+    vg_name = getVG(lvm_disk)
 
-logging.debug("disks: "+str(disks))
+    logging.debug("vg_name: "+vg_name)
 
-backup_name = postgresBackupMode(True)
+    pv_disks = getPVs(vg_name)
 
-logging.debug("backup_name: "+backup_name)
+    logging.debug("pv_disks: "+str(pv_disks))
 
-snap_name = doLVMSnapshot(lvm_disk, backup_name, snap_size)
+    disks = getDisks(pv_disks)
 
-logging.debug("snap_name: "+snap_name)
+    logging.debug("disks: "+str(disks))
 
-postgresBackupMode(False)
+    backup_name = postgresBackupMode(True)
 
-if awscli:
-    try:
-        import boto3
+    logging.debug("backup_name: "+backup_name)
 
-        logging.getLogger('boto3').setLevel(logging.CRITICAL)
-        logging.getLogger('botocore').setLevel(logging.CRITICAL)
-        logging.getLogger('nose').setLevel(logging.CRITICAL)
+    snap_name = doLVMSnapshot(lvm_disk, backup_name, snap_size)
 
-        instance_id = getInstanceID()
+    logging.debug("snap_name: "+snap_name)
 
-        logging.debug('instance_id: '+instance_id)
+    postgresBackupMode(False)
 
-        if not instance_id:
-          logAndExit("error getting instance_id")
+    if aws:
+        try:
+            initAWS()
 
-        ec2 = boto3.resource('ec2')
-        instance = ec2.Instance(instance_id)
+            instance_id = getInstanceID()
 
-        instance_devices = instance.block_device_mappings
+            logging.debug('instance_id: '+instance_id)
 
-        logging.debug('instance_devices: '+str(instance_devices))
+            if not instance_id:
+              logAndExit("error getting instance_id")
 
-        volumes = getAWSVolumes(instance_devices)
+            ec2 = boto3.resource('ec2')
+            instance = ec2.Instance(instance_id)
 
-        logging.debug('volumes: '+str(volumes))
+            instance_devices = instance.block_device_mappings
 
-        for volume_id in volumes:
-            if createAWSsnapshot(ec2, volume_id, lvm_disk, snap_name):
-                logging.debug('created AWS snapshot for '+volume_id)
-            else:
-                error_count+=0
-                logging.debug('error creating snapshot for '+volume_id)
+            logging.debug('instance_devices: '+str(instance_devices))
 
-        # wait for snapshots to be created
-        aws_snapshots_pending=99
-        while aws_snapshots_pending!=0:
-            aws_snapshots = getAWSsnapshot(id_host, lvm_disk, snap_name)
-            aws_snapshots_pending=0
-            current_status = {}
+            volumes = getAWSVolumes(instance_devices)
+
+            logging.debug('volumes: '+str(volumes))
+
+            for volume_id in volumes:
+                if createAWSsnapshot(ec2, volume_id, lvm_disk, snap_name):
+                    logging.debug('created AWS snapshot for '+volume_id)
+                else:
+                    error_count+=0
+                    logging.debug('error creating snapshot for '+volume_id)
+
+            # wait for snapshots to be created
+            aws_snapshots_pending=99
+            while aws_snapshots_pending!=0:
+                aws_snapshots = getAWSsnapshot(id_host, lvm_disk, snap_name)
+                aws_snapshots_pending=0
+                current_status = {}
+                for aws_snapshot in aws_snapshots:
+                    if aws_snapshot['State']=='pending':
+                        aws_snapshots_pending+=1
+                        current_status[aws_snapshot['SnapshotId']]=aws_snapshot['State']
+                if aws_snapshots_pending!=0:
+                    random_sleep = randint(10,100)
+                    logging.debug("waiting for AWS snapshot for "+str(random_sleep)+" seconds - current status: "+str(current_status))
+                    time.sleep(random_sleep)
+
+            # validacio snapshots
             for aws_snapshot in aws_snapshots:
-                if aws_snapshot['State']=='pending':
-                    aws_snapshots_pending+=1
-                    current_status[aws_snapshot['SnapshotId']]=aws_snapshot['State']
-            if aws_snapshots_pending!=0:
-                random_sleep = randint(10,100)
-                logging.debug("waiting for AWS snapshot for "+str(random_sleep)+" seconds - current status: "+str(current_status))
-                time.sleep(random_sleep)
+                if aws_snapshot['State']=='error':
+                    error_count+=1
 
-        # validacio snapshots
-        for aws_snapshot in aws_snapshots:
-            if aws_snapshot['State']=='error':
-                error_count+=1
-
-        if purge:
-            purgeOldAWSsnapshots(id_host, lvm_disk, keep_aws_snaps_days)
+            if purge:
+                purgeOldAWSsnapshots(id_host, lvm_disk, keep_aws_snaps_days)
 
 
-    except Exception as e:
-        logAndExit('error using AWS API: '+str(e))
+        except Exception as e:
+            logAndExit('error using AWS API: '+str(e))
 
-if purge:
-    purgeOldLVMSnapshots(vg_name, lv_name, keep_lvm_snaps, awscli)
+    if purge:
+        purgeOldLVMSnapshots(vg_name, lv_name, keep_lvm_snaps, aws)
 
-if to_addr:
-    sendReportEmail(error_count!=0, to_addr, id_host)
+    if to_addr:
+        sendReportEmail(error_count!=0, to_addr, id_host)
+
+    #
+    # END BACKUP MODE
+    #
