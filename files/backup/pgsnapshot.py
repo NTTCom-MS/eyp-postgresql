@@ -645,8 +645,8 @@ def launchAWSInstanceBasedOnInstanceIDwithSnapshots(base_instance_id, snap_name,
                                                 ],
                                 MinCount=1, MaxCount=1
                             )
-    else:
-        logAndExit("instance already running:" +str(reservations))
+        reservations = searchForRestoredInstance(id_host, lvm_disk, snap_name)
+    #
 
 def listAWSsnapshots():
     aws_snapshots = getAWSsnapshot(id_host, lvm_disk, "")
