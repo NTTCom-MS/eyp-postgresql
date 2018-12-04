@@ -474,6 +474,19 @@ def listAWSsnapshots():
 
     return avaiable_backups
 
+def showJelp():
+    print("* Global options:")
+    print("   [-c|--config] <config file>")
+    print("   [-a|--aws]")
+    print("   [-d|--dontpurge]")
+    print("   [-g|--logdir] <log dir>")
+    print("   [-l|--lvm-disk] <lvm disk>")
+    print("   [-s|--snapshot-size] <size>")
+    print("* Modes:")
+    print("   [-L|--list-backups]")
+    print("   [-r|--restore-to-vm] <snap>")
+    sys.exit("")
+
 timeformat = '%Y%m%d%H%M%S'
 lvm_disk = ""
 snap_size = "5G"
@@ -523,17 +536,7 @@ for opt, arg in options:
     elif opt in ('-r', '--restore-to-vm'):
         restore_to_vm = arg
     else:
-        print("* Global options:")
-        print("   [-c|--config] <config file>")
-        print("   [-a|--aws]")
-        print("   [-d|--dontpurge]")
-        print("   [-g|--logdir] <log dir>")
-        print("   [-l|--lvm-disk] <lvm disk>")
-        print("   [-s|--snapshot-size] <size>")
-        print("* Modes:")
-        print("   [-L|--list-backups]")
-        print("   [-r|--restore-to-vm] <snap>")
-        sys.exit("")
+        showJelp()
 
 logFormatter = logging.Formatter("%(asctime)s [%(threadName)-12.12s] [%(levelname)-5.5s]  %(message)s")
 rootLogger = logging.getLogger()
