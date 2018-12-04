@@ -434,7 +434,7 @@ def getVolumesFromSnapshot(id_host, lvm_disk, snap_name):
     volumes = client.describe_volumes(
                                         Filters=[
                                             {
-                                                'Name': 'pgsnapshot-snap_name',
+                                                'Name': 'tag:pgsnapshot-snap_name',
                                                 'Values': [
                                                     snap_name,
                                                 ]
