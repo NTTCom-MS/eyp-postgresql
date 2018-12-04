@@ -429,7 +429,7 @@ def getInstance(instance_id):
     logging.getLogger('nose').setLevel(logging.CRITICAL)
     return ec2.Instance(instance_id)
 
-def launchAWSInstanceBasedOnInstance(base_instance_id):
+def launchAWSInstanceBasedOnInstanceIDwithSnapshots(base_instance_id, snapshots):
     ec2 = boto3.resource('ec2')
     logging.getLogger('boto3').setLevel(logging.CRITICAL)
     logging.getLogger('botocore').setLevel(logging.CRITICAL)
@@ -517,12 +517,22 @@ for opt, arg in options:
         purge = False
     elif opt in ('-L', '--list-backups'):
         list_backups = True
-    elif opt in ('-l', '--logdir'):
+    elif opt in ('-g', '--logdir'):
         logdir = arg
     elif opt in ('-r', '--restore-to-vm'):
         restore_to_vm = arg
     else:
-      sys.exit("unrecoginzed option: ".opt)
+        print("* Global options:")
+        print("   [-c|--config] <config file>")
+        print("   [-a|--aws]")
+        print("   [-d|--dontpurge]")
+        print("   [-g|--logdir] <log dir>")
+        print("   [-l|--lvm-disk] <lvm disk>")
+        print("   [-s|--snapshot-size] <size>")
+        print("* Modes:")
+        print("   [-L|--list-backups]")
+        print("   [-r|--restore-to-vm] <snap>")
+        sys.exit("")
 
 logFormatter = logging.Formatter("%(asctime)s [%(threadName)-12.12s] [%(levelname)-5.5s]  %(message)s")
 rootLogger = logging.getLogger()
@@ -686,7 +696,12 @@ elif restore_to_vm:
 
         logging.debug('instance_id: '+instance_id)
 
-        launchAWSInstanceBasedOnInstance(instance_id)
+        aws_snapshots = getAWSsnapshot(id_host, lvm_disk, restore_to_vm)
+        if len(aws_snapshots)>0:
+            logging.debug('aws_snapshots: '+str(aws_snapshots))
+            # launchAWSInstanceBasedOnInstanceIDwithSnapshots(instance_id, aws_snapshots)
+        else:
+            logAndExit("unable to restore to VM using "+restore_to_vm)
     else:
         logAndExit("unable to restore LVM backup to VM")
 
