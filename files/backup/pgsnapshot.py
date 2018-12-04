@@ -500,6 +500,16 @@ def createAWSVolumeFromSnapshotID(az, snapshot_id, id_host, lvm_disk, snap_name)
                             )
     return volume
 
+def waitForAWSVolumes2bAvailable(aws_volumes):
+    client = boto3.client('ec2')
+    for aws_volume in aws_volumes:
+        response = client.describe_volume_status(VolumeIds=[aws_volume['VolumeId']])
+        current_status = response['VolumeStatuses'][0]['VolumeStatus']['Status']
+        if(current_status !='ok'):
+            random_sleep = randint(10,100)
+            logging.debug("waiting for AWS volume for "+str(random_sleep)+" seconds - current status: "+current_status)
+            time.sleep(random_sleep)
+
 def createAWSVolumeFromSnapshotName(snap_name, id_host, lvm_disk, az):
     aws_snapshots = getAWSsnapshot(id_host, lvm_disk, snap_name)
     aws_volumes_response = getVolumesFromSnapshot(id_host, lvm_disk, snap_name)
@@ -513,8 +523,6 @@ def createAWSVolumeFromSnapshotName(snap_name, id_host, lvm_disk, az):
         logging.debug("("+snap_name+"/"+id_host+"/"+lvm_disk+") - AWS VOLUMES: "+str(len(aws_volumes))+" vs "+"AWS SNAPSHOTS: "+str(len(aws_snapshots)))
 
         # TODO: verificar que no estan ja attachats
-
-        return aws_volumes
     else:
         # crear volums pels snapshots que no tenen volum
         for aws_snapshot in aws_snapshots:
@@ -525,7 +533,12 @@ def createAWSVolumeFromSnapshotName(snap_name, id_host, lvm_disk, az):
 
         # un cop creats repeteixo query i retorno
         aws_volumes_response = getVolumesFromSnapshot(id_host, lvm_disk, snap_name)
-        return aws_volumes_response['Volumes']
+        aws_volumes = aws_volumes_response['Volumes']
+
+        logging.debug("AWS volumes: "+str(aws_volumes))
+
+    waitForAWSVolumes2bAvailable(aws_volumes)
+    return aws_volumes
 
 def launchAWSInstanceBasedOnInstanceIDwithSnapshots(base_instance_id, snap_name, id_host, lvm_disk):
     ec2 = boto3.resource('ec2')
