@@ -506,6 +506,7 @@ def validateVolumesAreNotAttached(aws_volumes):
         attachments = aws_volume['Attachments']
         if(len(attachments)>0):
             logAndExit("volume "+aws_volume['VolumeId']+" already have "+str(len(attachments))+" attachments")
+    logging.debug("validateVolumesAreNotAttached - all clear")
 
 def waitForAWSVolumes2bAvailable(aws_volumes):
     logging.debug("waitForAWSVolumes2bAvailable")
@@ -518,6 +519,7 @@ def waitForAWSVolumes2bAvailable(aws_volumes):
             random_sleep = randint(10,100)
             logging.debug("waiting for AWS volume "+aws_volume['VolumeId']+" for "+str(random_sleep)+" seconds - current status: "+current_status)
             time.sleep(random_sleep)
+    logging.debug("waitForAWSVolumes2bAvailable - all clear")
 
 def createAWSVolumeFromSnapshotName(snap_name, id_host, lvm_disk, az):
     aws_snapshots = getAWSsnapshot(id_host, lvm_disk, snap_name)
