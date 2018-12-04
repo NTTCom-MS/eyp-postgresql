@@ -471,6 +471,8 @@ def createAWSVolumeFromSnapshot(snap_name, id_host, lvm_disk):
         return aws_volumes
     else:
         # crear volums pels snapshots que no tenen volum
+        
+        return aws_volumes
 
 def launchAWSInstanceBasedOnInstanceIDwithSnapshots(base_instance_id, snap_name, id_host, lvm_disk):
     ec2 = boto3.resource('ec2')
