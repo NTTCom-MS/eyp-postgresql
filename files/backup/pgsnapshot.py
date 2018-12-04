@@ -475,6 +475,7 @@ def listAWSsnapshots():
     return avaiable_backups
 
 def showJelp(msg):
+    print("Usage:")
     print("* Global options:")
     print("   [-c|--config] <config file>")
     print("   [-a|--aws]")
