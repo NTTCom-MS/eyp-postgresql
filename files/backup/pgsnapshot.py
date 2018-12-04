@@ -479,7 +479,7 @@ def createAWSVolumeFromSnapshotID(az, snapshot_id, id_host, lvm_disk, snap_name)
                                         'ResourceType': 'volume',
                                         'Tags': [
                                             {
-                                                'Key': 'pgsnapshot-volume_created',
+                                                'Key': 'pgsnapshot-volume_created_from_snapshot',
                                                 'Value': datetime.datetime.fromtimestamp(time.time()).strftime(timeformat)
                                             },
                                             {
