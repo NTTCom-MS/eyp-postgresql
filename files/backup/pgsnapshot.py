@@ -491,7 +491,7 @@ list_backups=False
 
 # parse opts
 
-options, remainder = getopt.getopt(sys.argv[1:], 'l:s:ac:dk:r:L', [
+options, remainder = getopt.getopt(sys.argv[1:], 'l:s:ac:dk:r:Lh', [
                                                             'lvm-disk=',
                                                             "config="
                                                             'snapshot-size=',
@@ -499,7 +499,8 @@ options, remainder = getopt.getopt(sys.argv[1:], 'l:s:ac:dk:r:L', [
                                                             'dontpurge',
                                                             'keep_aws_snaps_days=',
                                                             'restore-to-vm=',
-                                                            'list-backups'
+                                                            'list-backups',
+                                                            'help'
                                                          ])
 
 for opt, arg in options:
