@@ -500,6 +500,13 @@ def createAWSVolumeFromSnapshotID(az, snapshot_id, id_host, lvm_disk, snap_name)
                             )
     return volume
 
+def validateVolumesAreNotAttached(aws_volumes):
+    logging.debug("validateVolumesAreNotAttached")
+    for aws_volume in aws_volumes:
+        attachments = aws_volume['Attachments']
+        if(len(attachments)>0):
+            logAndExit("volume "+aws_volume['VolumeId']+" already have "+str(len(attachments))+" attachments")
+
 def waitForAWSVolumes2bAvailable(aws_volumes):
     logging.debug("waitForAWSVolumes2bAvailable")
     client = boto3.client('ec2')
@@ -562,7 +569,8 @@ def launchAWSInstanceBasedOnInstanceIDwithSnapshots(base_instance_id, snap_name,
     logging.debug("* InstanceType: "+aws_base_instance.instance_type)
     logging.debug("* KeyName: "+aws_base_instance.key_name)
 
-    volumes = createAWSVolumeFromSnapshotName(snap_name, id_host, lvm_disk, aws_base_instance.placement['AvailabilityZone'])
+    aws_volumes = createAWSVolumeFromSnapshotName(snap_name, id_host, lvm_disk, aws_base_instance.placement['AvailabilityZone'])
+    validateVolumesAreNotAttached(aws_volumes)
 
     logging.debug("launching new AWS instance")
     # ec2.create_instances(
