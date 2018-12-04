@@ -429,8 +429,52 @@ def getInstance(instance_id):
     logging.getLogger('nose').setLevel(logging.CRITICAL)
     return ec2.Instance(instance_id)
 
-def launchAWSInstanceBasedOnInstanceIDwithSnapshots(base_instance_id, snapshots):
+def getVolumesFromSnapshot(id_host, lvm_disk, snap_name):
+    ec2 = boto3.client('ec2')
+    volumes = client.describe_volumes(
+                                        Filters=[
+                                            {
+                                                'Name': 'pgsnapshot-snap_name',
+                                                'Values': [
+                                                    snap_name,
+                                                ]
+                                            },
+                                            {
+                                                'Name': 'tag:pgsnapshot-lvm_disk',
+                                                'Values': [
+                                                    lvm_disk,
+                                                ]
+                                            },
+                                            {
+                                                'Name': 'tag:pgsnapshot-host',
+                                                'Values': [
+                                                    id_host,
+                                                ]
+                                            },
+                                        ]
+                                    )
+    return volumes
+
+def createAWSVolumeFromSnapshot(snap_name, id_host, lvm_disk):
+    aws_snapshots = getAWSsnapshot(id_host, lvm_disk, snap_name)
+    aws_volumes = getVolumesFromSnapshot(id_host, lvm_disk, snap_name)
+
+    logging.debug("AWS snapshots: "+str(aws_snapshots))
+    logging.debug("AWS volumes: "+str(aws_volumes))
+
+    if(len(aws_volumes)==len(aws_snapshots)):
+        # volums ja creats
+        logging.debug("AWS VOLUMES("+snap_name+"/"+id_host+"/"+lvm_disk+"): "+str(len(aws_volumes))+" == "+"AWS SNAPSHOTS: "+str(len(aws_snapshots)))
+
+        # TODO: verificar que no estan ja attachats
+
+        return aws_volumes
+    else:
+        # crear volums pels snapshots que no tenen volum
+
+def launchAWSInstanceBasedOnInstanceIDwithSnapshots(base_instance_id, snap_name, id_host, lvm_disk):
     ec2 = boto3.resource('ec2')
+
     logging.getLogger('boto3').setLevel(logging.CRITICAL)
     logging.getLogger('botocore').setLevel(logging.CRITICAL)
     logging.getLogger('nose').setLevel(logging.CRITICAL)
@@ -448,13 +492,16 @@ def launchAWSInstanceBasedOnInstanceIDwithSnapshots(base_instance_id, snapshots)
     logging.debug("* InstanceType: "+aws_base_instance.instance_type)
     logging.debug("* KeyName: "+aws_base_instance.key_name)
 
-    ec2.create_instances(
-                            ImageId=aws_base_instance.image_id,
-                            InstanceType=aws_base_instance.instance_type,
-                            KeyName=aws_base_instance.key_name,
-                            SecurityGroupIds=sgs,
-                            MinCount=1, MaxCount=1
-                        )
+    volumes = createAWSVolumeFromSnapshot(snap_name, id_host, lvm_disk)
+
+    logging.debug("launching new AWS instance")
+    # ec2.create_instances(
+    #                         ImageId=aws_base_instance.image_id,
+    #                         InstanceType=aws_base_instance.instance_type,
+    #                         KeyName=aws_base_instance.key_name,
+    #                         SecurityGroupIds=sgs,
+    #                         MinCount=1, MaxCount=1
+    #                     )
 
 
 def listAWSsnapshots():
@@ -706,7 +753,7 @@ elif restore_to_vm:
         aws_snapshots = getAWSsnapshot(id_host, lvm_disk, restore_to_vm)
         if len(aws_snapshots)>0:
             logging.debug('aws_snapshots: '+str(aws_snapshots))
-            # launchAWSInstanceBasedOnInstanceIDwithSnapshots(instance_id, aws_snapshots)
+            launchAWSInstanceBasedOnInstanceIDwithSnapshots(instance_id, restore_to_vm, id_host, lvm_disk)
         else:
             logAndExit("unable to restore to VM using "+restore_to_vm)
     else:
