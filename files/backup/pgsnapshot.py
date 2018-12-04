@@ -501,13 +501,15 @@ def createAWSVolumeFromSnapshotID(az, snapshot_id, id_host, lvm_disk, snap_name)
     return volume
 
 def waitForAWSVolumes2bAvailable(aws_volumes):
+    logging.debug("waitForAWSVolumes2bAvailable")
     client = boto3.client('ec2')
     for aws_volume in aws_volumes:
         response = client.describe_volume_status(VolumeIds=[aws_volume['VolumeId']])
         current_status = response['VolumeStatuses'][0]['VolumeStatus']['Status']
+        logging.debug(aws_volume['VolumeId']+" status: "+current_status)
         if(current_status !='ok'):
             random_sleep = randint(10,100)
-            logging.debug("waiting for AWS volume for "+str(random_sleep)+" seconds - current status: "+current_status)
+            logging.debug("waiting for AWS volume "+aws_volume['VolumeId']+" for "+str(random_sleep)+" seconds - current status: "+current_status)
             time.sleep(random_sleep)
 
 def createAWSVolumeFromSnapshotName(snap_name, id_host, lvm_disk, az):
