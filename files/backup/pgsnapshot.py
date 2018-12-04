@@ -503,19 +503,21 @@ restore_to_vm=""
 list_backups=False
 
 # parse opts
-
-options, remainder = getopt.getopt(sys.argv[1:], 'l:s:ac:dk:r:Lh', [
-                                                            'lvm-disk=',
-                                                            "config="
-                                                            'snapshot-size=',
-                                                            'aws',
-                                                            'dontpurge',
-                                                            'keep_aws_snaps_days=',
-                                                            'restore-to-vm=',
-                                                            'list-backups',
-                                                            'help'
-                                                         ])
-
+try:
+    options, remainder = getopt.getopt(sys.argv[1:], 'l:s:ac:dk:r:Lh', [
+                                                                'lvm-disk=',
+                                                                "config="
+                                                                'snapshot-size=',
+                                                                'aws',
+                                                                'dontpurge',
+                                                                'keep_aws_snaps_days=',
+                                                                'restore-to-vm=',
+                                                                'list-backups',
+                                                                'help'
+                                                             ])
+except:
+    showJelp()
+    
 for opt, arg in options:
     if opt in ('-l', '--lvm-disk'):
         lvm_disk = arg
