@@ -464,14 +464,14 @@ def createAWSVolumeFromSnapshot(snap_name, id_host, lvm_disk):
 
     if(len(aws_volumes)==len(aws_snapshots)):
         # volums ja creats
-        logging.debug("AWS VOLUMES("+snap_name+"/"+id_host+"/"+lvm_disk+"): "+str(len(aws_volumes))+" == "+"AWS SNAPSHOTS: "+str(len(aws_snapshots)))
+        logging.debug("("+snap_name+"/"+id_host+"/"+lvm_disk+") - AWS VOLUMES: "+str(len(aws_volumes))+" vs "+"AWS SNAPSHOTS: "+str(len(aws_snapshots)))
 
         # TODO: verificar que no estan ja attachats
 
         return aws_volumes
     else:
         # crear volums pels snapshots que no tenen volum
-        
+
         return aws_volumes
 
 def launchAWSInstanceBasedOnInstanceIDwithSnapshots(base_instance_id, snap_name, id_host, lvm_disk):
