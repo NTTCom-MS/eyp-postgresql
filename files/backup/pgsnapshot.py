@@ -468,6 +468,7 @@ def getVolumesFromSnapshot(id_host, lvm_disk, snap_name, snapshot_id=""):
     return volumes
 
 def createAWSVolumeFromSnapshotID(az, snapshot_id, id_host, lvm_disk, snap_name):
+    logging.debug("createAWSVolumeFromSnapshotID("+az+","+snapshot_id+","+id_host+","+lvm_disk+","+snap_name+")")
     ec2 = boto3.resource('ec2')
     volume = ec2.create_volume(
                                 AvailabilityZone='string',
