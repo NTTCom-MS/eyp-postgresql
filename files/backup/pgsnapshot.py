@@ -119,7 +119,7 @@ def purgeOldLVMSnapshots(vg_name, lv_name, keep, aws):
     if len(snaps)!=0:
         keylist = snaps.keys()
         keylist.sort()
-        logging.debug(keylist)
+        logging.debug("keylist: "+str(keylist))
         to_delete = len(keylist)-keep
         if to_delete<0:
             to_delete=0
