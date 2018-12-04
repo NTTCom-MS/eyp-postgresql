@@ -430,7 +430,7 @@ def getInstance(instance_id):
     return ec2.Instance(instance_id)
 
 def getVolumesFromSnapshot(id_host, lvm_disk, snap_name):
-    ec2 = boto3.client('ec2')
+    client = boto3.client('ec2')
     volumes = client.describe_volumes(
                                         Filters=[
                                             {
