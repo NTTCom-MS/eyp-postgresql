@@ -658,7 +658,7 @@ if list_backups:
         logging.debug("list of available backups: "+str(avaiable_backups))
 
         for backup in avaiable_backups.keys():
-            print(" * "+backup+"\n")
+            print(" * "+backup)
 
     else:
         logging.debug("== LIST LVM BACKUPS ==")
@@ -670,7 +670,7 @@ if list_backups:
         logging.debug(keylist)
 
         for key in keylist:
-            print(" * "+snaps[key]+"\n")
+            print(" * "+snaps[key])
 
 
 elif restore_to_vm:
