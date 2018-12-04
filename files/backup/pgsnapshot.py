@@ -530,6 +530,8 @@ def showJelp(msg):
     print("   [-g|--logdir] <log dir>")
     print("   [-l|--lvm-disk] <lvm disk>")
     print("   [-s|--snapshot-size] <size>")
+    print("   [-k|--keep-aws-snaps-days] <days>")
+    print("   [-K|--keep-lvm-snaps] <number of LVM snapshots to keep>")
     print("* Modes:")
     print("   [-L|--list-backups]")
     print("   [-r|--restore-to-vm] <snap>")
@@ -552,15 +554,16 @@ list_backups=False
 
 # parse opts
 try:
-    options, remainder = getopt.getopt(sys.argv[1:], 'l:s:ac:dk:r:Lh', [
+    options, remainder = getopt.getopt(sys.argv[1:], 'l:s:ac:dk:r:LhK:', [
                                                                 'lvm-disk=',
                                                                 "config="
                                                                 'snapshot-size=',
                                                                 'aws',
                                                                 'dontpurge',
-                                                                'keep_aws_snaps_days=',
+                                                                'keep-aws-snaps-days=',
                                                                 'restore-to-vm=',
                                                                 'list-backups',
+                                                                'keep-lvm-snaps=',
                                                                 'help'
                                                              ])
 except Exception, e:
@@ -573,6 +576,8 @@ for opt, arg in options:
         snap_size = arg
     elif opt in ('-k', '--keep_aws_snaps_days'):
         keep_aws_snaps_days = int(arg)
+    elif opt in ('-K', '--keep-lvm-snaps'):
+        keep_lvm_snaps = int(arg)
     elif opt in ('-c', '--config'):
         config_file = arg
     elif opt in ('-a', '--aws'):
