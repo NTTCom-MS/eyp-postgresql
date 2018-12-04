@@ -429,41 +429,85 @@ def getInstance(instance_id):
     logging.getLogger('nose').setLevel(logging.CRITICAL)
     return ec2.Instance(instance_id)
 
-def getVolumesFromSnapshot(id_host, lvm_disk, snap_name):
+def getVolumesFromSnapshot(id_host, lvm_disk, snap_name, snapshot_id=""):
     client = boto3.client('ec2')
+    filters = [
+                {
+                    'Name': 'tag:pgsnapshot-snap_name',
+                    'Values': [
+                        snap_name,
+                    ]
+                },
+                {
+                    'Name': 'tag:pgsnapshot-lvm_disk',
+                    'Values': [
+                        lvm_disk,
+                    ]
+                },
+                {
+                    'Name': 'tag:pgsnapshot-host',
+                    'Values': [
+                        id_host,
+                    ]
+                },
+            ]
+
+    if snapshot_id:
+        filters.append(
+                        {
+                            'Name': 'snapshot-id',
+                            'Values': [
+                                snapshot_id,
+                            ]
+                        }
+        )
+
     volumes = client.describe_volumes(
-                                        Filters=[
-                                            {
-                                                'Name': 'tag:pgsnapshot-snap_name',
-                                                'Values': [
-                                                    snap_name,
-                                                ]
-                                            },
-                                            {
-                                                'Name': 'tag:pgsnapshot-lvm_disk',
-                                                'Values': [
-                                                    lvm_disk,
-                                                ]
-                                            },
-                                            {
-                                                'Name': 'tag:pgsnapshot-host',
-                                                'Values': [
-                                                    id_host,
-                                                ]
-                                            },
-                                        ]
+                                        Filters=filters
                                     )
     return volumes
 
-def createAWSVolumeFromSnapshot(snap_name, id_host, lvm_disk):
+def createAWSVolumeFromSnapshotID(az, snapshot_id, id_host, lvm_disk, snap_name):
+    ec2 = boto3.resource('ec2')
+    volume = ec2.create_volume(
+                                AvailabilityZone='string',
+                                SnapshotId=snapshot_id,
+                                VolumeType='gp2',
+                                TagSpecifications=[
+                                    {
+                                        'ResourceType': 'volume',
+                                        'Tags': [
+                                            {
+                                                'Key': 'pgsnapshot-volume_created',
+                                                'Value': datetime.datetime.fromtimestamp(time.time()).strftime(timeformat)
+                                            },
+                                            {
+                                                'Key': 'pgsnapshot-snap_name',
+                                                'Value': snap_name,
+                                            },
+                                            {
+                                                'Key': 'pgsnapshot-lvm_disk',
+                                                'Value': lvm_disk,
+                                            },
+                                            {
+                                                'Key': 'pgsnapshot-host',
+                                                'Value': id_host,
+                                            },
+                                        ]
+                                    },
+                                ]
+                            )
+    return volume
+
+def createAWSVolumeFromSnapshotName(snap_name, id_host, lvm_disk, az):
     aws_snapshots = getAWSsnapshot(id_host, lvm_disk, snap_name)
-    aws_volumes = getVolumesFromSnapshot(id_host, lvm_disk, snap_name)
+    aws_volumes = getVolumesFromSnapshot(id_host, lvm_disk, snap_name)['Volumes']
 
     logging.debug("AWS snapshots: "+str(aws_snapshots))
     logging.debug("AWS volumes: "+str(aws_volumes))
 
     if(len(aws_volumes)==len(aws_snapshots)):
-        # volums ja creats
+        # suposem que la relació es 1 a 1, aqui potencial bug com una casa
         logging.debug("("+snap_name+"/"+id_host+"/"+lvm_disk+") - AWS VOLUMES: "+str(len(aws_volumes))+" vs "+"AWS SNAPSHOTS: "+str(len(aws_snapshots)))
 
         # TODO: verificar que no estan ja attachats
@@ -471,8 +515,14 @@ def createAWSVolumeFromSnapshot(snap_name, id_host, lvm_disk):
         return aws_volumes
     else:
         # crear volums pels snapshots que no tenen volum
+        for aws_snapshot in aws_snapshots:
+            aws_volumes_for_snapshot = getVolumesFromSnapshot(id_host, lvm_disk, snap_name, aws_snapshot['SnapshotId'])['Volumes']
+            if(len(aws_volumes_for_snapshot))==0:
+                logging.debug("creant volum desde snaphot_id: "+aws_snapshot['SnapshotId'])
+                createAWSVolumeFromSnapshotID(az, aws_snapshot['SnapshotId'], id_host, lvm_disk, snap_name)
 
-        return aws_volumes
+        # un cop creats repeteixo query i retorno
+        return = getVolumesFromSnapshot(id_host, lvm_disk, snap_name)['Volumes']
 
 def launchAWSInstanceBasedOnInstanceIDwithSnapshots(base_instance_id, snap_name, id_host, lvm_disk):
     ec2 = boto3.resource('ec2')
@@ -494,7 +544,7 @@ def launchAWSInstanceBasedOnInstanceIDwithSnapshots(base_instance_id, snap_name,
     logging.debug("* InstanceType: "+aws_base_instance.instance_type)
     logging.debug("* KeyName: "+aws_base_instance.key_name)
 
-    volumes = createAWSVolumeFromSnapshot(snap_name, id_host, lvm_disk)
+    volumes = createAWSVolumeFromSnapshotName(snap_name, id_host, lvm_disk, aws_base_instance.placement['AvailabilityZone'])
 
     logging.debug("launching new AWS instance")
     # ec2.create_instances(
