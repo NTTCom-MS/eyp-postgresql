@@ -502,7 +502,8 @@ def createAWSVolumeFromSnapshotID(az, snapshot_id, id_host, lvm_disk, snap_name)
 
 def createAWSVolumeFromSnapshotName(snap_name, id_host, lvm_disk, az):
     aws_snapshots = getAWSsnapshot(id_host, lvm_disk, snap_name)
-    aws_volumes = getVolumesFromSnapshot(id_host, lvm_disk, snap_name)['Volumes']
+    aws_volumes_response = getVolumesFromSnapshot(id_host, lvm_disk, snap_name)
+    aws_volumes = aws_volumes_response['Volumes']
 
     logging.debug("AWS snapshots: "+str(aws_snapshots))
     logging.debug("AWS volumes: "+str(aws_volumes))
@@ -523,7 +524,8 @@ def createAWSVolumeFromSnapshotName(snap_name, id_host, lvm_disk, az):
                 createAWSVolumeFromSnapshotID(az, aws_snapshot['SnapshotId'], id_host, lvm_disk, snap_name)
 
         # un cop creats repeteixo query i retorno
-        return = getVolumesFromSnapshot(id_host, lvm_disk, snap_name)['Volumes']
+        aws_volumes_response = getVolumesFromSnapshot(id_host, lvm_disk, snap_name)
+        return aws_volumes_response['Volumes']
 
 def launchAWSInstanceBasedOnInstanceIDwithSnapshots(base_instance_id, snap_name, id_host, lvm_disk):
     ec2 = boto3.resource('ec2')
