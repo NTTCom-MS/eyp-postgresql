@@ -607,7 +607,7 @@ def launchAWSInstanceBasedOnInstanceIDwithSnapshots(base_instance_id, snap_name,
 
     if len(reservations)==0:
         logging.debug("launching new AWS instance")
-        ec2.create_instances(
+        instance = ec2.create_instances(
                                 ImageId=aws_base_instance.image_id,
                                 InstanceType=aws_base_instance.instance_type,
                                 KeyName=aws_base_instance.key_name,
@@ -633,7 +633,7 @@ def launchAWSInstanceBasedOnInstanceIDwithSnapshots(base_instance_id, snap_name,
                                                                 'Value': id_host,
                                                             },
                                                             {
-                                                                'Key': 'pgsnapshot-instance_created_from_snapshot',
+                                                                'Key': 'pgsnapshot-instance_created',
                                                                 'Value': datetime.datetime.fromtimestamp(time.time()).strftime(timeformat)
                                                             },
                                                         ]
