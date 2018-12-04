@@ -92,7 +92,7 @@ def removeLVMSnapshot(lv_snap):
     else:
         logAndExit('Unable to remove lvm snapshot: (retcode: '+str(retval)+')'+lastline)
 
-def purgeOldLVMSnapshots(vg_name, lv_name, keep, aws):
+def getLVMsnapshots(vg_name, lv_name):
     snaps = {}
     p = subprocess.Popen("lvdisplay /dev/"+vg_name+"/"+lv_name+" | awk '/LV snapshot/,/LV Status/' | grep -v LV | awk '{ print $1 }'", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     linecount=0
@@ -105,6 +105,18 @@ def purgeOldLVMSnapshots(vg_name, lv_name, keep, aws):
     retval = p.wait()
 
     if retval==0:
+        return snaps
+    else:
+        # not using longAndExit because we could end up in a recurse loop
+        if to_addr:
+            sendReportEmail(True, to_addr, id_host)
+
+        sys.exit('Unable to purge old snapshots'+"\n")
+
+def purgeOldLVMSnapshots(vg_name, lv_name, keep, aws):
+    snaps = getLVMsnapshots(vg_name, lv_name)
+
+    if len(snaps)!=0:
         keylist = snaps.keys()
         keylist.sort()
         logging.debug(keylist)
@@ -648,6 +660,17 @@ if list_backups:
 
     else:
         logging.debug("== LIST LVM BACKUPS ==")
+
+        snaps = getLVMsnapshots(vg_name, lv_name)
+
+        keylist = snaps.keys()
+        keylist.sort()
+        logging.debug(keylist)
+
+        for key in keylist:
+            print(" * "+snaps[key]+"\n")
+
+
 elif restore_to_vm:
     if aws:
         #
