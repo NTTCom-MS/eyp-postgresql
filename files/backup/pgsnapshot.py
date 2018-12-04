@@ -643,7 +643,7 @@ if list_backups:
 
         logging.debug("list of available backups: "+str(avaiable_backups))
 
-        for backup in keys(avaiable_backups):
+        for backup in avaiable_backups.keys():
             print(" * "+backup+"\n")
 
     else:
