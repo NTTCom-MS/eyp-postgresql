@@ -551,6 +551,34 @@ def createAWSVolumeFromSnapshotName(snap_name, id_host, lvm_disk, az):
     waitForAWSVolumes2bAvailable(aws_volumes)
     return aws_volumes
 
+def searchForRestoredInstance(id_host, lvm_disk, snap_name):
+    logging.debug("searchForRestoredInstance")
+    client = boto3.client('ec2')
+    response = client.describe_instances(
+                                            Filters=[
+                                                        {
+                                                            'Name': 'tag:pgsnapshot-snap_name',
+                                                            'Values': [
+                                                                snap_name,
+                                                            ]
+                                                        },
+                                                        {
+                                                            'Name': 'tag:pgsnapshot-lvm_disk',
+                                                            'Values': [
+                                                                lvm_disk,
+                                                            ]
+                                                        },
+                                                        {
+                                                            'Name': 'tag:pgsnapshot-host',
+                                                            'Values': [
+                                                                id_host,
+                                                            ]
+                                                        },
+                                            ],
+                                        )
+    logging.debug("describe_instances response: "+str(response))
+    return response
+
 def launchAWSInstanceBasedOnInstanceIDwithSnapshots(base_instance_id, snap_name, id_host, lvm_disk):
     ec2 = boto3.resource('ec2')
 
@@ -574,12 +602,41 @@ def launchAWSInstanceBasedOnInstanceIDwithSnapshots(base_instance_id, snap_name,
     aws_volumes = createAWSVolumeFromSnapshotName(snap_name, id_host, lvm_disk, aws_base_instance.placement['AvailabilityZone'])
     validateVolumesAreNotAttached(aws_volumes)
 
+    searchForRestoredInstance(id_host, lvm_disk, snap_name)
+
     logging.debug("launching new AWS instance")
     # ec2.create_instances(
     #                         ImageId=aws_base_instance.image_id,
     #                         InstanceType=aws_base_instance.instance_type,
     #                         KeyName=aws_base_instance.key_name,
     #                         SecurityGroupIds=sgs,
+    #                         TagSpecifications=[
+    #                                             {
+    #                                                 'ResourceType': 'instance',
+    #                                                 'Tags': [
+    #                                                     {
+    #                                                         'Key': 'Name',
+    #                                                         'Value': snap_name
+    #                                                     },
+    #                                                     {
+    #                                                         'Key': 'pgsnapshot-snap_name',
+    #                                                         'Value': snap_name,
+    #                                                     },
+    #                                                     {
+    #                                                         'Key': 'pgsnapshot-lvm_disk',
+    #                                                         'Value': lvm_disk,
+    #                                                     },
+    #                                                     {
+    #                                                         'Key': 'pgsnapshot-host',
+    #                                                         'Value': id_host,
+    #                                                     },
+    #                                                     {
+    #                                                         'Key': 'pgsnapshot-instance_created_from_snapshot',
+    #                                                         'Value': datetime.datetime.fromtimestamp(time.time()).strftime(timeformat)
+    #                                                     },
+    #                                                 ]
+    #                                             },
+    #                                         ],
     #                         MinCount=1, MaxCount=1
     #                     )
 
