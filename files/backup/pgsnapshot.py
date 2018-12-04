@@ -474,7 +474,7 @@ def listAWSsnapshots():
 
     return avaiable_backups
 
-def showJelp():
+def showJelp(msg):
     print("* Global options:")
     print("   [-c|--config] <config file>")
     print("   [-a|--aws]")
@@ -485,7 +485,7 @@ def showJelp():
     print("* Modes:")
     print("   [-L|--list-backups]")
     print("   [-r|--restore-to-vm] <snap>")
-    sys.exit("")
+    sys.exit(msg)
 
 timeformat = '%Y%m%d%H%M%S'
 lvm_disk = ""
@@ -515,9 +515,9 @@ try:
                                                                 'list-backups',
                                                                 'help'
                                                              ])
-except:
-    showJelp()
-    
+except Exception, e:
+    showJelp(str(e))
+
 for opt, arg in options:
     if opt in ('-l', '--lvm-disk'):
         lvm_disk = arg
@@ -538,7 +538,7 @@ for opt, arg in options:
     elif opt in ('-r', '--restore-to-vm'):
         restore_to_vm = arg
     else:
-        showJelp()
+        showJelp("")
 
 logFormatter = logging.Formatter("%(asctime)s [%(threadName)-12.12s] [%(levelname)-5.5s]  %(message)s")
 rootLogger = logging.getLogger()
