@@ -14,6 +14,7 @@ define postgresql::backup::pgsnapshot (
                                       $keep_aws_snaps_days = '7',
                                       $snapshot_basename   = 'pgsnap',
                                       $logdir              = '/var/log/pgsnapshot',
+                                      $force_ami           = undef,
                                       #cron
                                       $setcronjob          = true,
                                       $hour_cronjob        = '2',

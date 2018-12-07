@@ -584,7 +584,7 @@ def searchForRestoredInstance(id_host, lvm_disk, snap_name):
     reservations = response['Reservations']
     return reservations
 
-def launchAWSInstanceBasedOnInstanceIDwithSnapshots(base_instance_id, snap_name, id_host, lvm_disk):
+def launchAWSInstanceBasedOnInstanceIDwithSnapshots(base_instance_id, snap_name, id_host, lvm_disk, force_ami):
     ec2 = boto3.resource('ec2')
 
     logging.getLogger('boto3').setLevel(logging.CRITICAL)
@@ -600,7 +600,12 @@ def launchAWSInstanceBasedOnInstanceIDwithSnapshots(base_instance_id, snap_name,
         sgs.append(security_group['GroupId'])
         count+=1
 
-    logging.debug("* ImageID: "+aws_base_instance.image_id)
+    if force_ami:
+        instance_image_id=force_ami
+    else:
+        instance_image_id=aws_base_instance.image_id
+
+    logging.debug("* ImageID: "+instance_image_id)
     logging.debug("* InstanceType: "+aws_base_instance.instance_type)
     logging.debug("* KeyName: "+aws_base_instance.key_name)
 
@@ -612,7 +617,7 @@ def launchAWSInstanceBasedOnInstanceIDwithSnapshots(base_instance_id, snap_name,
     if len(reservations)==0:
         logging.debug("launching new AWS instance")
         instance = ec2.create_instances(
-                                ImageId=aws_base_instance.image_id,
+                                ImageId=instance_image_id,
                                 InstanceType=aws_base_instance.instance_type,
                                 KeyName=aws_base_instance.key_name,
                                 SecurityGroupIds=sgs,
@@ -695,10 +700,11 @@ snapshotbasename='snap'
 error_count=0
 restore_to_vm=""
 list_backups=False
+force_ami=""
 
 # parse opts
 try:
-    options, remainder = getopt.getopt(sys.argv[1:], 'l:s:ac:dk:r:LhK:', [
+    options, remainder = getopt.getopt(sys.argv[1:], 'l:s:ac:dk:r:LhK:A:', [
                                                                 'lvm-disk=',
                                                                 "config="
                                                                 'snapshot-size=',
@@ -708,6 +714,7 @@ try:
                                                                 'restore-to-vm=',
                                                                 'list-backups',
                                                                 'keep-lvm-snaps=',
+                                                                'force-ami=',
                                                                 'help'
                                                              ])
 except Exception, e:
@@ -734,6 +741,8 @@ for opt, arg in options:
         logdir = arg
     elif opt in ('-r', '--restore-to-vm'):
         restore_to_vm = arg
+    elif opt in ('-A', '--force-ami'):
+        force_ami = arg
     else:
         showJelp("")
 
@@ -829,6 +838,11 @@ try:
 except:
     id_host=socket.gethostname()
 
+try:
+    force_ami=config.get('pgsnapshot', 'force-ami').strip('"')
+except:
+    logging.debug('Using default value for force_ami: '+force_ami)
+
 #
 # ACTIONS
 #
@@ -902,7 +916,7 @@ elif restore_to_vm:
         aws_snapshots = getAWSsnapshot(id_host, lvm_disk, restore_to_vm)
         if len(aws_snapshots)>0:
             logging.debug('aws_snapshots: '+str(aws_snapshots))
-            launchAWSInstanceBasedOnInstanceIDwithSnapshots(instance_id, restore_to_vm, id_host, lvm_disk)
+            launchAWSInstanceBasedOnInstanceIDwithSnapshots(instance_id, restore_to_vm, id_host, lvm_disk, force_ami)
         else:
             logAndExit("unable to restore to VM using "+restore_to_vm)
     else:
