@@ -616,7 +616,7 @@ def launchAWSInstanceBasedOnInstanceIDwithSnapshots(base_instance_id, snap_name,
 
     running_restores=0
     for reservation in reservations:
-        logging.debug("reservation: "+str(reservation))
+        # logging.debug("reservation: "+str(reservation))
         for instance in reservation['Instances']:
             logging.debug(instance['InstanceId']+": "+instance['State']['Name'])
             if instance['State']['Name']!='terminated':
@@ -663,14 +663,20 @@ def launchAWSInstanceBasedOnInstanceIDwithSnapshots(base_instance_id, snap_name,
         logging.debug("reservations: "+str(reservations))
 
         running_restores=0
+        running_instance_id=""
         for reservation in reservations:
-            logging.debug("reservation: "+str(reservation))
+            # logging.debug("reservation: "+str(reservation))
             for instance in reservation['Instances']:
                 logging.debug(instance['InstanceId']+": "+instance['State']['Name'])
                 if instance['State']['Name']!='terminated':
                     running_restores+=1
+                    running_instance_id=instance['InstanceId']
 
         # assert: running restores ha de ser 1
+        if running_restores!=1 or not running_instance_id:
+            logAndExit("too many restore VMs: "+str(reservations)+" - instance_id: "+running_instance_id)
+
+
 
         #
         # Linux Devices: /dev/sdf through /dev/sdp
