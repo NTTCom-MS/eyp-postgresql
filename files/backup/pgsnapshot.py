@@ -616,7 +616,7 @@ def launchAWSInstanceBasedOnInstanceIDwithSnapshots(base_instance_id, snap_name,
 
     running_restores=0
     for reservation in reservations:
-        for instance in reservation['instances']:
+        for instance in reservations:
             logging.debug(instance['InstanceId']+": "+instance['State']['Name'])
             if instance['State']['Name']!='terminated':
                 running_restores+=1
