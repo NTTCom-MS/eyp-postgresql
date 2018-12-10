@@ -652,6 +652,11 @@ def launchAWSInstanceBasedOnInstanceIDwithSnapshots(base_instance_id, snap_name,
                             )
         reservations = searchForRestoredInstance(id_host, lvm_disk, snap_name)
         logging.debug("reservations: "+str(reservations))
+
+        #
+        # Linux Devices: /dev/sdf through /dev/sdp
+        #
+
     #
 
 def listAWSsnapshots():
