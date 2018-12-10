@@ -614,7 +614,15 @@ def launchAWSInstanceBasedOnInstanceIDwithSnapshots(base_instance_id, snap_name,
 
     reservations = searchForRestoredInstance(id_host, lvm_disk, snap_name)
 
-    if len(reservations)==0:
+    running_restores=0
+    for reservation in reservations:
+        for instance in reservation['instances']:
+            logging.debug(instance['InstanceId']+": "+instance['State']['Name'])
+            if instance['State']['Name']!='terminated'
+                running_restores+=1
+
+
+    if running_restores==0:
         logging.debug("launching new AWS instance")
         instance = ec2.create_instances(
                                 ImageId=instance_image_id,
