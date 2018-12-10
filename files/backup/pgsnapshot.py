@@ -676,8 +676,6 @@ def launchAWSInstanceBasedOnInstanceIDwithSnapshots(base_instance_id, snap_name,
         if running_restores!=1 or not running_instance_id:
             logAndExit("too many restore VMs: "+str(reservations)+" - instance_id: "+running_instance_id)
 
-
-
         #
         # Linux Devices: /dev/sdf through /dev/sdp
         #
