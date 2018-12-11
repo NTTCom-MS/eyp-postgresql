@@ -612,17 +612,19 @@ def launchAWSInstanceBasedOnInstanceIDwithSnapshots(base_instance_id, snap_name,
     aws_volumes = createAWSVolumeFromSnapshotName(snap_name, id_host, lvm_disk, aws_base_instance.placement['AvailabilityZone'])
     validateVolumesAreNotAttached(aws_volumes)
 
-    reservations = searchForRestoredInstance(id_host, lvm_disk, snap_name)
+    restored_instances = searchForRestoredInstance(id_host, lvm_disk, snap_name)
 
     running_restores=0
     running_instance_id=""
-    for reservation in reservations:
+    running_instance=None
+    for reservation in restored_instances:
         # logging.debug("reservation: "+str(reservation))
         for instance in reservation['Instances']:
             logging.debug(instance['InstanceId']+": "+instance['State']['Name'])
             if instance['State']['Name']!='terminated':
                 running_restores+=1
                 running_instance_id=instance['InstanceId']
+                running_instance=instance
 
 
     if running_restores==0:
@@ -661,33 +663,42 @@ def launchAWSInstanceBasedOnInstanceIDwithSnapshots(base_instance_id, snap_name,
                                                 ],
                                 MinCount=1, MaxCount=1
                             )
-        reservations = searchForRestoredInstance(id_host, lvm_disk, snap_name)
-        logging.debug("reservations: "+str(reservations))
+        restored_instances = searchForRestoredInstance(id_host, lvm_disk, snap_name)
+        logging.debug("restored_instances: "+str(restored_instances))
 
         running_restores=0
         running_instance_id=""
-        for reservation in reservations:
+        for reservation in restored_instances:
             # logging.debug("reservation: "+str(reservation))
             for instance in reservation['Instances']:
                 logging.debug(instance['InstanceId']+": "+instance['State']['Name'])
                 if instance['State']['Name']!='terminated':
                     running_restores+=1
                     running_instance_id=instance['InstanceId']
+                    running_instance=instance
 
     # assert: running restores ha de ser 1
     if running_restores!=1 or not running_instance_id:
-        logAndExit("too many restore VMs: "+str(reservations)+" - instance_id: "+running_instance_id)
+        logAndExit("too many restore VMs: "+str(restored_instances)+" - instance_id: "+running_instance_id)
 
     #
     # Linux Devices: /dev/sdf through /dev/sdp
     #
-    allowed_devices = ["/dev/sd"+chr(x) for x in range(102, 112)]
+    allowed_devices = ["/dev/sd"+chr(x) for x in range(102, 113)]
+
+    for device in running_instance['BlockDeviceMappings']:
+        logging.debug("device: "+str(device))
 
     logging.debug("allowed_devices: "+str(allowed_devices))
 
     for aws_volume in aws_volumes:
         logging.debug("aws_volume: "+str(aws_volume))
-        # result = conn.attach_volume (vol.id, instance.id, "/dev/sdf")
+        result = ec2.attach_volume (aws_volume['VolumeId'], running_instance_id, allowed_devices.pop())
+        logging.deug("volume attachment result: "+str(result))
+
+    restored_instances = searchForRestoredInstance(id_host, lvm_disk, snap_name)
+    logging.debug("restored_instances after attaching volumes: "+str(restored_instances))
+
 
     #
 
