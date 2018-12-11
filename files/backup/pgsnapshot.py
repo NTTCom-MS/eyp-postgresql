@@ -783,7 +783,7 @@ def launchAWSInstanceBasedOnInstanceIDwithSnapshots(base_instance_id, snap_name,
         # logging.debug("reservation: "+str(reservation))
         for instance in reservation['Instances']:
             logging.debug(instance['InstanceId']+": "+instance['State']['Name'])
-            if instance['State']['Name']!='running:
+            if instance['State']['Name']!='running':
                 print(instance['InstanceId']+": "+instance['PublicDnsName'])
                 break
 
