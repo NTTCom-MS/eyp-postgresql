@@ -782,12 +782,9 @@ def launchAWSInstanceBasedOnInstanceIDwithSnapshots(base_instance_id, snap_name,
     for reservation in restored_instances:
         # logging.debug("reservation: "+str(reservation))
         for instance in reservation['Instances']:
-            logging.debug(instance['InstanceId']+": "+instance['State']['Name'])
-            if instance['State']['Name']!='running':
+            if instance['State']['Name']=='running':
                 print(instance['InstanceId']+": "+instance['PublicDnsName'])
                 break
-
-    #
 
 def listAWSsnapshots():
     aws_snapshots = getAWSsnapshot(id_host, lvm_disk, "")
