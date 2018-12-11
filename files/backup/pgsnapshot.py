@@ -525,7 +525,7 @@ def waitForAWSRestoredInstance2bRunning(id_host, lvm_disk, snap_name):
                     instance_running=True
         if not instance_running:
             random_sleep = randint(10,100)
-            logging.debug("waiting for AWS restore instance to startup for "+str(random_sleep)+" seconds - current status: "+current_status)
+            logging.debug("waiting for AWS restore instance to startup for "+str(random_sleep)+" seconds - current instance status: "+restored_instances)
             time.sleep(random_sleep)
     logging.debug("waitForAWSRestoredInstance2bRunning - all clear")
 
