@@ -517,16 +517,16 @@ def waitForAWSRestoredInstance2bRunning(id_host, lvm_disk, snap_name):
     instance_running=False
     while not instance_running:
         restored_instances = searchForRestoredInstance(id_host, lvm_disk, snap_name)
-        instance_running=True
         for reservation in restored_instances:
             # logging.debug("reservation: "+str(reservation))
             for instance in reservation['Instances']:
                 logging.debug("* "+instance['InstanceId']+": "+instance['State']['Name'])
-                if instance['State']['Name']!='running':
-                    instance_running=False
-                    random_sleep = randint(10,100)
-                    logging.debug("waiting for AWS volume "+instance['InstanceId']+" to attach for "+str(random_sleep)+" seconds - current status: "+current_status)
-                    time.sleep(random_sleep)
+                if instance['State']['Name']=='running':
+                    instance_running=True
+        if not instance_running:
+            random_sleep = randint(10,100)
+            logging.debug("waiting for AWS volume "+instance['InstanceId']+" to attach for "+str(random_sleep)+" seconds - current status: "+current_status)
+            time.sleep(random_sleep)
     logging.debug("waitForAWSRestoredInstance2bRunning - all clear")
 
 
