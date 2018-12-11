@@ -516,6 +516,7 @@ def waitForAWSRestoredInstance2bRunning(id_host, lvm_disk, snap_name):
     logging.debug("waitForAWSRestoredInstance2bRunning")
     instance_running=False
     while not instance_running:
+        restored_instances = searchForRestoredInstance(id_host, lvm_disk, snap_name)
         instance_running=True
         for reservation in restored_instances:
             # logging.debug("reservation: "+str(reservation))
@@ -523,6 +524,9 @@ def waitForAWSRestoredInstance2bRunning(id_host, lvm_disk, snap_name):
                 logging.debug("* "+instance['InstanceId']+": "+instance['State']['Name'])
                 if instance['State']['Name']!='running':
                     instance_running=False
+                    random_sleep = randint(10,100)
+                    logging.debug("waiting for AWS volume "+instance['InstanceId']+" to attach for "+str(random_sleep)+" seconds - current status: "+current_status)
+                    time.sleep(random_sleep)
     logging.debug("waitForAWSRestoredInstance2bRunning - all clear")
 
 
@@ -557,7 +561,7 @@ def waitForAWSRestoredInstanceVolumes2bAttached(id_host, lvm_disk, snap_name):
             #                             {u'DeviceName': '/dev/sdo', u'Ebs': {u'Status': 'attaching' ...
             if device['Ebs']['Status']=="attaching":
                 random_sleep = randint(10,100)
-                logging.debug("waiting for AWS volume "+aws_volume['VolumeId']+" to attach for "+str(random_sleep)+" seconds - current status: "+current_status)
+                logging.debug("waiting for AWS volume "+device['DeviceName']+" to attach for "+str(random_sleep)+" seconds - current status: "+current_status)
                 time.sleep(random_sleep)
                 volumes_attached=False
     logging.debug("waitForAWSRestoredInstanceVolumes2bAttached - all clear")
