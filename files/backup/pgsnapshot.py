@@ -512,6 +512,43 @@ def validateVolumesAreNotAttached(aws_volumes):
             logAndExit("volume "+aws_volume['VolumeId']+" already has "+str(len(attachments))+" attachments")
     logging.debug("validateVolumesAreNotAttached - all clear")
 
+def waitForAWSRestoredInstanceVolumes2bAttached(id_host, lvm_disk, snap_name):
+    logging.debug("waitForAWSRestoredInstanceVolumes2bAttached")
+    volumes_attached=False
+    while not volumes_attached:
+        restored_instances = searchForRestoredInstance(id_host, lvm_disk, snap_name)
+
+        running_restores=0
+        running_instance_id=""
+        running_instance=None
+        running_instance_region=None
+        for reservation in restored_instances:
+            # logging.debug("reservation: "+str(reservation))
+            for instance in reservation['Instances']:
+                logging.debug(instance['InstanceId']+": "+instance['State']['Name'])
+                if instance['State']['Name']!='terminated':
+                    running_restores+=1
+                    running_instance_id=instance['InstanceId']
+                    running_instance=instance
+                    running_instance_region=instance['Placement']['AvailabilityZone']
+
+        if running_restores!=1 or not running_instance_id:
+            logAndExit("too many restore VMs: "+str(restored_instances)+" - instance_id: "+running_instance_id)
+
+        volumes_attached=True
+        for device in running_instance['BlockDeviceMappings']:
+            logging.debug("device: "+str(device))
+            #    u'BlockDeviceMappings': [{u'DeviceName': '/dev/sda1', u'Ebs': {u'Status': 'attached', ...
+            #                             {u'DeviceName': '/dev/sdo', u'Ebs': {u'Status': 'attaching' ...
+            if device['Ebs']['Status']=="attaching":
+                random_sleep = randint(10,100)
+                logging.debug("waiting for AWS volume "+aws_volume['VolumeId']+" to attach for "+str(random_sleep)+" seconds - current status: "+current_status)
+                time.sleep(random_sleep)
+                volumes_attached=False
+    logging.debug("waitForAWSRestoredInstanceVolumes2bAttached - all clear")
+
+
+
 def waitForAWSVolumes2bAvailable(aws_volumes):
     logging.debug("waitForAWSVolumes2bAvailable")
     client = boto3.client('ec2')
@@ -710,6 +747,8 @@ def launchAWSInstanceBasedOnInstanceIDwithSnapshots(base_instance_id, snap_name,
         if not is_attached:
             result = ec2_client.attach_volume(Device=allowed_devices.pop(), InstanceId=running_instance_id, VolumeId=aws_volume['VolumeId'])
             logging.debug("volume attachment result: "+str(result))
+
+    waitForAWSRestoredInstanceVolumes2bAttached(id_host, lvm_disk, snap_name)
 
     restored_instances = searchForRestoredInstance(id_host, lvm_disk, snap_name)
     logging.debug("restored_instances after attaching volumes: "+str(restored_instances))
