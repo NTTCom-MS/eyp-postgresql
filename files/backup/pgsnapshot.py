@@ -529,8 +529,6 @@ def waitForAWSRestoredInstance2bRunning(id_host, lvm_disk, snap_name):
             time.sleep(random_sleep)
     logging.debug("waitForAWSRestoredInstance2bRunning - all clear")
 
-
-
 def waitForAWSRestoredInstanceVolumes2bAttached(id_host, lvm_disk, snap_name):
     logging.debug("waitForAWSRestoredInstanceVolumes2bAttached")
     volumes_attached=False
