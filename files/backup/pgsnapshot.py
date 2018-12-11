@@ -679,6 +679,13 @@ def launchAWSInstanceBasedOnInstanceIDwithSnapshots(base_instance_id, snap_name,
         #
         # Linux Devices: /dev/sdf through /dev/sdp
         #
+        allowed_devices = ["/dev/sd"+chr(x) for x in range(102, 112)]
+
+        logging.debug("allowed_devices: "+str(allowed_devices))
+
+        for aws_volume in aws_volumes:
+            logging.debug("aws_volume: "+str(aws_volume))
+            # result = conn.attach_volume (vol.id, instance.id, "/dev/sdf")
 
     #
 
