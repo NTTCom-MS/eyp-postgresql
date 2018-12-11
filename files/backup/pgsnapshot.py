@@ -509,7 +509,7 @@ def validateVolumesAreNotAttached(aws_volumes):
     for aws_volume in aws_volumes:
         attachments = aws_volume['Attachments']
         if(len(attachments)>0):
-            logAndExit("volume "+aws_volume['VolumeId']+" already have "+str(len(attachments))+" attachments")
+            logAndExit("volume "+aws_volume['VolumeId']+" already has "+str(len(attachments))+" attachments")
     logging.debug("validateVolumesAreNotAttached - all clear")
 
 def waitForAWSVolumes2bAvailable(aws_volumes):
@@ -611,7 +611,7 @@ def launchAWSInstanceBasedOnInstanceIDwithSnapshots(base_instance_id, snap_name,
     logging.debug("* KeyName: "+aws_base_instance.key_name)
 
     aws_volumes = createAWSVolumeFromSnapshotName(snap_name, id_host, lvm_disk, aws_base_instance.placement['AvailabilityZone'])
-    validateVolumesAreNotAttached(aws_volumes)
+    # validateVolumesAreNotAttached(aws_volumes)
 
     restored_instances = searchForRestoredInstance(id_host, lvm_disk, snap_name)
 
