@@ -562,7 +562,7 @@ def waitForAWSRestoredInstanceVolumes2bAttached(id_host, lvm_disk, snap_name):
             #                             {u'DeviceName': '/dev/sdo', u'Ebs': {u'Status': 'attaching' ...
             if device['Ebs']['Status']=="attaching":
                 random_sleep = randint(10,100)
-                logging.debug("waiting for AWS volume "+device['DeviceName']+" to attach for "+str(random_sleep)+" seconds - current status: "+current_status)
+                logging.debug("waiting for AWS volume "+device['DeviceName']+" to attach for "+str(random_sleep)+" seconds - current status: "+device['Ebs']['Status'])
                 time.sleep(random_sleep)
                 volumes_attached=False
     logging.debug("waitForAWSRestoredInstanceVolumes2bAttached - all clear")
