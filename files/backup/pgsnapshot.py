@@ -55,7 +55,7 @@ def isPostgresInBackupMode():
     if retval==0 and linecount==1:
         return bool(lastline)
     else:
-        logging.error('Unable check if postgres is un backup mode: '+lastline)
+        logging.error('Unable check if postgres is on backup mode: '+lastline)
 
 def logAndExit(msg):
     global purge
