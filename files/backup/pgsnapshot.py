@@ -560,7 +560,7 @@ def waitForAWSRestoredInstanceVolumes2bAttached(id_host, lvm_disk, snap_name):
             logging.debug("device: "+str(device))
             #    u'BlockDeviceMappings': [{u'DeviceName': '/dev/sda1', u'Ebs': {u'Status': 'attached', ...
             #                             {u'DeviceName': '/dev/sdo', u'Ebs': {u'Status': 'attaching' ...
-            if device['Ebs']['Status']=="attaching":
+            if device['Ebs']['Status']!="attached":
                 random_sleep = randint(10,100)
                 logging.debug("waiting for AWS volume "+device['DeviceName']+" to attach for "+str(random_sleep)+" seconds - current status: "+device['Ebs']['Status'])
                 time.sleep(random_sleep)
