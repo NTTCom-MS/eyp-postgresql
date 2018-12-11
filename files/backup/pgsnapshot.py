@@ -520,6 +520,7 @@ def waitForAWSRestoredInstance2bRunning(id_host, lvm_disk, snap_name):
         for reservation in restored_instances:
             # logging.debug("reservation: "+str(reservation))
             for instance in reservation['Instances']:
+                logging.debug("* "+instance['InstanceId']+": "+instance['State']['Name'])
                 if instance['State']['Name']!='running':
                     instance_running=False
     logging.debug("waitForAWSRestoredInstance2bRunning - all clear")
