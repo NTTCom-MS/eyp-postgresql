@@ -691,8 +691,13 @@ def launchAWSInstanceBasedOnInstanceIDwithSnapshots(base_instance_id, snap_name,
 
     for device in running_instance['BlockDeviceMappings']:
         logging.debug("device: "+str(device))
+        if device['DeviceName'] in allowed_devices:
+            allowed_devices.remove(device['DeviceName'])
 
     logging.debug("allowed_devices: "+str(allowed_devices))
+
+    if not allowed_devices:
+        logAndExit("allowed devices empty - unable to attach volumes to instance")
 
     ec2_client=boto3.client('ec2')
     for aws_volume in aws_volumes:
@@ -703,7 +708,6 @@ def launchAWSInstanceBasedOnInstanceIDwithSnapshots(base_instance_id, snap_name,
 
     restored_instances = searchForRestoredInstance(id_host, lvm_disk, snap_name)
     logging.debug("restored_instances after attaching volumes: "+str(restored_instances))
-
 
     #
 
