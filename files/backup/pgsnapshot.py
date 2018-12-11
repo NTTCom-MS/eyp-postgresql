@@ -617,6 +617,7 @@ def launchAWSInstanceBasedOnInstanceIDwithSnapshots(base_instance_id, snap_name,
     running_restores=0
     running_instance_id=""
     running_instance=None
+    running_instance_region=None
     for reservation in restored_instances:
         # logging.debug("reservation: "+str(reservation))
         for instance in reservation['Instances']:
@@ -625,6 +626,7 @@ def launchAWSInstanceBasedOnInstanceIDwithSnapshots(base_instance_id, snap_name,
                 running_restores+=1
                 running_instance_id=instance['InstanceId']
                 running_instance=instance
+                running_instance_region=instance['Placement']['AvailabilityZone']
 
 
     if running_restores==0:
@@ -667,7 +669,6 @@ def launchAWSInstanceBasedOnInstanceIDwithSnapshots(base_instance_id, snap_name,
         logging.debug("restored_instances: "+str(restored_instances))
 
         running_restores=0
-        running_instance_id=""
         for reservation in restored_instances:
             # logging.debug("reservation: "+str(reservation))
             for instance in reservation['Instances']:
@@ -676,6 +677,7 @@ def launchAWSInstanceBasedOnInstanceIDwithSnapshots(base_instance_id, snap_name,
                     running_restores+=1
                     running_instance_id=instance['InstanceId']
                     running_instance=instance
+                    running_instance_region=instance['Placement']['AvailabilityZone']
 
     # assert: running restores ha de ser 1
     if running_restores!=1 or not running_instance_id:
@@ -694,7 +696,7 @@ def launchAWSInstanceBasedOnInstanceIDwithSnapshots(base_instance_id, snap_name,
     ec2_client=boto3.client('ec2')
     for aws_volume in aws_volumes:
         logging.debug("aws_volume: "+str(aws_volume))
-        result = ec2_client.attach_volume (aws_volume['VolumeId'], running_instance_id, allowed_devices.pop())
+        result = running_instance.attach_volume (VolumeId=aws_volume['VolumeId'], Device=allowed_devices.pop())
         logging.deug("volume attachment result: "+str(result))
 
     restored_instances = searchForRestoredInstance(id_host, lvm_disk, snap_name)
