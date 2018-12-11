@@ -512,6 +512,20 @@ def validateVolumesAreNotAttached(aws_volumes):
             logAndExit("volume "+aws_volume['VolumeId']+" already has "+str(len(attachments))+" attachments")
     logging.debug("validateVolumesAreNotAttached - all clear")
 
+def waitForAWSRestoredInstance2bRunning(id_host, lvm_disk, snap_name):
+    logging.debug("waitForAWSRestoredInstance2bRunning")
+    instance_running=False
+    while not instance_running:
+        instance_running=True
+        for reservation in restored_instances:
+            # logging.debug("reservation: "+str(reservation))
+            for instance in reservation['Instances']:
+                if instance['State']['Name']!='running':
+                    instance_running=False
+    logging.debug("waitForAWSRestoredInstance2bRunning - all clear")
+
+
+
 def waitForAWSRestoredInstanceVolumes2bAttached(id_host, lvm_disk, snap_name):
     logging.debug("waitForAWSRestoredInstanceVolumes2bAttached")
     volumes_attached=False
@@ -705,6 +719,8 @@ def launchAWSInstanceBasedOnInstanceIDwithSnapshots(base_instance_id, snap_name,
                             )
         restored_instances = searchForRestoredInstance(id_host, lvm_disk, snap_name)
         logging.debug("restored_instances: "+str(restored_instances))
+
+        waitForAWSRestoredInstance2bRunning(id_host, lvm_disk, snap_name)
 
         running_restores=0
         for reservation in restored_instances:
