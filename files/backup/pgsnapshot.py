@@ -693,7 +693,7 @@ def launchAWSInstanceBasedOnInstanceIDwithSnapshots(base_instance_id, snap_name,
 
     for aws_volume in aws_volumes:
         logging.debug("aws_volume: "+str(aws_volume))
-        result = ec2.attach_volume (aws_volume['VolumeId'], running_instance_id, allowed_devices.pop())
+        result = boto3.client('ec2').attach_volume (aws_volume['VolumeId'], running_instance_id, allowed_devices.pop())
         logging.deug("volume attachment result: "+str(result))
 
     restored_instances = searchForRestoredInstance(id_host, lvm_disk, snap_name)
