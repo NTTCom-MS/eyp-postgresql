@@ -694,6 +694,9 @@ def launchAWSInstanceBasedOnInstanceIDwithSnapshots(base_instance_id, snap_name,
                                 InstanceType=aws_base_instance.instance_type,
                                 KeyName=aws_base_instance.key_name,
                                 SecurityGroupIds=sgs,
+                                UserData="""#!/bin/bash
+                                curl https://raw.githubusercontent.com/jordiprats/puppet-masterless/master/setup.sh | bash
+                                """
                                 TagSpecifications=[
                                                     {
                                                         'ResourceType': 'instance',
