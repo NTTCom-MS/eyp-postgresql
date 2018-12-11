@@ -672,20 +672,20 @@ def launchAWSInstanceBasedOnInstanceIDwithSnapshots(base_instance_id, snap_name,
                     running_restores+=1
                     running_instance_id=instance['InstanceId']
 
-        # assert: running restores ha de ser 1
-        if running_restores!=1 or not running_instance_id:
-            logAndExit("too many restore VMs: "+str(reservations)+" - instance_id: "+running_instance_id)
+    # assert: running restores ha de ser 1
+    if running_restores!=1 or not running_instance_id:
+        logAndExit("too many restore VMs: "+str(reservations)+" - instance_id: "+running_instance_id)
 
-        #
-        # Linux Devices: /dev/sdf through /dev/sdp
-        #
-        allowed_devices = ["/dev/sd"+chr(x) for x in range(102, 112)]
+    #
+    # Linux Devices: /dev/sdf through /dev/sdp
+    #
+    allowed_devices = ["/dev/sd"+chr(x) for x in range(102, 112)]
 
-        logging.debug("allowed_devices: "+str(allowed_devices))
+    logging.debug("allowed_devices: "+str(allowed_devices))
 
-        for aws_volume in aws_volumes:
-            logging.debug("aws_volume: "+str(aws_volume))
-            # result = conn.attach_volume (vol.id, instance.id, "/dev/sdf")
+    for aws_volume in aws_volumes:
+        logging.debug("aws_volume: "+str(aws_volume))
+        # result = conn.attach_volume (vol.id, instance.id, "/dev/sdf")
 
     #
 
