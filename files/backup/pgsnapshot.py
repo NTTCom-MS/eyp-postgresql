@@ -586,6 +586,7 @@ def searchForRestoredInstance(id_host, lvm_disk, snap_name):
 
 def launchAWSInstanceBasedOnInstanceIDwithSnapshots(base_instance_id, snap_name, id_host, lvm_disk, force_ami):
     ec2 = boto3.resource('ec2')
+    ec2_client = boto3.client('ec2')
 
     logging.getLogger('boto3').setLevel(logging.CRITICAL)
     logging.getLogger('botocore').setLevel(logging.CRITICAL)
@@ -697,9 +698,8 @@ def launchAWSInstanceBasedOnInstanceIDwithSnapshots(base_instance_id, snap_name,
     for aws_volume in aws_volumes:
         logging.debug("aws_volume: "+str(aws_volume))
         # result = running_instance.attach_volume (VolumeId=aws_volume['VolumeId'], Device=allowed_devices.pop())
-        ec2_client = boto3.client('ec2')
         result = ec2_client.attach_volume(Device=allowed_devices.pop(), InstanceId=running_instance_id, VolumeId=aws_volume['VolumeId'])
-        logging.deug("volume attachment result: "+str(result))
+        logging.debug("volume attachment result: "+str(result))
 
     restored_instances = searchForRestoredInstance(id_host, lvm_disk, snap_name)
     logging.debug("restored_instances after attaching volumes: "+str(restored_instances))
