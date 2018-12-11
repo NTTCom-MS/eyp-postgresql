@@ -92,7 +92,7 @@ def removeLVMSnapshot(lv_snap):
 
     if retval==0 and linecount==1:
         logging.debug("removed snapshot:"+lv_snap)
-        return snap_name
+        return lv_snap
     else:
         logAndExit('Unable to remove lvm snapshot: (retcode: '+str(retval)+')'+lastline)
 
