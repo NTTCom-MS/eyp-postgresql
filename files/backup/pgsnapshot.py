@@ -779,6 +779,14 @@ def launchAWSInstanceBasedOnInstanceIDwithSnapshots(base_instance_id, snap_name,
     restored_instances = searchForRestoredInstance(id_host, lvm_disk, snap_name)
     logging.debug("restored_instances after attaching volumes: "+str(restored_instances))
 
+    for reservation in restored_instances:
+        # logging.debug("reservation: "+str(reservation))
+        for instance in reservation['Instances']:
+            logging.debug(instance['InstanceId']+": "+instance['State']['Name'])
+            if instance['State']['Name']!='running:
+                print(instance['InstanceId'])
+                break
+
     #
 
 def listAWSsnapshots():
