@@ -717,6 +717,8 @@ def launchAWSInstanceBasedOnInstanceIDwithSnapshots(base_instance_id, snap_name,
                                                 ],
                                 MinCount=1, MaxCount=1
                             )
+
+        logging.debug("instancia creada info: "+str(instance))
         restored_instances = searchForRestoredInstance(id_host, lvm_disk, snap_name)
         logging.debug("restored_instances: "+str(restored_instances))
 
