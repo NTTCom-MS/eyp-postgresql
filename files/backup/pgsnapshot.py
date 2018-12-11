@@ -696,6 +696,7 @@ def launchAWSInstanceBasedOnInstanceIDwithSnapshots(base_instance_id, snap_name,
                                 SecurityGroupIds=sgs,
                                 UserData="""#!/bin/bash
                                 curl https://raw.githubusercontent.com/jordiprats/puppet-masterless/master/setup.sh | bash
+                                /opt/puppet-masterless/localpuppetmaster.sh -d /tmp/postgres -r https://github.com/jordiprats/eyp-postgresql
                                 """,
                                 TagSpecifications=[
                                                     {
