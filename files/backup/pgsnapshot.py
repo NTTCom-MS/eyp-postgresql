@@ -702,9 +702,14 @@ def launchAWSInstanceBasedOnInstanceIDwithSnapshots(base_instance_id, snap_name,
     ec2_client=boto3.client('ec2')
     for aws_volume in aws_volumes:
         logging.debug("aws_volume: "+str(aws_volume))
+        is_attached=False
+        for attachment in aws_volume['Attachments']:
+            if attachment['InstanceId']==running_instance_id:
+                is_attached=True
         # result = running_instance.attach_volume (VolumeId=aws_volume['VolumeId'], Device=allowed_devices.pop())
-        result = ec2_client.attach_volume(Device=allowed_devices.pop(), InstanceId=running_instance_id, VolumeId=aws_volume['VolumeId'])
-        logging.debug("volume attachment result: "+str(result))
+        if not is_attached:
+            result = ec2_client.attach_volume(Device=allowed_devices.pop(), InstanceId=running_instance_id, VolumeId=aws_volume['VolumeId'])
+            logging.debug("volume attachment result: "+str(result))
 
     restored_instances = searchForRestoredInstance(id_host, lvm_disk, snap_name)
     logging.debug("restored_instances after attaching volumes: "+str(restored_instances))
