@@ -20,7 +20,11 @@ fi
 lvdisplay 2>/dev/null | grep "LV Name" | grep "$1"
 while [ "$?" -ne 0 ];
 do
-  $RANDOM_SLEEP=$(echo $RANDOM | grep -Eo "^[0-9]{2}")
+  RANDOM_SLEEP=$(echo $RANDOM | grep -Eo "^[0-9]{2}")
+  if [ -z "${RANDOM_SLEEP}" ];
+  then
+    RANDOM_SLEEP=10
+  fi
   echo "$1 not found, waiting for ${RANDOM_SLEEP} seconds"
   sleep $RANDOM_SLEEP
   lvdisplay 2>/dev/null | grep "LV Name" | grep "$1"
