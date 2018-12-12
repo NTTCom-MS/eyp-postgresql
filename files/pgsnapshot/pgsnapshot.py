@@ -546,6 +546,7 @@ def waitForAWSRestoredInstanceVolumes2bAttached(id_host, lvm_disk, snap_name):
     while not volumes_attached:
         restored_instances = searchForRestoredInstance(id_host, lvm_disk, snap_name)
 
+        logging.debug("checking instance status:")
         running_restores=0
         running_instance_id=""
         running_instance=None
@@ -757,6 +758,7 @@ def launchAWSInstanceBasedOnInstanceIDwithSnapshots(base_instance_id, snap_name,
 
         waitForAWSRestoredInstance2bRunning(id_host, lvm_disk, snap_name)
 
+        logging.debug("checking instance status:")
         running_restores=0
         for reservation in restored_instances:
             # logging.debug("reservation: "+str(reservation))
