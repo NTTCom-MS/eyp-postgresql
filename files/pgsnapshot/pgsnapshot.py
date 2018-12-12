@@ -604,7 +604,7 @@ def createAWSVolumeFromSnapshotName(snap_name, id_host, lvm_disk, az):
     else:
         # crear volums pels snapshots que no tenen volum
         for aws_snapshot in aws_snapshots:
-            logging.debug("inspecting snapshot: "+aws_snapshot['SnapshotId'])
+            logging.debug("*X inspecting snapshot: "+aws_snapshot['SnapshotId'])
             aws_volumes_for_snapshot = getVolumesFromSnapshot(id_host, lvm_disk, snap_name, aws_snapshot['SnapshotId'])['Volumes']
             if(len(aws_volumes_for_snapshot))==0:
                 logging.debug("creating volume using snaphot_id: "+aws_snapshot['SnapshotId'])
