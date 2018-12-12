@@ -255,7 +255,7 @@ aws=true
 
 #### backup - AWS snapshot
 
-Delete AWS snapshots older that 10 days
+Make a AWS snapshot backups and delete AWS snapshots older that 10 days
 
 ```
 localpuppetmaster.sh -d /tmp/postgres -r https://github.com/jordiprats/eyp-postgresql; python /tmp/postgres/modules/postgresql/files/pgsnapshot/pgsnapshot.py -c demo.cfg -a -k 10
@@ -263,7 +263,7 @@ localpuppetmaster.sh -d /tmp/postgres -r https://github.com/jordiprats/eyp-postg
 
 #### backup - LVM snapshot
 
-Keep last 10 LVM snapshots
+Make a LVM snapshot backups keeping last 10 LVM snapshots
 
 ```
 localpuppetmaster.sh -d /tmp/postgres -r https://github.com/jordiprats/eyp-postgresql; python /tmp/postgres/modules/postgresql/files/pgsnapshot/pgsnapshot.py -c demo.cfg -K 10
@@ -272,7 +272,13 @@ localpuppetmaster.sh -d /tmp/postgres -r https://github.com/jordiprats/eyp-postg
 #### list backups - AWS snapshots
 
 ```
-localpuppetmaster.sh -d /tmp/postgres -r https://github.com/jordiprats/eyp-postgresql; python /tmp/postgres/modules/postgresql/files/pgsnapshot/pgsnapshot.py -c demo.cfg -a -k 10 -L
+localpuppetmaster.sh -d /tmp/postgres -r https://github.com/jordiprats/eyp-postgresql; python /tmp/postgres/modules/postgresql/files/pgsnapshot/pgsnapshot.py -c demo.cfg -a -L
+```
+
+#### list backups - LVM snapshots
+
+```
+localpuppetmaster.sh -d /tmp/postgres -r https://github.com/jordiprats/eyp-postgresql; python /tmp/postgres/modules/postgresql/files/pgsnapshot/pgsnapshot.py -c demo.cfg -L
 ```
 
 #### restore - AWS snapshot
@@ -280,8 +286,10 @@ localpuppetmaster.sh -d /tmp/postgres -r https://github.com/jordiprats/eyp-postg
 restore AWS snapshot named **snap.20181212122000**
 
 ```
-localpuppetmaster.sh -d /tmp/postgres -r https://github.com/jordiprats/eyp-postgresql; python /tmp/postgres/modules/postgresql/files/pgsnapshot/pgsnapshot.py -c demo.cfg -a -k 10 -r snap.20181212122000
+localpuppetmaster.sh -d /tmp/postgres -r https://github.com/jordiprats/eyp-postgresql; python /tmp/postgres/modules/postgresql/files/pgsnapshot/pgsnapshot.py -c demo.cfg -a -r snap.20181212122000
 ```
+
+As output you'll get the instance id and the public DNS name
 
 ## Reference
 
