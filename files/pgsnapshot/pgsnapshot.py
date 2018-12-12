@@ -1063,13 +1063,13 @@ if list_backups:
         logging.debug("== LIST AWS BACKUPS ==")
 
         avaiable_backups = listAWSsnapshots()
-
-        logging.debug("list of available backups: "+str(avaiable_backups))
-
         keylist = avaiable_backups.keys()
         keylist.sort()
 
-        for backup in avaiable_backups.keys():
+        logging.debug("list of available backups: "+str(keylist))
+
+
+        for backup in keylist:
             print(" * "+backup)
         print("\n")
 
