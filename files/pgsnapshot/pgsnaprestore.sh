@@ -1,7 +1,6 @@
 #!/bin/bash
 
 exec > /var/log/$0.$(date +%Y%m%d%H%M%S).log 2>&1
-exec -xv
 
 if [ -z "$1" ];
 then
