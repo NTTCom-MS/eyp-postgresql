@@ -774,12 +774,13 @@ def launchAWSInstanceBasedOnInstanceIDwithSnapshots(base_instance_id, snap_name,
     while_counter=0
     # assert: running restores ha de ser 1
     while running_restores!=1 or not running_instance_id:
-
+        while_counter+=1
         random_sleep = randint(10,100)
         logging.debug("waiting for AWS restored instance (pre volume attach) to be running for "+str(random_sleep)+" seconds")
         time.sleep(random_sleep)
 
         waitForAWSRestoredInstance2bRunning(id_host, lvm_disk, snap_name)
+        restored_instances = searchForRestoredInstance(id_host, lvm_disk, snap_name)
         logging.debug(str(while_counter)+" - checking instance status:")
         running_restores=0
         for reservation in restored_instances:
