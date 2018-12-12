@@ -792,6 +792,9 @@ def launchAWSInstanceBasedOnInstanceIDwithSnapshots(base_instance_id, snap_name,
                     running_instance=instance
                     running_instance_region=instance['Placement']['AvailabilityZone']
 
+        if running_restores>1:
+            logAndExit("## "+str(running_restores)+" running restores, aborting")
+
 
 
     #
