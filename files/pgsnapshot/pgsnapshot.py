@@ -554,7 +554,7 @@ def waitForAWSRestoredInstanceVolumes2bAttached(id_host, lvm_disk, snap_name):
             # logging.debug("reservation: "+str(reservation))
             for instance in reservation['Instances']:
                 logging.debug(instance['InstanceId']+": "+instance['State']['Name'])
-                if instance['State']['Name']!='terminated':
+                if instance['State']['Name']!='terminated' and instance['State']['Name']!='shutting-down' and instance['State']['Name']!='pending':
                     running_restores+=1
                     running_instance_id=instance['InstanceId']
                     running_instance=instance
@@ -762,7 +762,7 @@ def launchAWSInstanceBasedOnInstanceIDwithSnapshots(base_instance_id, snap_name,
             # logging.debug("reservation: "+str(reservation))
             for instance in reservation['Instances']:
                 logging.debug(instance['InstanceId']+": "+instance['State']['Name'])
-                if instance['State']['Name']!='terminated' and instance['State']['Name']!='shutting-down':
+                if instance['State']['Name']!='terminated' and instance['State']['Name']!='shutting-down' and instance['State']['Name']!='pending':
                     running_restores+=1
                     running_instance_id=instance['InstanceId']
                     running_instance=instance
