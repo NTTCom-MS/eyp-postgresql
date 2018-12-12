@@ -859,6 +859,7 @@ pgsnapshot - Into the snapshots to save the data!
     print("* Modes:")
     print("   [-L|--list-backups]")
     print("   [-r|--restore-to-vm] <snap>")
+    print("")
     sys.exit(msg)
 
 timeformat = '%Y%m%d%H%M%S'
