@@ -1,0 +1,1 @@
+class { 'postgresql::backup::pgsnaprestore': }
