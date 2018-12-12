@@ -84,6 +84,7 @@ class postgresql(
                   $default_text_search_config      = 'pg_catalog.english',
                   $shared_preload_libraries        = undef,
                   $search_path                     = [ '"$user"', 'public' ],
+                  $manage_pghba                    = true,
                 ) inherits postgresql::params {
 
   validate_array($listen)
@@ -237,6 +238,7 @@ class postgresql(
     search_path                     => $search_path,
     log_min_duration_statement      => $log_min_duration_statement,
     log_file_mode                   => $log_file_mode,
+    manage_pghba                    => $manage_pghba,
   } ~>
 
   class { '::postgresql::service':

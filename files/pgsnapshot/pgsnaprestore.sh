@@ -110,6 +110,7 @@ class { 'postgresql':
   version             => '${POSTGRES_VERSION}',
   datadir             => '/var/lib/pgsnapshot',
   initdb              => false,
+  manage_pghba        => false,
 }
 EOF
 
