@@ -1,1 +1,1 @@
-class { 'postgresql::backup::pgsnaprestore': }
+class { 'postgresql::backup::pgsnapshot::pgsnaprestore': }
