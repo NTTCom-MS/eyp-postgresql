@@ -622,8 +622,12 @@ def createAWSVolumeFromSnapshotName(snap_name, id_host, lvm_disk, az):
 
         logging.debug("2) AWS volumes: "+str(aws_volumes))
 
-    aws_volumes_response = getVolumesFromSnapshot(id_host, lvm_disk, snap_name)
-    aws_volumes = aws_volumes_response['Volumes']
+    while len(aws_volumes)==0:
+        random_sleep = randint(30,120)
+        logging.debug("waiting for AWS volumes to be created for "+str(random_sleep)+" seconds - current status: ")
+        time.sleep(random_sleep)
+        aws_volumes_response = getVolumesFromSnapshot(id_host, lvm_disk, snap_name)
+        aws_volumes = aws_volumes_response['Volumes']
 
     logging.debug("3) AWS volumes: "+str(aws_volumes))
 
