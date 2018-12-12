@@ -104,6 +104,8 @@ class { 'postgresql':
   checkpoint_segments => '8',
   wal_keep_segments   => '8',
   version             => '${POSTGRES_VERSION}',
+  datadir             => '/var/lib/pgsnapshot',
+  initdb              => false,
 }
 EOF
 
