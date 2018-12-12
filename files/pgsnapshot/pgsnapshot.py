@@ -470,6 +470,7 @@ def getVolumesFromSnapshot(id_host, lvm_disk, snap_name, snapshot_id=""):
     volumes = client.describe_volumes(
                                         Filters=filters
                                     )
+    logging.debug("getVolumesFromSnapshot volumes found: "+str(volumes))
     return volumes
 
 def createAWSVolumeFromSnapshotID(az, snapshot_id, id_host, lvm_disk, snap_name):
