@@ -602,10 +602,13 @@ def createAWSVolumeFromSnapshotName(snap_name, id_host, lvm_disk, az):
     else:
         # crear volums pels snapshots que no tenen volum
         for aws_snapshot in aws_snapshots:
+            logging.debug("inspecting snapshot: "+aws_snapshot['SnapshotId'])
             aws_volumes_for_snapshot = getVolumesFromSnapshot(id_host, lvm_disk, snap_name, aws_snapshot['SnapshotId'])['Volumes']
             if(len(aws_volumes_for_snapshot))==0:
-                logging.debug("creant volum desde snaphot_id: "+aws_snapshot['SnapshotId'])
+                logging.debug("creating volume using snaphot_id: "+aws_snapshot['SnapshotId'])
                 createAWSVolumeFromSnapshotID(az, aws_snapshot['SnapshotId'], id_host, lvm_disk, snap_name)
+            else:
+                logging.debug("snapshot with volumes:"+str(aws_volumes_for_snapshot))
 
         # un cop creats repeteixo query i retorno
         aws_volumes_response = getVolumesFromSnapshot(id_host, lvm_disk, snap_name)
@@ -771,9 +774,11 @@ def launchAWSInstanceBasedOnInstanceIDwithSnapshots(base_instance_id, snap_name,
     if not allowed_devices:
         logAndExit("allowed devices empty - unable to attach volumes to instance")
 
+    logging.debug("list of aws volumes: "+str(aws_volumes))
+
     ec2_client=boto3.client('ec2')
     for aws_volume in aws_volumes:
-        logging.debug("aws_volume: "+str(aws_volume))
+        logging.debug("//*// aws_volume: "+str(aws_volume))
         is_attached=False
         for attachment in aws_volume['Attachments']:
             if attachment['InstanceId']==running_instance_id:
@@ -781,7 +786,9 @@ def launchAWSInstanceBasedOnInstanceIDwithSnapshots(base_instance_id, snap_name,
         # result = running_instance.attach_volume (VolumeId=aws_volume['VolumeId'], Device=allowed_devices.pop())
         if not is_attached:
             result = ec2_client.attach_volume(Device=allowed_devices.pop(), InstanceId=running_instance_id, VolumeId=aws_volume['VolumeId'])
-            logging.debug("volume attachment result: "+str(result))
+            logging.debug("volume "+aws_volume['VolumeId']+" attachment result: "+str(result))
+        else:
+            logging.debug("volume "+aws_volume['VolumeId']+" attachment result: "+str(result))
 
     waitForAWSRestoredInstanceVolumes2bAttached(id_host, lvm_disk, snap_name)
 
