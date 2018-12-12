@@ -295,6 +295,8 @@ As output you'll get the instance id and the public DNS name, for example:
 i-029aca55f79548fc5: ec2-63-33-65-78.eu-west-1.compute.amazonaws.com
 ```
 
+The restored instance will have the same exact HBA rules a original instance
+
 ## Reference
 
 ### classes
