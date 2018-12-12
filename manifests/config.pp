@@ -50,6 +50,7 @@ class postgresql::config(
                           $search_path                      = [ '"$user"', 'public' ],
                           $log_min_duration_statement       = '-1',
                           $log_file_mode                    = '0600',
+                          $manage_pghba                     = true,
                         ) inherits postgresql::params {
 
   Postgresql_psql {
@@ -98,17 +99,20 @@ class postgresql::config(
     order   => '00',
   }
 
-  concat { "${datadir_path}/pg_hba.conf":
-    ensure => 'present',
-    owner  => $postgresql::params::postgresuser,
-    group  => $postgresql::params::postgresgroup,
-    mode   => '0600',
-  }
+  if($manage_pghba)
+  {
+    concat { "${datadir_path}/pg_hba.conf":
+      ensure => 'present',
+      owner  => $postgresql::params::postgresuser,
+      group  => $postgresql::params::postgresgroup,
+      mode   => '0600',
+    }
 
-  concat::fragment{ "header pg_hba ${datadir_path}":
-    target  => "${datadir_path}/pg_hba.conf",
-    content => template("${module_name}/hba/header.erb"),
-    order   => '00',
+    concat::fragment{ "header pg_hba ${datadir_path}":
+      target  => "${datadir_path}/pg_hba.conf",
+      content => template("${module_name}/hba/header.erb"),
+      order   => '00',
+    }
   }
 
   if($postgresql::params::sysconfig)

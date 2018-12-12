@@ -3,6 +3,7 @@
 ## 0.1.57
 
 * added pgsnapshot.py as backup method
+* added flag to disable pg_hba.conf management
 
 ## 0.1.56
 

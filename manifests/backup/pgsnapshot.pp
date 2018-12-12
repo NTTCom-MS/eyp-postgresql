@@ -7,6 +7,7 @@ define postgresql::backup::pgsnapshot (
                                       $mailto              = undef,
                                       $idhost              = undef,
                                       $basedir             = '/usr/local/bin',
+                                      $confdir             = '/etc',
                                       $lvm_disk            = undef,
                                       $aws                 = false,
                                       $snap_size           = '5G',
@@ -14,6 +15,7 @@ define postgresql::backup::pgsnapshot (
                                       $keep_aws_snaps_days = '7',
                                       $snapshot_basename   = 'pgsnap',
                                       $logdir              = '/var/log/pgsnapshot',
+                                      $force_ami           = undef,
                                       #cron
                                       $setcronjob          = true,
                                       $hour_cronjob        = '2',
@@ -42,24 +44,37 @@ define postgresql::backup::pgsnapshot (
   validate_absolute_path($basedir)
   validate_absolute_path($destination)
 
+  exec { "mkdir p ${basedir} pgsnapshot":
+    command => "mkdir -p ${basedir}",
+    creates => $basedir,
+  }
+
+  exec { "mkdir p ${confdir} pgsnapshot":
+    command => "mkdir -p ${confdir}",
+    creates => $confdir,
+  }
+
+
   #source => "puppet:///modules/${module_name}/backup_pgdump.sh",
   file { "${basedir}/pgsnapshot.py":
     ensure  => $ensure,
     owner   => 'root',
     group   => $username,
     mode    => '0750',
-    content => file("${module_name}/backup/pgsnapshot.py"),
+    content => file("${module_name}/pgsnapshot/pgsnapshot.py"),
+    require => Exec["mkdir p ${basedir} pgsnapshot"],
   }
 
-  file { "${basedir}/postgres_snapshot.config":
+  file { "${confdir}/postgres_snapshot.config":
     ensure  => $ensure,
     owner   => 'root',
     group   => $username,
     mode    => '0640',
     content => template("${module_name}/backup/config_pgsnapshot.erb"),
+    require => Exec["mkdir p ${confdir} pgsnapshot"],
   }
 
-  exec { "mkdir p ${destination} backup":
+  exec { "mkdir p ${destination} pgsnapshot":
     command => "mkdir -p ${destination}",
     creates => $destination,
   }
@@ -69,10 +84,10 @@ define postgresql::backup::pgsnapshot (
     owner   => 'root',
     group   => $username,
     mode    => '0770',
-    require => Exec["mkdir p ${destination} backup"],
+    require => Exec["mkdir p ${destination} pgsnapshot"],
   }
 
-  exec { "mkdir p ${logdir} backup":
+  exec { "mkdir p ${logdir} pgsnapshot":
     command => "mkdir -p ${logdir}",
     creates => $logdir,
   }
@@ -82,21 +97,21 @@ define postgresql::backup::pgsnapshot (
     owner   => 'root',
     group   => $username,
     mode    => '0770',
-    require => Exec["mkdir p ${logdir} backup"],
+    require => Exec["mkdir p ${logdir} pgsnapshot"],
   }
 
   if($setcronjob)
   {
-    cron { "cronjob logical postgres backup: ${backupname}":
+    cron { "cronjob logical postgres backup pgsnapshot: ${backupname}":
       ensure   => $ensure,
-      command  => "${basedir}/pgsnapshot.py -c ${basedir}/postgres_snapshot.config",
+      command  => "${basedir}/pgsnapshot.py -c ${confdir}/postgres_snapshot.config",
       user     => $username,
       hour     => $hour_cronjob,
       minute   => $minute_cronjob,
       month    => $month_cronjob,
       monthday => $monthday_cronjob,
       weekday  => $weekday_cronjob,
-      require  => File[ [ "${basedir}/postgres_snapshot.config",
+      require  => File[ [ "${confdir}/postgres_snapshot.config",
                           "${basedir}/pgsnapshot.py"
                       ] ],
     }
