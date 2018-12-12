@@ -90,7 +90,7 @@ fi
 mkdir -p /tmp/postgres/manifests
 
 cat <<EOF >/tmp/postgres/manifests/pgrestore.pp
-class { 'postgresql::backup::pgsnaprestore': }
+class { 'postgresql::backup::pgsnapshot::pgsnaprestore': }
 
 ->
 
