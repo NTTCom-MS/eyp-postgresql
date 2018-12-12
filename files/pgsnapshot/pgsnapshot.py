@@ -699,6 +699,7 @@ def launchAWSInstanceBasedOnInstanceIDwithSnapshots(base_instance_id, snap_name,
     running_instance_id=""
     running_instance=None
     running_instance_region=None
+    logging.debug("launchAWSInstanceBasedOnInstanceIDwithSnapshots first check - checking instance status:")
     for reservation in restored_instances:
         # logging.debug("reservation: "+str(reservation))
         for instance in reservation['Instances']:
@@ -758,7 +759,7 @@ def launchAWSInstanceBasedOnInstanceIDwithSnapshots(base_instance_id, snap_name,
 
         waitForAWSRestoredInstance2bRunning(id_host, lvm_disk, snap_name)
 
-        logging.debug("checking instance status:")
+        logging.debug("launched instance - checking instance status:")
         running_restores=0
         for reservation in restored_instances:
             # logging.debug("reservation: "+str(reservation))
@@ -774,6 +775,7 @@ def launchAWSInstanceBasedOnInstanceIDwithSnapshots(base_instance_id, snap_name,
     # assert: running restores ha de ser 1
     while running_restores!=1 or not running_instance_id:
 
+        waitForAWSRestoredInstance2bRunning(id_host, lvm_disk, snap_name)
         logging.debug(str(while_counter)+" - checking instance status:")
         running_restores=0
         for reservation in restored_instances:
@@ -787,7 +789,6 @@ def launchAWSInstanceBasedOnInstanceIDwithSnapshots(base_instance_id, snap_name,
                     running_instance_region=instance['Placement']['AvailabilityZone']
 
 
-        waitForAWSRestoredInstance2bRunning(id_host, lvm_disk, snap_name)
 
     #
     # Linux Devices: /dev/sdf through /dev/sdp
