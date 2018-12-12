@@ -1007,7 +1007,7 @@ except:
 try:
     keep_aws_snaps_days=int(config.get('pgsnapshot', 'keepAWSsnapdays'))
 except:
-    logging.debug('Using default value for aws: '+str(keep_aws_snaps_days))
+    logging.debug('Using default value for keep_aws_snaps_days: '+str(keep_aws_snaps_days))
 
 try:
     to_addr=config.get('pgsnapshot', 'to').strip('"')
