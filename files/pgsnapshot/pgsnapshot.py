@@ -702,8 +702,7 @@ def launchAWSInstanceBasedOnInstanceIDwithSnapshots(base_instance_id, snap_name,
                                 curl https://raw.githubusercontent.com/jordiprats/puppet-masterless/master/setup.sh | bash
                                 /opt/puppet-masterless/localpuppetmaster.sh -d /tmp/lvm -r https://github.com/NTTCom-MS/eyp-lvm -s /tmp/lvm/modules/lvm/examples/base.pp
                                 /opt/puppet-masterless/localpuppetmaster.sh -d /tmp/postgres -r https://github.com/jordiprats/eyp-postgresql -s /tmp/postgres/modules/postgresql/examples/pgsnaprestore.pp
-                                /usr/local/bin/pgsnaprestore.sh
-                                """,
+                                /usr/local/bin/pgsnaprestore.sh """+snap_name,
                                 TagSpecifications=[
                                                     {
                                                         'ResourceType': 'instance',
