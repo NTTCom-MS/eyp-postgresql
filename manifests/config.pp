@@ -112,7 +112,7 @@ class postgresql::config(
       target  => "${datadir_path}/pg_hba.conf",
       content => template("${module_name}/hba/header.erb"),
       order   => '00',
-    }  
+    }
   }
 
   if($postgresql::params::sysconfig)
