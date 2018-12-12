@@ -42,12 +42,15 @@ fi
 
 mkdir -p /var/lib/pgsnapshot
 
-mount "${BASE_PATH}" /var/lib/pgsnapshot
-
-if [ "$?" ne 0 ];
+mount | grep "/var/lib/pgsnapshot"
+if [ "$?" -ne 0 ];
 then
-  echo "error mounting FS"
-  exit 1
+  mount "${BASE_PATH}" /var/lib/pgsnapshot
+  if [ "$?" ne 0 ];
+  then
+    echo "error mounting FS"
+    exit 1
+  fi
 fi
 
 grep "/var/lib/pgsnapshot" /etc/fstab
