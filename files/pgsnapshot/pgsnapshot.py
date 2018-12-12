@@ -467,11 +467,11 @@ def getVolumesFromSnapshot(id_host, lvm_disk, snap_name, snapshot_id=""):
                         }
         )
     logging.debug("getVolumesFromSnapshot filters: "+str(filters))
-    volumes = client.describe_volumes(
+    response = client.describe_volumes(
                                         Filters=filters
                                     )
-    logging.debug("getVolumesFromSnapshot volumes found: "+str(volumes))
-    return volumes
+    logging.debug("getVolumesFromSnapshot - client.describe_volumes response: "+str(response))
+    return response
 
 def createAWSVolumeFromSnapshotID(az, snapshot_id, id_host, lvm_disk, snap_name):
     logging.debug("createAWSVolumeFromSnapshotID("+az+", "+snapshot_id+", "+id_host+", "+lvm_disk+", "+snap_name+")")
@@ -591,14 +591,15 @@ def waitForAWSVolumes2bAvailable(aws_volumes):
     logging.debug("waitForAWSVolumes2bAvailable - all clear")
 
 def createAWSVolumeFromSnapshotName(snap_name, id_host, lvm_disk, az):
+    logging.debug("// createAWSVolumeFromSnapshotName")
     aws_snapshots = getAWSsnapshot(id_host, lvm_disk, snap_name)
     aws_volumes_response = getVolumesFromSnapshot(id_host, lvm_disk, snap_name)
     aws_volumes = aws_volumes_response['Volumes']
 
-    logging.debug("AWS snapshots: "+str(aws_snapshots))
-    logging.debug("AWS volumes: "+str(aws_volumes))
+    logging.debug("1) AWS snapshots: "+str(aws_snapshots))
+    logging.debug("1) AWS volumes: "+str(aws_volumes))
 
-    if(len(aws_volumes)==len(aws_snapshots)):
+    if(len(aws_volumes)==len(aws_snapshots)) and len(aws_volumes)!=0:
         # suposem que la relacio es 1 a 1, aqui potencial bug com una casa
         logging.debug("createAWSVolumeFromSnapshotName:: ("+snap_name+"/"+id_host+"/"+lvm_disk+") - AWS VOLUMES: "+str(len(aws_volumes))+" vs "+"AWS SNAPSHOTS: "+str(len(aws_snapshots)))
 
@@ -619,7 +620,12 @@ def createAWSVolumeFromSnapshotName(snap_name, id_host, lvm_disk, az):
         aws_volumes_response = getVolumesFromSnapshot(id_host, lvm_disk, snap_name)
         aws_volumes = aws_volumes_response['Volumes']
 
-        logging.debug("AWS volumes: "+str(aws_volumes))
+        logging.debug("2) AWS volumes: "+str(aws_volumes))
+
+    aws_volumes_response = getVolumesFromSnapshot(id_host, lvm_disk, snap_name)
+    aws_volumes = aws_volumes_response['Volumes']
+
+    logging.debug("3) AWS volumes: "+str(aws_volumes))
 
     waitForAWSVolumes2bAvailable(aws_volumes)
     return aws_volumes
