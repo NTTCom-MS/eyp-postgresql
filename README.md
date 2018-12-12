@@ -9,6 +9,7 @@
     * [Setup requirements](#setup-requirements)
     * [Beginning with postgresql](#beginning-with-postgresql)
 4. [Usage](#usage)
+    * [pgsnapshot usage](#pgsnapshot)
 5. [Reference](#reference)
 5. [Limitations](#limitations)
 6. [Development](#development)
