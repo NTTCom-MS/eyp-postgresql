@@ -609,7 +609,7 @@ def createAWSVolumeFromSnapshotName(snap_name, id_host, lvm_disk, az):
             if(len(aws_volumes_for_snapshot))==0:
                 logging.debug("creating volume using snaphot_id: "+aws_snapshot['SnapshotId'])
                 volume = createAWSVolumeFromSnapshotID(az, aws_snapshot['SnapshotId'], id_host, lvm_disk, snap_name)
-                logging.debug("created volume: "+volume)
+                logging.debug("created volume: "+str(volume))
             else:
                 logging.debug("snapshot with volumes:"+str(aws_volumes_for_snapshot))
 
