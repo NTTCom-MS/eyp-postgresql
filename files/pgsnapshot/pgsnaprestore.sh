@@ -1,14 +1,15 @@
 #!/bin/bash
 
-exec > /var/log/$0.$(date +%Y%m%d%H%M%S).log 2>&1
-
 if [ -z "$1" ];
 then
   echo "usage: $0 <snap_name>"
   exit 1
 fi
 
-LVDISPLAYBIN=$(which 2>/dev/null)
+exec > /var/log/$1.$(date +%Y%m%d%H%M%S).log 2>&1
+
+
+LVDISPLAYBIN=$(which lvdisplay 2>/dev/null)
 
 if [ -z "${LVDISPLAYBIN}" ];
 then
