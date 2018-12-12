@@ -484,7 +484,7 @@ def createAWSVolumeFromSnapshotID(az, snapshot_id, id_host, lvm_disk, snap_name)
                                         'Tags': [
                                             {
                                                 'Key': 'Name',
-                                                'Value': snap_name
+                                                'Value': snap_name+" - "+snapshot_id
                                             },
                                             {
                                                 'Key': 'pgsnapshot-volume_created_from_snapshot',
