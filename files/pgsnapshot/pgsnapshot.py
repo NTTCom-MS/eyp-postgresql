@@ -596,7 +596,7 @@ def createAWSVolumeFromSnapshotName(snap_name, id_host, lvm_disk, az):
 
     if(len(aws_volumes)==len(aws_snapshots)):
         # suposem que la relacio es 1 a 1, aqui potencial bug com una casa
-        logging.debug("("+snap_name+"/"+id_host+"/"+lvm_disk+") - AWS VOLUMES: "+str(len(aws_volumes))+" vs "+"AWS SNAPSHOTS: "+str(len(aws_snapshots)))
+        logging.debug("createAWSVolumeFromSnapshotName:: ("+snap_name+"/"+id_host+"/"+lvm_disk+") - AWS VOLUMES: "+str(len(aws_volumes))+" vs "+"AWS SNAPSHOTS: "+str(len(aws_snapshots)))
 
         # TODO: verificar que no estan ja attachats
     else:
