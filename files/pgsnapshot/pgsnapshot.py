@@ -770,11 +770,24 @@ def launchAWSInstanceBasedOnInstanceIDwithSnapshots(base_instance_id, snap_name,
                     running_instance=instance
                     running_instance_region=instance['Placement']['AvailabilityZone']
 
+    while_counter=0
     # assert: running restores ha de ser 1
-    if running_restores!=1 or not running_instance_id:
-        logAndExit("too many restore VMs ("+str(running_restores)+"): "+str(restored_instances)+" - instance_id: "+running_instance_id)
+    while running_restores!=1 or not running_instance_id:
 
-    waitForAWSRestoredInstance2bRunning(id_host, lvm_disk, snap_name)
+        logging.debug(str(while_counter)+" - checking instance status:")
+        running_restores=0
+        for reservation in restored_instances:
+            # logging.debug("reservation: "+str(reservation))
+            for instance in reservation['Instances']:
+                logging.debug(instance['InstanceId']+": "+instance['State']['Name'])
+                if instance['State']['Name']=='running':
+                    running_restores+=1
+                    running_instance_id=instance['InstanceId']
+                    running_instance=instance
+                    running_instance_region=instance['Placement']['AvailabilityZone']
+
+
+        waitForAWSRestoredInstance2bRunning(id_host, lvm_disk, snap_name)
 
     #
     # Linux Devices: /dev/sdf through /dev/sdp
