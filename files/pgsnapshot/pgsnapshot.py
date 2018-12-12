@@ -473,6 +473,29 @@ def getVolumesFromSnapshot(id_host, lvm_disk, snap_name, snapshot_id=""):
 
 def createAWSVolumeFromSnapshotID(az, snapshot_id, id_host, lvm_disk, snap_name):
     logging.debug("createAWSVolumeFromSnapshotID("+az+", "+snapshot_id+", "+id_host+", "+lvm_disk+", "+snap_name+")")
+    tags = [
+        {
+            'Key': 'Name',
+            'Value': snap_name+" - "+snapshot_id
+        },
+        {
+            'Key': 'pgsnapshot-volume_created_from_snapshot',
+            'Value': datetime.datetime.fromtimestamp(time.time()).strftime(timeformat)
+        },
+        {
+            'Key': 'pgsnapshot-snap_name',
+            'Value': snap_name,
+        },
+        {
+            'Key': 'pgsnapshot-lvm_disk',
+            'Value': lvm_disk,
+        },
+        {
+            'Key': 'pgsnapshot-host',
+            'Value': id_host,
+        },
+    ]
+    logging.debug("createAWSVolumeFromSnapshotID tags: "+str(tags))
     ec2 = boto3.resource('ec2')
     volume = ec2.create_volume(
                                 AvailabilityZone=az,
@@ -481,28 +504,7 @@ def createAWSVolumeFromSnapshotID(az, snapshot_id, id_host, lvm_disk, snap_name)
                                 TagSpecifications=[
                                     {
                                         'ResourceType': 'volume',
-                                        'Tags': [
-                                            {
-                                                'Key': 'Name',
-                                                'Value': snap_name+" - "+snapshot_id
-                                            },
-                                            {
-                                                'Key': 'pgsnapshot-volume_created_from_snapshot',
-                                                'Value': datetime.datetime.fromtimestamp(time.time()).strftime(timeformat)
-                                            },
-                                            {
-                                                'Key': 'pgsnapshot-snap_name',
-                                                'Value': snap_name,
-                                            },
-                                            {
-                                                'Key': 'pgsnapshot-lvm_disk',
-                                                'Value': lvm_disk,
-                                            },
-                                            {
-                                                'Key': 'pgsnapshot-host',
-                                                'Value': id_host,
-                                            },
-                                        ]
+                                        'Tags': tags
                                     },
                                 ]
                             )
