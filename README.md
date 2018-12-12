@@ -289,7 +289,11 @@ restore AWS snapshot named **snap.20181212122000**
 localpuppetmaster.sh -d /tmp/postgres -r https://github.com/jordiprats/eyp-postgresql; python /tmp/postgres/modules/postgresql/files/pgsnapshot/pgsnapshot.py -c demo.cfg -a -r snap.20181212122000
 ```
 
-As output you'll get the instance id and the public DNS name
+As output you'll get the instance id and the public DNS name, for example:
+
+```
+i-029aca55f79548fc5: ec2-63-33-65-78.eu-west-1.compute.amazonaws.com
+```
 
 ## Reference
 
