@@ -1066,6 +1066,9 @@ if list_backups:
 
         logging.debug("list of available backups: "+str(avaiable_backups))
 
+        keylist = avaiable_backups.keys()
+        keylist.sort()
+
         for backup in avaiable_backups.keys():
             print(" * "+backup)
         print("\n")
