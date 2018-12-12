@@ -325,7 +325,7 @@ def createAWSsnapshot(volume_id, lvm_disk, snap_name):
         snapshot = ec2.create_snapshot(VolumeId=volume_id, Description="pgsnapshot for "+snap_name, TagSpecifications = [{
         'ResourceType': 'snapshot',
         'Tags': [
-            { 'Key': 'pgsnapshot-lvm_disk', 'Value': lvm_disk },{ 'Key': 'pgsnapshot-host', 'Value': id_host },{ 'Key': 'pgsnapshot-snap_name', 'Value': snap_name }        ]
+                    {'Key': 'Name', 'Value': snap_name }, { 'Key': 'pgsnapshot-lvm_disk', 'Value': lvm_disk },{ 'Key': 'pgsnapshot-host', 'Value': id_host },{ 'Key': 'pgsnapshot-snap_name', 'Value': snap_name }        ]
         }])
         #snapshot.add_tags({ 'Key': 'pgsnapshot-lvm_disk', 'Value': lvm_disk },{ 'Key': 'pgsnapshot-host', 'Value': id_host },{ 'Key': 'pgsnapshot-snap_name', 'Value': snap_name })
         # ec2.create_tags(
@@ -482,6 +482,10 @@ def createAWSVolumeFromSnapshotID(az, snapshot_id, id_host, lvm_disk, snap_name)
                                     {
                                         'ResourceType': 'volume',
                                         'Tags': [
+                                            {
+                                                'Key': 'Name',
+                                                'Value': snap_name
+                                            },
                                             {
                                                 'Key': 'pgsnapshot-volume_created_from_snapshot',
                                                 'Value': datetime.datetime.fromtimestamp(time.time()).strftime(timeformat)
