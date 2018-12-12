@@ -561,7 +561,7 @@ def waitForAWSRestoredInstanceVolumes2bAttached(id_host, lvm_disk, snap_name):
                     running_instance_region=instance['Placement']['AvailabilityZone']
 
         if running_restores!=1 or not running_instance_id:
-            logAndExit("too many restore VMs: "+str(restored_instances)+" - instance_id: "+running_instance_id)
+            logAndExit("too many restore VMs ("+running_restores+"): "+str(restored_instances)+" - instance_id: "+running_instance_id)
 
         volumes_attached=True
         for device in running_instance['BlockDeviceMappings']:
@@ -770,7 +770,7 @@ def launchAWSInstanceBasedOnInstanceIDwithSnapshots(base_instance_id, snap_name,
 
     # assert: running restores ha de ser 1
     if running_restores!=1 or not running_instance_id:
-        logAndExit("too many restore VMs: "+str(restored_instances)+" - instance_id: "+running_instance_id)
+        logAndExit("too many restore VMs ("+running_restores+"): "+str(restored_instances)+" - instance_id: "+running_instance_id)
 
     waitForAWSRestoredInstance2bRunning(id_host, lvm_disk, snap_name)
 
