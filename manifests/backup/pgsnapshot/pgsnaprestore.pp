@@ -1,4 +1,4 @@
-class postgresql::backup::pgsnaprestore (
+class postgresql::backup::pgsnapshot::pgsnaprestore (
                                           $basedir = '/usr/local/bin',
                                         ) inherits postgresql::params {
   Exec {
