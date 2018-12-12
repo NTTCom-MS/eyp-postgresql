@@ -844,8 +844,8 @@ def showJelp(msg):
           ;@@@@@@@@@   ;@@@@
             @@@@@@@+    +@@@
               `'@'
-    pgsnapshot - Into the snapshots to save the data!
-    
+pgsnapshot - Into the snapshots to save the data!
+
     """)
     print("Usage:")
     print("* Global options:")
