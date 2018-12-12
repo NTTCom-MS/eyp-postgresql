@@ -233,6 +233,40 @@ class { 'postgresql':
 }
 ```
 
+### pgsnapshot
+
+Demo using an empty config file
+
+#### backup - AWS snapshot
+
+Delete AWS snapshots older that 10 days
+
+```
+localpuppetmaster.sh -d /tmp/postgres -r https://github.com/jordiprats/eyp-postgresql; python /tmp/postgres/modules/postgresql/files/pgsnapshot/pgsnapshot.py -c demo.cfg -a -k 10
+```
+
+#### backup - LVM snapshot
+
+Keep last 10 LVM snapshots
+
+```
+localpuppetmaster.sh -d /tmp/postgres -r https://github.com/jordiprats/eyp-postgresql; python /tmp/postgres/modules/postgresql/files/pgsnapshot/pgsnapshot.py -c demo.cfg -K 10
+```
+
+#### list backups - AWS snapshots
+
+```
+localpuppetmaster.sh -d /tmp/postgres -r https://github.com/jordiprats/eyp-postgresql; python /tmp/postgres/modules/postgresql/files/pgsnapshot/pgsnapshot.py -c demo.cfg -a -k 10 -L
+```
+
+#### restore - AWS snapshot
+
+restore AWS snapshot named **snap.20181212122000**
+
+```
+localpuppetmaster.sh -d /tmp/postgres -r https://github.com/jordiprats/eyp-postgresql; python /tmp/postgres/modules/postgresql/files/pgsnapshot/pgsnapshot.py -c demo.cfg -a -k 10 -r snap.20181212122000
+```
+
 ## Reference
 
 ### classes
