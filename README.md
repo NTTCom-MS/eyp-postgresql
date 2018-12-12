@@ -235,7 +235,23 @@ class { 'postgresql':
 
 ### pgsnapshot
 
-Demo using an empty config file
+This demo uses an empty config file, all settings set via cli:
+
+```
+touch demo.cfg
+```
+
+In the real world a sample config file would look like this:
+
+```
+[pgsnapshot]
+snapsize=30G
+to=backup.reports@systemadmin.es
+host-id=cpe0014535
+keeplvmsnaps=0
+keepAWSsnapdays=7
+aws=true
+```
 
 #### backup - AWS snapshot
 
