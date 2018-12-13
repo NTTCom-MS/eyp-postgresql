@@ -276,7 +276,7 @@ All options need to be in the **[pgsnapshot]** section
 Make a AWS snapshot backups and delete AWS snapshots older that 10 days
 
 ```
-# localpuppetmaster.sh -d /tmp/postgres -r https://github.com/NTTCom-mS/eyp-postgresql; python /tmp/postgres/modules/postgresql/files/pgsnapshot/pgsnapshot.py -c demo.cfg -a -k 10
+localpuppetmaster.sh -d /tmp/postgres -r https://github.com/NTTCom-mS/eyp-postgresql; python /tmp/postgres/modules/postgresql/files/pgsnapshot/pgsnapshot.py -c demo.cfg -a -k 10
 ```
 
 #### backup - LVM snapshot
@@ -284,13 +284,18 @@ Make a AWS snapshot backups and delete AWS snapshots older that 10 days
 Make a LVM snapshot backups keeping last 10 LVM snapshots
 
 ```
-# localpuppetmaster.sh -d /tmp/postgres -r https://github.com/NTTCom-mS/eyp-postgresql; python /tmp/postgres/modules/postgresql/files/pgsnapshot/pgsnapshot.py -c demo.cfg -K 10
+localpuppetmaster.sh -d /tmp/postgres -r https://github.com/NTTCom-mS/eyp-postgresql; python /tmp/postgres/modules/postgresql/files/pgsnapshot/pgsnapshot.py -c demo.cfg -K 10
 ```
 
 #### list backups - AWS snapshots
 
 ```
-# localpuppetmaster.sh -d /tmp/postgres -r https://github.com/NTTCom-mS/eyp-postgresql; python /tmp/postgres/modules/postgresql/files/pgsnapshot/pgsnapshot.py -c demo.cfg -a -L
+localpuppetmaster.sh -d /tmp/postgres -r https://github.com/NTTCom-mS/eyp-postgresql; python /tmp/postgres/modules/postgresql/files/pgsnapshot/pgsnapshot.py -c demo.cfg -a -L
+```
+
+Sample output:
+
+```
 * snap.20181207000001
 * snap.20181208000001
 * snap.20181209000001
@@ -303,7 +308,14 @@ Make a LVM snapshot backups keeping last 10 LVM snapshots
 #### list backups - LVM snapshots
 
 ```
-# localpuppetmaster.sh -d /tmp/postgres -r https://github.com/NTTCom-mS/eyp-postgresql; python /tmp/postgres/modules/postgresql/files/pgsnapshot/pgsnapshot.py -c demo.cfg -L
+localpuppetmaster.sh -d /tmp/postgres -r https://github.com/NTTCom-mS/eyp-postgresql; python /tmp/postgres/modules/postgresql/files/pgsnapshot/pgsnapshot.py -c demo.cfg -L
+```
+
+Sample output:
+
+```
+* snap.20181207000001
+* snap.20181208000001
 ```
 
 #### restore - AWS snapshot
@@ -311,8 +323,7 @@ Make a LVM snapshot backups keeping last 10 LVM snapshots
 restore AWS snapshot named **snap.20181212122000**
 
 ```
-# localpuppetmaster.sh -d /tmp/postgres -r https://github.com/NTTCom-mS/eyp-postgresql; python /tmp/postgres/modules/postgresql/files/pgsnapshot/pgsnapshot.py -c demo.cfg -a -r snap.20181212122000
-i-029aca55f79548fc5: ec2-63-33-65-78.eu-west-1.compute.amazonaws.com
+localpuppetmaster.sh -d /tmp/postgres -r https://github.com/NTTCom-mS/eyp-postgresql; python /tmp/postgres/modules/postgresql/files/pgsnapshot/pgsnapshot.py -c demo.cfg -a -r snap.20181212122000
 
 ```
 
