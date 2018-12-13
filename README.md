@@ -293,10 +293,29 @@ localpuppetmaster.sh -d /tmp/postgres -r https://github.com/NTTCom-mS/eyp-postgr
 localpuppetmaster.sh -d /tmp/postgres -r https://github.com/NTTCom-mS/eyp-postgresql; python /tmp/postgres/modules/postgresql/files/pgsnapshot/pgsnapshot.py -c demo.cfg -a -L
 ```
 
+Sample output:
+
+```
+* snap.20181207000001
+* snap.20181208000001
+* snap.20181209000001
+* snap.20181210000001
+* snap.20181211000001
+* snap.20181212000004
+* snap.20181213000001
+```
+
 #### list backups - LVM snapshots
 
 ```
 localpuppetmaster.sh -d /tmp/postgres -r https://github.com/NTTCom-mS/eyp-postgresql; python /tmp/postgres/modules/postgresql/files/pgsnapshot/pgsnapshot.py -c demo.cfg -L
+```
+
+Sample output:
+
+```
+* snap.20181207000001
+* snap.20181208000001
 ```
 
 #### restore - AWS snapshot
@@ -305,6 +324,7 @@ restore AWS snapshot named **snap.20181212122000**
 
 ```
 localpuppetmaster.sh -d /tmp/postgres -r https://github.com/NTTCom-mS/eyp-postgresql; python /tmp/postgres/modules/postgresql/files/pgsnapshot/pgsnapshot.py -c demo.cfg -a -r snap.20181212122000
+
 ```
 
 As output you'll get the instance id and the public DNS name, for example:
