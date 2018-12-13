@@ -254,12 +254,29 @@ keepAWSsnapdays=7
 aws=true
 ```
 
+#### config file options
+
+All options need to be in the **[pgsnapshot]** section
+
+* **pgusername**: Postgre's username (default: postgres)
+* **to**: Send a backup report to this address (default: do not send any report)
+* **host-id**: Force a specific host id (default: server's FQDN)
+* **lvmdisk**: Use a specific LVM disk (default: connect to postgres to get the actual datadir)
+* **snapsize**: Snapshot size - recommended to be large if you plan to keep snapshots and small if you plan to use AWS snapshots (default: 5G)
+* **keeplvmsnaps**: How many LVM snapshots to keep (default: 2)
+* **snapshotbasename**: LVM snapshot basename (default: snap)
+* **logdir**: Where to keep log files for each action (default: /var/log/pgsnapshot)
+* **aws**: Use AWS snapshots (default: false)
+* **keepAWSsnapdays**: Delete AWS snapshots older than N days (default: 7)
+* **force-ami**: Force a specific AMI for the restored instance (default: use the same AMI as the running instance)
+
+
 #### backup - AWS snapshot
 
 Make a AWS snapshot backups and delete AWS snapshots older that 10 days
 
 ```
-localpuppetmaster.sh -d /tmp/postgres -r https://github.com/jordiprats/eyp-postgresql; python /tmp/postgres/modules/postgresql/files/pgsnapshot/pgsnapshot.py -c demo.cfg -a -k 10
+localpuppetmaster.sh -d /tmp/postgres -r https://github.com/NTTCom-mS/eyp-postgresql; python /tmp/postgres/modules/postgresql/files/pgsnapshot/pgsnapshot.py -c demo.cfg -a -k 10
 ```
 
 #### backup - LVM snapshot
@@ -267,19 +284,19 @@ localpuppetmaster.sh -d /tmp/postgres -r https://github.com/jordiprats/eyp-postg
 Make a LVM snapshot backups keeping last 10 LVM snapshots
 
 ```
-localpuppetmaster.sh -d /tmp/postgres -r https://github.com/jordiprats/eyp-postgresql; python /tmp/postgres/modules/postgresql/files/pgsnapshot/pgsnapshot.py -c demo.cfg -K 10
+localpuppetmaster.sh -d /tmp/postgres -r https://github.com/NTTCom-mS/eyp-postgresql; python /tmp/postgres/modules/postgresql/files/pgsnapshot/pgsnapshot.py -c demo.cfg -K 10
 ```
 
 #### list backups - AWS snapshots
 
 ```
-localpuppetmaster.sh -d /tmp/postgres -r https://github.com/jordiprats/eyp-postgresql; python /tmp/postgres/modules/postgresql/files/pgsnapshot/pgsnapshot.py -c demo.cfg -a -L
+localpuppetmaster.sh -d /tmp/postgres -r https://github.com/NTTCom-mS/eyp-postgresql; python /tmp/postgres/modules/postgresql/files/pgsnapshot/pgsnapshot.py -c demo.cfg -a -L
 ```
 
 #### list backups - LVM snapshots
 
 ```
-localpuppetmaster.sh -d /tmp/postgres -r https://github.com/jordiprats/eyp-postgresql; python /tmp/postgres/modules/postgresql/files/pgsnapshot/pgsnapshot.py -c demo.cfg -L
+localpuppetmaster.sh -d /tmp/postgres -r https://github.com/NTTCom-mS/eyp-postgresql; python /tmp/postgres/modules/postgresql/files/pgsnapshot/pgsnapshot.py -c demo.cfg -L
 ```
 
 #### restore - AWS snapshot
@@ -287,7 +304,7 @@ localpuppetmaster.sh -d /tmp/postgres -r https://github.com/jordiprats/eyp-postg
 restore AWS snapshot named **snap.20181212122000**
 
 ```
-localpuppetmaster.sh -d /tmp/postgres -r https://github.com/jordiprats/eyp-postgresql; python /tmp/postgres/modules/postgresql/files/pgsnapshot/pgsnapshot.py -c demo.cfg -a -r snap.20181212122000
+localpuppetmaster.sh -d /tmp/postgres -r https://github.com/NTTCom-mS/eyp-postgresql; python /tmp/postgres/modules/postgresql/files/pgsnapshot/pgsnapshot.py -c demo.cfg -a -r snap.20181212122000
 ```
 
 As output you'll get the instance id and the public DNS name, for example:
