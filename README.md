@@ -270,6 +270,7 @@ All options need to be in the **[pgsnapshot]** section
 * **keepAWSsnapdays**: Delete AWS snapshots older than N days (default: 7)
 * **force-ami**: Force a specific AMI for the restored instance (default: use the same AMI as the running instance)
 
+These options and the cronjob for pgsnapshot will be configured using **postgresql::backup::pgsnapshot**
 
 #### backup - AWS snapshot
 
