@@ -29,7 +29,8 @@ define postgresql::backup::pgsnapshot (
     path => '/usr/sbin:/usr/bin:/sbin:/bin',
   }
 
-  include python
+  include ::python
+  include ::lvm
 
   pythonpip { 'psutil':
     ensure => 'present',
