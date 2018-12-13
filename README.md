@@ -236,7 +236,7 @@ class { 'postgresql':
 
 ### pgsnapshot
 
-This demo uses an empty config file, all settings set via cli:
+This section describes pgsnapshot usage as a reference without actually install it via puppet (not recommended) using an empty config file, passing settings via cli options. Please note this is not the intended usage
 
 ```
 touch demo.cfg
@@ -579,6 +579,33 @@ postgresql::pgdumpbackup { "backup logic":
   idhost => 'postgresmaster01',
 }
 ```
+
+#### postgresql::backup::pgsnapshot
+
+Backups using pgsnapshot:
+
+* **ensure**:              = 'present',
+* **username**:            = 'postgres',
+* **backupname**:          = $name,
+* **retention**:           = '7',
+* **mailto**:              = undef,
+* **idhost**:              = undef,
+* **basedir**:             = '/usr/local/bin',
+* **confdir**:             = '/etc',
+* **lvm_disk**:            = undef,
+* **aws**:                 = false,
+* **snap_size**:           = '5G',
+* **keeplvmsnaps**:        = '2',
+* **keep_aws_snaps_days**: = '7',
+* **snapshot_basename**:   = 'pgsnap',
+* **logdir**:              = '/var/log/pgsnapshot',
+* **force_ami**:           = undef,
+* **setcronjob**:          = true,
+* **hour_cronjob**:        = '2',
+* **minute_cronjob**:      = '0',
+* **month_cronjob**:       = undef,
+* **monthday_cronjob**:    = undef,
+* **weekday_cronjob**:     = undef,
 
 ## Limitations
 

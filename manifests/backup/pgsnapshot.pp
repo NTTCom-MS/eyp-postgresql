@@ -1,5 +1,4 @@
 define postgresql::backup::pgsnapshot (
-                                      $destination,
                                       $ensure              = 'present',
                                       $username            = 'postgres',
                                       $backupname          = $name,
@@ -42,9 +41,6 @@ define postgresql::backup::pgsnapshot (
   # python-pip
   # pip psutil
 
-  validate_absolute_path($basedir)
-  validate_absolute_path($destination)
-
   exec { "mkdir p ${basedir} pgsnapshot":
     command => "mkdir -p ${basedir}",
     creates => $basedir,
@@ -73,19 +69,6 @@ define postgresql::backup::pgsnapshot (
     mode    => '0640',
     content => template("${module_name}/backup/config_pgsnapshot.erb"),
     require => Exec["mkdir p ${confdir} pgsnapshot"],
-  }
-
-  exec { "mkdir p ${destination} pgsnapshot":
-    command => "mkdir -p ${destination}",
-    creates => $destination,
-  }
-
-  file { $destination:
-    ensure  => 'directory',
-    owner   => 'root',
-    group   => $username,
-    mode    => '0770',
-    require => Exec["mkdir p ${destination} pgsnapshot"],
   }
 
   exec { "mkdir p ${logdir} pgsnapshot":
