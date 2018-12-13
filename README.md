@@ -236,7 +236,7 @@ class { 'postgresql':
 
 ### pgsnapshot
 
-This demo uses an empty config file, all settings set via cli:
+This section describes pgsnapshot usage as a reference without actually install it via puppet (not recommended) using an empty config file, passing settings via cli options. Please note this is not the intended usage
 
 ```
 touch demo.cfg
@@ -580,9 +580,37 @@ postgresql::pgdumpbackup { "backup logic":
 }
 ```
 
+#### postgresql::backup::pgsnapshot
+
+Backups using pgsnapshot:
+
+* **ensure**: Whether the cronjob and the script itseld should be in the system (default: present)
+* **username**: Postgre's username (default: postgres)
+* **backupname**: Backup job name (default: resource's name)
+* **mailto**: Send a backup report to this address (default: undef)
+* **idhost**: Force a specific host id (default: undef, server's FQDN)
+* **basedir**: Where to install backup script (default: /usr/local/bin)
+* **confdir**: Where to store configuration file (default: /etc)
+* **lvm_disk**: Use a specific LVM disk (default: undef, connect to postgres to get the actual datadir)
+* **aws**: Use AWS snapshots (default: false)
+* **snap_size**: Snapshot size - recommended to be large if you plan to keep snapshots and small if you plan to use AWS snapshots (default: 5G)
+* **keeplvmsnaps**: How many LVM snapshots to keep (default: 2)
+* **keep_aws_snaps_days**: Delete AWS snapshots older than N days (default: 7)
+* **snapshot_basename**: LVM snapshot basename (default: pgsnap)
+* **logdir**: Log directory (default: /var/log/pgsnapshot)
+* **force_ami**: Force a specific AMI for the restored instance (default: undef, use the same AMI as the running instance)
+* cron settings:
+  * **setcronjob**: create a cronjob (default: true)
+  * **hour_cronjob**: hour (default: 2)
+  * **minute_cronjob**: minute (default: 0)
+  * **month_cronjob**: month (default: undef)
+  * **monthday_cronjob**: monthday (default: undef)
+  * **weekday_cronjob**: weekday (default: undef)
+
+
 ## Limitations
 
-Only available in CentOS 6 and 7
+Tested in CentOS 6 and 7
 
 ## Development
 
