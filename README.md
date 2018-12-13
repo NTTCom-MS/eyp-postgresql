@@ -584,32 +584,33 @@ postgresql::pgdumpbackup { "backup logic":
 
 Backups using pgsnapshot:
 
-* **ensure**:              = 'present',
-* **username**:            = 'postgres',
-* **backupname**:          = $name,
-* **retention**:           = '7',
-* **mailto**:              = undef,
-* **idhost**:              = undef,
-* **basedir**:             = '/usr/local/bin',
-* **confdir**:             = '/etc',
-* **lvm_disk**:            = undef,
-* **aws**:                 = false,
-* **snap_size**:           = '5G',
-* **keeplvmsnaps**:        = '2',
-* **keep_aws_snaps_days**: = '7',
-* **snapshot_basename**:   = 'pgsnap',
-* **logdir**:              = '/var/log/pgsnapshot',
-* **force_ami**:           = undef,
-* **setcronjob**:          = true,
-* **hour_cronjob**:        = '2',
-* **minute_cronjob**:      = '0',
-* **month_cronjob**:       = undef,
-* **monthday_cronjob**:    = undef,
-* **weekday_cronjob**:     = undef,
+* **ensure**: Whether the cronjob and the script itseld should be in the system (default: present)
+* **username**: Postgre's username (default: postgres)
+* **backupname**: Backup job name (default: resource's name)
+* **mailto**: Send a backup report to this address (default: undef)
+* **idhost**: Force a specific host id (default: undef, server's FQDN)
+* **basedir**: Where to install backup script (default: /usr/local/bin)
+* **confdir**: Where to store configuration file (default: /etc)
+* **lvm_disk**: Use a specific LVM disk (default: undef, connect to postgres to get the actual datadir)
+* **aws**: Use AWS snapshots (default: false)
+* **snap_size**: Snapshot size - recommended to be large if you plan to keep snapshots and small if you plan to use AWS snapshots (default: 5G)
+* **keeplvmsnaps**: How many LVM snapshots to keep (default: 2)
+* **keep_aws_snaps_days**: Delete AWS snapshots older than N days (default: 7)
+* **snapshot_basename**: LVM snapshot basename (default: pgsnap)
+* **logdir**: Log directory (default: /var/log/pgsnapshot)
+* **force_ami**: Force a specific AMI for the restored instance (default: undef, use the same AMI as the running instance)
+* cron settings:
+  * **setcronjob**: create a cronjob (default: true)
+  * **hour_cronjob**: hour (default: 2)
+  * **minute_cronjob**: minute (default: 0)
+  * **month_cronjob**: month (default: undef)
+  * **monthday_cronjob**: monthday (default: undef)
+  * **weekday_cronjob**: weekday (default: undef)
+
 
 ## Limitations
 
-Only available in CentOS 6 and 7
+Tested in CentOS 6 and 7
 
 ## Development
 

@@ -2,7 +2,6 @@ define postgresql::backup::pgsnapshot (
                                       $ensure              = 'present',
                                       $username            = 'postgres',
                                       $backupname          = $name,
-                                      $retention           = '7',
                                       $mailto              = undef,
                                       $idhost              = undef,
                                       $basedir             = '/usr/local/bin',
