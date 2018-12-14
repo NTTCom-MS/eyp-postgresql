@@ -111,6 +111,7 @@ class { 'postgresql':
   datadir             => '/var/lib/pgsnapshot',
   initdb              => false,
   manage_pghba        => false,
+  manage_configfile   => false,
 }
 EOF
 
