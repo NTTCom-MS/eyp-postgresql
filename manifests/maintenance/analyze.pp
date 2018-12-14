@@ -23,7 +23,7 @@ class postgresql::maintenance::analyze (
 
   if($setcronjob)
   {
-    cron { "cronjob vacuum analyze":
+    cron { 'cronjob vacuum analyze':
       ensure   => $ensure,
       command  => "${basedir}/analyze.sh",
       user     => 'postgres',
