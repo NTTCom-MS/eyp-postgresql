@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.1.58
+
+* added flatg to disable postgres.conf management
+
 ## 0.1.57
 
 * added pgsnapshot.py as backup method
