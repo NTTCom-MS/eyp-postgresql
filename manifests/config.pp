@@ -51,6 +51,7 @@ class postgresql::config(
                           $log_min_duration_statement       = '-1',
                           $log_file_mode                    = '0600',
                           $manage_pghba                     = true,
+                          $manage_configfile                = true,
                         ) inherits postgresql::params {
 
   Postgresql_psql {
@@ -85,18 +86,20 @@ class postgresql::config(
     }
   }
 
+  if($manage_configfile)
+  {
+    concat { "${datadir_path}/postgresql.conf":
+      ensure => 'present',
+      owner  => $postgresql::params::postgresuser,
+      group  => $postgresql::params::postgresgroup,
+      mode   => '0600',
+    }
 
-  concat { "${datadir_path}/postgresql.conf":
-    ensure => 'present',
-    owner  => $postgresql::params::postgresuser,
-    group  => $postgresql::params::postgresgroup,
-    mode   => '0600',
-  }
-
-  concat::fragment{ "base postgresql ${datadir_path}":
-    target  => "${datadir_path}/postgresql.conf",
-    content => template("${module_name}/postgresconf.erb"),
-    order   => '00',
+    concat::fragment{ "base postgresql ${datadir_path}":
+      target  => "${datadir_path}/postgresql.conf",
+      content => template("${module_name}/postgresconf.erb"),
+      order   => '00',
+    }  
   }
 
   if($manage_pghba)
