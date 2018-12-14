@@ -99,7 +99,7 @@ class postgresql::config(
       target  => "${datadir_path}/postgresql.conf",
       content => template("${module_name}/postgresconf.erb"),
       order   => '00',
-    }  
+    }
   }
 
   if($manage_pghba)
