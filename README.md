@@ -60,7 +60,7 @@ Currently, it only supports PostgreSQL 9.2 and 9.6
 ```puppet
 node 'pgm'
 {
-	#.29
+	# 192.168.56.29
 
 	class { 'sysctl': }
 
@@ -90,7 +90,7 @@ node 'pgm'
 
 node 'pgs'
 {
-	#.30
+	# 192.168.56.30
 
 	class { 'sysctl': }
 
