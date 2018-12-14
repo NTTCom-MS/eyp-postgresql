@@ -1,4 +1,3 @@
-
 class { 'postgresql':
   wal_level           => 'hot_standby',
   max_wal_senders     => '3',
