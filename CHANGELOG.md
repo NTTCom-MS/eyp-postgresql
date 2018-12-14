@@ -2,7 +2,8 @@
 
 ## 0.1.58
 
-* added flatg to disable postgres.conf management
+* added flag to disable postgres.conf management
+* disable postgres.conf management on a restored instance via pgsnapshot
 
 ## 0.1.57
 
