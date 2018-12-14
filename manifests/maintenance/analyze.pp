@@ -23,18 +23,16 @@ class postgresql::maintenance::analyze (
 
   if($setcronjob)
   {
-    cron { "cronjob logical postgres backup pgsnapshot: ${backupname}":
+    cron { "cronjob vacuum analyze":
       ensure   => $ensure,
-      command  => "${basedir}/pgsnapshot.py -c ${confdir}/postgres_snapshot.config",
-      user     => $username,
+      command  => "${basedir}/analyze.sh",
+      user     => 'postgres',
       hour     => $hour_cronjob,
       minute   => $minute_cronjob,
       month    => $month_cronjob,
       monthday => $monthday_cronjob,
       weekday  => $weekday_cronjob,
-      require  => File[ [ "${confdir}/postgres_snapshot.config",
-                          "${basedir}/pgsnapshot.py"
-                      ] ],
+      require  => File["${basedir}/analyze.sh"],
     }
   }
 }
