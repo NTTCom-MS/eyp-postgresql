@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.1.59
+
+* configure vacuum analyze job: **postgresql::maintenance::analyze**
+
 ## 0.1.58
 
 * added flag to disable postgres.conf management
