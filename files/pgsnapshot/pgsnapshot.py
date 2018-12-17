@@ -969,7 +969,7 @@ for opt, arg in options:
     elif opt in ('-d', '--dontpurge'):
         purge = False
     elif opt in ('-R', '--list-restored-instances'):
-        list_retored_instances = False
+        list_retored_instances = True
     elif opt in ('-L', '--list-backups'):
         list_backups = True
     elif opt in ('-g', '--logdir'):
