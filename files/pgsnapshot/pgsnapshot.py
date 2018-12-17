@@ -912,6 +912,7 @@ pgsnapshot - Into the snapshots to save the data!
     print("   [-K|--keep-lvm-snaps] <number of LVM snapshots to keep>")
     print("* Modes:")
     print("   [-L|--list-backups]")
+    print("   [-R|--list-restored-instances]")
     print("   [-r|--restore-to-vm] <snap>")
     print("")
     sys.exit(msg)
