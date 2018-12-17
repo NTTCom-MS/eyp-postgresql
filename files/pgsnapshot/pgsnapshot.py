@@ -1112,7 +1112,16 @@ if list_retored_instances:
     # LIST RESTORED INSTANCES
     #
     restored_instances = searchForRestoredInstance(id_host, lvm_disk, '')
-    logging.debug(restored_instances)
+    logging.debug("list restored instances: "+str(restored_instances))
+
+    list_restored_instances={}
+
+    for reservation in restored_instances:
+        # logging.debug("reservation: "+str(reservation))
+        for instance in reservation['Instances']:
+            logging.debug(instance['InstanceId']+": "+instance['State']['Name'])
+            # if instance['State']['Name']=='running':
+            #     list_restored_instances
 elif list_backups:
     #
     # LIST AVAILABLE BACKUPS
