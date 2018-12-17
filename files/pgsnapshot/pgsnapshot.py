@@ -638,28 +638,31 @@ def createAWSVolumeFromSnapshotName(snap_name, id_host, lvm_disk, az):
 def searchForRestoredInstance(id_host, lvm_disk, snap_name):
     logging.debug("searchForRestoredInstance")
     client = boto3.client('ec2')
-    response = client.describe_instances(
-                                            Filters=[
-                                                        {
-                                                            'Name': 'tag:pgsnapshot-snap_name',
-                                                            'Values': [
-                                                                snap_name,
-                                                            ]
-                                                        },
-                                                        {
-                                                            'Name': 'tag:pgsnapshot-lvm_disk',
-                                                            'Values': [
-                                                                lvm_disk,
-                                                            ]
-                                                        },
-                                                        {
-                                                            'Name': 'tag:pgsnapshot-host',
-                                                            'Values': [
-                                                                id_host,
-                                                            ]
-                                                        },
-                                            ],
-                                        )
+    filters = [
+                {
+                    'Name': 'tag:pgsnapshot-lvm_disk',
+                    'Values': [
+                        lvm_disk,
+                    ]
+                },
+                {
+                    'Name': 'tag:pgsnapshot-host',
+                    'Values': [
+                        id_host,
+                    ]
+                },
+            ]
+
+    if snap_name:
+        filters.append(
+                {
+                    'Name': 'tag:pgsnapshot-snap_name',
+                    'Values': [
+                        snap_name,
+                    ]
+                },
+        )
+    response = client.describe_instances(Filters=filters)
     logging.debug("describe_instances response: "+str(response))
     reservations = response['Reservations']
     return reservations
@@ -928,10 +931,11 @@ error_count=0
 restore_to_vm=""
 list_backups=False
 force_ami=""
+list_retored_instances=False
 
 # parse opts
 try:
-    options, remainder = getopt.getopt(sys.argv[1:], 'l:s:ac:dk:r:LhK:A:', [
+    options, remainder = getopt.getopt(sys.argv[1:], 'l:s:ac:dk:r:LhK:A:R', [
                                                                 'lvm-disk=',
                                                                 "config="
                                                                 'snapshot-size=',
@@ -942,6 +946,7 @@ try:
                                                                 'list-backups',
                                                                 'keep-lvm-snaps=',
                                                                 'force-ami=',
+                                                                'list-restored-instances'
                                                                 'help'
                                                              ])
 except Exception, e:
@@ -962,6 +967,8 @@ for opt, arg in options:
         aws = True
     elif opt in ('-d', '--dontpurge'):
         purge = False
+    elif opt in ('-R', '--list-restored-instances'):
+        list_retored_instances = False
     elif opt in ('-L', '--list-backups'):
         list_backups = True
     elif opt in ('-g', '--logdir'):
@@ -1100,7 +1107,13 @@ disks = getDisks(pv_disks)
 
 logging.debug("disks: "+str(disks))
 
-if list_backups:
+if list_retored_instances:
+    #
+    # LIST RESTORED INSTANCES
+    #
+    restored_instances = searchForRestoredInstance(id_host, lvm_disk, '')
+    logging.debug(restored_instances)
+elif list_backups:
     #
     # LIST AVAILABLE BACKUPS
     #
