@@ -58,10 +58,9 @@ Currently, it only supports PostgreSQL 9.2 and 9.6
 ### streaming replication setup
 
 ```puppet
+# 192.168.56.29
 node 'pgm'
 {
-	#.29
-
 	class { 'sysctl': }
 
 	class { 'postgresql':
@@ -88,10 +87,9 @@ node 'pgm'
 
 }
 
+# 192.168.56.30
 node 'pgs'
 {
-	#.30
-
 	class { 'sysctl': }
 
 	class { 'postgresql':

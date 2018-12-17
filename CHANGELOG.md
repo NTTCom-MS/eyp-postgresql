@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## 0.1.59
+
+* configure vacuum analyze job: **postgresql::maintenance::analyze**
+
+## 0.1.58
+
+* added flag to disable postgres.conf management
+* disable postgres.conf management on a restored instance via pgsnapshot
+
 ## 0.1.57
 
 * added pgsnapshot.py as backup method
