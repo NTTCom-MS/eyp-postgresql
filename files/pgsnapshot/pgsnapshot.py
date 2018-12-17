@@ -1121,8 +1121,20 @@ if list_retored_instances:
         # logging.debug("reservation: "+str(reservation))
         for instance in reservation['Instances']:
             logging.debug(instance['InstanceId']+": "+instance['State']['Name'])
-            # if instance['State']['Name']=='running':
-            #     list_restored_instances
+            if instance['State']['Name']=='running':
+                for tag in instance['Tags']:
+                    if tag['Key']=="'pgsnapshot-snap_name'":
+                        list_restored_instances[tag['Value']]=instance['PublicDnsName']
+
+    logging.debug("llista restore instances: "+str(list_restored_instances))
+
+    keylist = list_restored_instances.keys()
+    keylist.sort()
+
+    for backup in keylist:
+        print(" * "+backup+": "+list_restored_instances[backup])
+    print("\n")
+
 elif list_backups:
     #
     # LIST AVAILABLE BACKUPS
