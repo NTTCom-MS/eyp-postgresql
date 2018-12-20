@@ -1113,18 +1113,18 @@ if list_retored_instances:
     # LIST RESTORED INSTANCES
     #
     restored_instances = searchForRestoredInstance(id_host, lvm_disk, '')
-    logging.debug("list restored instances: "+str(restored_instances))
+    logging.debug("//*// list restored instances: "+str(restored_instances))
 
-    list_restored_instances={}
+    list_restored_instances_dnsname={}
+    list_restored_instances_instance_id={}
 
-    for reservation in restored_instances:
-        # logging.debug("reservation: "+str(reservation))
-        for instance in reservation['Instances']:
-            logging.debug(instance['InstanceId']+": "+instance['State']['Name'])
-            if instance['State']['Name']=='running':
-                for tag in instance['Tags']:
-                    if tag['Key']=="'pgsnapshot-snap_name'":
-                        list_restored_instances[tag['Value']]=instance['PublicDnsName']
+    for instance in restored_instances:
+        logging.debug(instance['InstanceId']+": "+instance['State']['Name'])
+        if instance['State']['Name']=='running':
+            for tag in instance['Tags']:
+                if tag['Key']=="'pgsnapshot-snap_name'":
+                    list_restored_instances_dnsname[tag['Value']]=instance['PublicDnsName']
+                    list_restored_instances_instance_id[tag['Value']]=instance['InstanceId']
 
     logging.debug("llista restore instances: "+str(list_restored_instances))
 
@@ -1132,7 +1132,7 @@ if list_retored_instances:
     keylist.sort()
 
     for backup in keylist:
-        print(" * "+backup+": "+list_restored_instances[backup])
+        print(" * "+backup+": "+list_restored_instances[backup]+" ("+list_restored_instances_instance_id[backup]+")")
     print("\n")
 
 elif list_backups:
