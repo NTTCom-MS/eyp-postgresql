@@ -1122,6 +1122,7 @@ if list_retored_instances:
         logging.debug(str(instance))
         logging.debug(instance['InstanceId']+": "+instance['State']['Name'])
         if instance['State']['Name']=='running':
+            logging.debug("*X - instance "+instance['InstanceId']+": tags: "+str(instance['Tags']))
             for tag in instance['Tags']:
                 if tag['Key']=="'pgsnapshot-snap_name'":
                     list_restored_instances_dnsname[tag['Value']]=instance['PublicDnsName']
