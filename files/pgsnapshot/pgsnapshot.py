@@ -1130,11 +1130,11 @@ if list_retored_instances:
     logging.debug("llista restore instances dnsname: "+str(list_restored_instances_dnsname))
     logging.debug("llista restore instances instance_id: "+str(list_restored_instances_instance_id))
 
-    keylist = list_restored_instances.keys()
+    keylist = list_restored_instances_dnsname.keys()
     keylist.sort()
 
     for backup in keylist:
-        print(" * "+backup+": "+list_restored_instances[backup]+" ("+list_restored_instances_instance_id[backup]+")")
+        print(" * "+backup+": "+list_restored_instances_dnsname[backup]+" ("+list_restored_instances_instance_id[backup]+")")
     print("\n")
 
 elif list_backups:
