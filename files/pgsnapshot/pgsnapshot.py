@@ -1119,6 +1119,7 @@ if list_retored_instances:
     list_restored_instances_instance_id={}
 
     for instance in restored_instances:
+        logging.debug(str(instance))
         logging.debug(instance['InstanceId']+": "+instance['State']['Name'])
         if instance['State']['Name']=='running':
             for tag in instance['Tags']:
