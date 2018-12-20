@@ -1127,7 +1127,8 @@ if list_retored_instances:
                     list_restored_instances_dnsname[tag['Value']]=instance['PublicDnsName']
                     list_restored_instances_instance_id[tag['Value']]=instance['InstanceId']
 
-    logging.debug("llista restore instances: "+str(list_restored_instances))
+    logging.debug("llista restore instances dnsname: "+str(list_restored_instances_dnsname))
+    logging.debug("llista restore instances instance_id: "+str(list_restored_instances_dnsname))
 
     keylist = list_restored_instances.keys()
     keylist.sort()
