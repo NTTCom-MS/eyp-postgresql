@@ -31,6 +31,7 @@ do
   DUPLICATED_PV=$(pvscan 2>&1 | grep "was already found on" | awk '{ print $5 }' | head -n1)
   if [ ! -z "${DUPLICATED_PV}" ];
   then
+    # hack - needs to be improved
     vgimportclone --config 'devices{filter=[ "r|/dev/xvdb1|" ]}' -n restore $(ls /dev/xvd* | grep "[0-9]$" | grep -v "xvd[ab]")
   fi
 
