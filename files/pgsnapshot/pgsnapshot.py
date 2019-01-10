@@ -1182,7 +1182,7 @@ elif restore_to_vm:
 
         instance_id = getInstanceID()
 
-        logging.debug('instance_id: '+instance_id)
+        logging.debug('original instance_id: '+instance_id)
 
         aws_snapshots = getAWSsnapshot(id_host, lvm_disk, restore_to_vm)
         if len(aws_snapshots)>0:
