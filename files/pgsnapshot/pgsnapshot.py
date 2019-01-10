@@ -829,7 +829,8 @@ def launchAWSInstanceBasedOnInstanceIDwithSnapshots(base_instance_id, snap_name,
             logAndExit("## "+str(running_restores)+" running restores, aborting")
 
 
-
+    assignElasticIPs(id_host, lvm_disk, snap_name)
+    
     #
     # Linux Devices: /dev/sdf through /dev/sdp
     #
@@ -862,8 +863,6 @@ def launchAWSInstanceBasedOnInstanceIDwithSnapshots(base_instance_id, snap_name,
             logging.debug("volume "+aws_volume['VolumeId']+" is already attached")
 
     waitForAWSRestoredInstanceVolumes2bAttached(id_host, lvm_disk, snap_name)
-
-    assignElasticIPs(id_host, lvm_disk, snap_name)
 
     restored_instances = searchForRestoredInstance(id_host, lvm_disk, snap_name)
     logging.debug("restored_instances after attaching volumes: "+str(restored_instances))
