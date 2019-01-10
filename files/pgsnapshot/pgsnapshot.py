@@ -692,6 +692,7 @@ def launchAWSInstanceBasedOnInstanceIDwithSnapshots(base_instance_id, snap_name,
     logging.debug("* ImageID: "+instance_image_id)
     logging.debug("* InstanceType: "+aws_base_instance.instance_type)
     logging.debug("* KeyName: "+aws_base_instance.key_name)
+    logging.debug("* subnet ID: "+aws_base_instance.subnet_id)
 
     aws_volumes = createAWSVolumeFromSnapshotName(snap_name, id_host, lvm_disk, aws_base_instance.placement['AvailabilityZone'])
     # validateVolumesAreNotAttached(aws_volumes)
@@ -721,6 +722,7 @@ def launchAWSInstanceBasedOnInstanceIDwithSnapshots(base_instance_id, snap_name,
                                 InstanceType=aws_base_instance.instance_type,
                                 KeyName=aws_base_instance.key_name,
                                 SecurityGroupIds=sgs,
+                                SubnetId=aws_base_instance.subnet_id,
                                 UserData="""#!/bin/bash
                                 curl https://raw.githubusercontent.com/jordiprats/puppet-masterless/master/setup.sh | bash
                                 /opt/puppet-masterless/localpuppetmaster.sh -d /tmp/lvm -r https://github.com/NTTCom-MS/eyp-lvm -s /tmp/lvm/modules/lvm/examples/base.pp
