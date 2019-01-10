@@ -27,6 +27,15 @@ do
   fi
   echo "$1 not found, waiting for ${RANDOM_SLEEP} seconds"
   sleep $RANDOM_SLEEP
+
+  DUPLICATED_PV=$(pvscan 2>&1 | grep "was already found on" | awk '{ print $5 }' | head -n1)
+  if [ ! -z "${DUPLICATED_PV}" ];
+  then
+    # hack - needs to be improved
+    vgimportclone --config 'devices{filter=[ "r|/dev/xvdb1|" ]}' -n restore $(pvdisplay --config 'devices{filter=[ "r|/dev/xvdb1|" ]}' | grep "PV Name" | awk '{ print $NF }')
+  fi
+
+
   lvdisplay 2>/dev/null | grep "LV Name" | grep "$1"
 done
 
