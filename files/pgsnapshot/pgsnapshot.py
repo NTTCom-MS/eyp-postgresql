@@ -667,6 +667,25 @@ def searchForRestoredInstance(id_host, lvm_disk, snap_name):
     reservations = response['Reservations']
     return reservations
 
+def assignElasticIPs(id_host, lvm_disk, snap_name):
+    logging.debug("assignElasticIPs")
+    ec2 = boto3.resource('ec2')
+    ec2_client = boto3.client('ec2')
+
+    restored_instances = searchForRestoredInstance(id_host, lvm_disk, snap_name)
+
+    for reservation in restored_instances:
+        # logging.debug("reservation: "+str(reservation))
+        for instance in reservation['Instances']:
+            if instance['State']['Name']=='running':
+                if not instance['PublicDnsName']:
+                    allocated_addr = ec2_client.allocate_address(Domain='vpc')
+
+                    response = ec2_client.associate_address(
+                        AllocationId=allocated_addr['AllocationId'],
+                        InstanceId=instance['InstanceId'],
+                    )
+
 def launchAWSInstanceBasedOnInstanceIDwithSnapshots(base_instance_id, snap_name, id_host, lvm_disk, force_ami):
     ec2 = boto3.resource('ec2')
     ec2_client = boto3.client('ec2')
@@ -838,6 +857,8 @@ def launchAWSInstanceBasedOnInstanceIDwithSnapshots(base_instance_id, snap_name,
 
     restored_instances = searchForRestoredInstance(id_host, lvm_disk, snap_name)
     logging.debug("restored_instances after attaching volumes: "+str(restored_instances))
+
+    assignElasticIPs(id_host, lvm_disk, snap_name)
 
     for reservation in restored_instances:
         # logging.debug("reservation: "+str(reservation))
