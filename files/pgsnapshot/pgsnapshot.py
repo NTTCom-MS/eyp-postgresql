@@ -843,7 +843,10 @@ def launchAWSInstanceBasedOnInstanceIDwithSnapshots(base_instance_id, snap_name,
         # logging.debug("reservation: "+str(reservation))
         for instance in reservation['Instances']:
             if instance['State']['Name']=='running':
-                print(instance['InstanceId']+": "+instance['PublicDnsName'])
+                if instance['PublicDnsName']:
+                    print(instance['InstanceId']+": "+instance['PublicDnsName'])
+                else:
+                    print(instance['InstanceId']+": "+instance['PrivateDnsName'])
                 break
 
 def listAWSsnapshots():
@@ -1128,7 +1131,10 @@ if list_retored_instances:
             for tag in instance['Tags']:
                 if tag['Key']=="pgsnapshot-snap_name":
                     logging.debug("FOUND snaptag: "+tag['Value'])
-                    list_restored_instances_dnsname[tag['Value']]=instance['PublicDnsName']
+                    if instance['PublicDnsName']:
+                        list_restored_instances_dnsname[tag['Value']]=instance['PublicDnsName']
+                    else:
+                        list_restored_instances_dnsname[tag['Value']]=instance['PrivateDnsName']
                     list_restored_instances_instance_id[tag['Value']]=instance['InstanceId']
 
     logging.debug("llista restore instances dnsname: "+str(list_restored_instances_dnsname))
