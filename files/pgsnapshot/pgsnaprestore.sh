@@ -17,6 +17,7 @@ then
   exit 1
 fi
 
+vgimport -a
 lvdisplay 2>/dev/null | grep "LV Name" | grep "$1"
 while [ "$?" -ne 0 ];
 do
@@ -27,6 +28,7 @@ do
   fi
   echo "$1 not found, waiting for ${RANDOM_SLEEP} seconds"
   sleep $RANDOM_SLEEP
+  vgimport -a
   lvdisplay 2>/dev/null | grep "LV Name" | grep "$1"
 done
 
