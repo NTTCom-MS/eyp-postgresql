@@ -17,7 +17,6 @@ then
   exit 1
 fi
 
-vgimport -a
 lvdisplay 2>/dev/null | grep "LV Name" | grep "$1"
 while [ "$?" -ne 0 ];
 do
@@ -28,7 +27,14 @@ do
   fi
   echo "$1 not found, waiting for ${RANDOM_SLEEP} seconds"
   sleep $RANDOM_SLEEP
-  vgimport -a
+
+  DUPLICATED_PV=$(pvscan 2>&1 | grep "was already found on" | awk '{ print $5 }' | head -n1)
+  if [ ! -z "${DUPLICATED_PV}" ];
+  then
+    vgimportclone --config 'devices{filter=[ "r|/dev/xvdb1|" ]}' -n restore $(ls /dev/xvd* | grep "[0-9]$" | grep -v "xvd[ab]")
+  fi
+
+
   lvdisplay 2>/dev/null | grep "LV Name" | grep "$1"
 done
 
