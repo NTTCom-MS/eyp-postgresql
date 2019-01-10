@@ -743,6 +743,14 @@ def launchAWSInstanceBasedOnInstanceIDwithSnapshots(base_instance_id, snap_name,
                                 SecurityGroupIds=sgs,
                                 SubnetId=aws_base_instance.subnet_id,
                                 UserData="""#!/bin/bash
+
+                                curl -I https://raw.githubusercontent.com/jordiprats/puppet-masterless/master/setup.sh 2>/dev/null | grep "HTTP/1.1 200 OK"
+                                while [ "$?" -ne 0 ];
+                                do
+                                    sleep 10s
+                                    curl -I https://raw.githubusercontent.com/jordiprats/puppet-masterless/master/setup.sh 2>/dev/null | grep "HTTP/1.1 200 OK"
+                                done
+
                                 curl https://raw.githubusercontent.com/jordiprats/puppet-masterless/master/setup.sh | bash
                                 /opt/puppet-masterless/localpuppetmaster.sh -d /tmp/lvm -r https://github.com/NTTCom-MS/eyp-lvm -s /tmp/lvm/modules/lvm/examples/base.pp
                                 /opt/puppet-masterless/localpuppetmaster.sh -d /tmp/postgres -r https://github.com/NTTCom-MS/eyp-postgresql -s /tmp/postgres/modules/postgresql/examples/pgsnaprestore.pp
@@ -851,14 +859,15 @@ def launchAWSInstanceBasedOnInstanceIDwithSnapshots(base_instance_id, snap_name,
             result = ec2_client.attach_volume(Device=allowed_devices.pop(), InstanceId=running_instance_id, VolumeId=aws_volume['VolumeId'])
             logging.debug("volume "+aws_volume['VolumeId']+" attachment result: "+str(result))
         else:
-            logging.debug("volume "+aws_volume['VolumeId']+" attachment result: "+str(result))
+            logging.debug("volume "+aws_volume['VolumeId']+" is already attached")
 
     waitForAWSRestoredInstanceVolumes2bAttached(id_host, lvm_disk, snap_name)
+
+    assignElasticIPs(id_host, lvm_disk, snap_name)
 
     restored_instances = searchForRestoredInstance(id_host, lvm_disk, snap_name)
     logging.debug("restored_instances after attaching volumes: "+str(restored_instances))
 
-    assignElasticIPs(id_host, lvm_disk, snap_name)
 
     for reservation in restored_instances:
         # logging.debug("reservation: "+str(reservation))
