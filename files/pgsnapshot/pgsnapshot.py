@@ -1115,26 +1115,30 @@ if list_retored_instances:
     # LIST RESTORED INSTANCES
     #
     restored_instances = searchForRestoredInstance(id_host, lvm_disk, '')
-    logging.debug("list restored instances: "+str(restored_instances))
+    logging.debug("//*// list restored instances: "+str(restored_instances))
 
-    list_restored_instances={}
+    list_restored_instances_dnsname={}
+    list_restored_instances_instance_id={}
 
-    for reservation in restored_instances:
-        # logging.debug("reservation: "+str(reservation))
-        for instance in reservation['Instances']:
-            logging.debug(instance['InstanceId']+": "+instance['State']['Name'])
-            if instance['State']['Name']=='running':
-                for tag in instance['Tags']:
-                    if tag['Key']=="'pgsnapshot-snap_name'":
-                        list_restored_instances[tag['Value']]=instance['PublicDnsName']
+    for instance in restored_instances[0]['Instances']:
+        logging.debug(str(instance))
+        logging.debug(instance['InstanceId']+": "+instance['State']['Name'])
+        if instance['State']['Name']=='running':
+            logging.debug("*X - instance "+instance['InstanceId']+": tags: "+str(instance['Tags']))
+            for tag in instance['Tags']:
+                if tag['Key']=="pgsnapshot-snap_name":
+                    logging.debug("FOUND snaptag: "+tag['Value'])
+                    list_restored_instances_dnsname[tag['Value']]=instance['PublicDnsName']
+                    list_restored_instances_instance_id[tag['Value']]=instance['InstanceId']
 
-    logging.debug("llista restore instances: "+str(list_restored_instances))
+    logging.debug("llista restore instances dnsname: "+str(list_restored_instances_dnsname))
+    logging.debug("llista restore instances instance_id: "+str(list_restored_instances_instance_id))
 
-    keylist = list_restored_instances.keys()
+    keylist = list_restored_instances_dnsname.keys()
     keylist.sort()
 
     for backup in keylist:
-        print(" * "+backup+": "+list_restored_instances[backup])
+        print(" * "+backup+": "+list_restored_instances_dnsname[backup]+" ("+list_restored_instances_instance_id[backup]+")")
     print("\n")
 
 elif list_backups:
