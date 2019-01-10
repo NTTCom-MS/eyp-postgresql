@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.1.62
+
+* bugfix pgsnapshot: set same SubnetId for the restore instances
+
 ## 0.1.60
 
 * improved pgsnapshot: added -R option to be able to list currently running restored instances
