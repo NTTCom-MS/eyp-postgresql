@@ -44,7 +44,7 @@
 
 ## 0.1.53
 
-* minor feature clenaup
+* minor feature cleanup
 
 ## 0.1.52
 
