@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 0.1.63
+
+* set max_replication_slots to 5 by default
+* **postgresql::streaming_replication**:
+  - added primary_slot_name and recovery_min_apply_delay
+
 ## 0.1.62
 
 * bugfix pgsnapshot: set same SubnetId for the restore instances
