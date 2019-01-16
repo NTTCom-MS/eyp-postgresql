@@ -620,7 +620,7 @@ have some tests to check both presence and absence of any feature
 * Add more postgres versions
 * tablespaces management
 * Rewrite class relationships
-* Improve default config: https://github.com/le0pard/pgtune/blob/master/webpack/selectors/configuration.js
+* Improve default configa: https://github.com/le0pard/pgtune/blob/master/webpack/selectors/configuration.js
 
 ### Contributing
 

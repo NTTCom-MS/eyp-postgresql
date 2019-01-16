@@ -830,7 +830,7 @@ def launchAWSInstanceBasedOnInstanceIDwithSnapshots(base_instance_id, snap_name,
 
 
     assignElasticIPs(id_host, lvm_disk, snap_name)
-    
+
     #
     # Linux Devices: /dev/sdf through /dev/sdp
     #
@@ -1143,6 +1143,7 @@ disks = getDisks(pv_disks)
 logging.debug("disks: "+str(disks))
 
 if list_retored_instances:
+    to_addr=""
     #
     # LIST RESTORED INSTANCES
     #
@@ -1177,6 +1178,7 @@ if list_retored_instances:
     print("\n")
 
 elif list_backups:
+    to_addr=""
     #
     # LIST AVAILABLE BACKUPS
     #
@@ -1209,6 +1211,7 @@ elif list_backups:
 
 
 elif restore_to_vm:
+    to_addr=""
     if aws:
         #
         # RESTORE TO VM MODE

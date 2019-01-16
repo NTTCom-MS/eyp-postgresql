@@ -2,13 +2,15 @@
 # @overview It requires to have **pg_basebackup** and the defined username already created on the master DB
 #
 class postgresql::streaming_replication (
-                                          $masterhost              = undef,
-                                          $masterusername          = undef,
-                                          $masterpassword          = undef,
-                                          $masterport              = $postgresql::params::port_default,
-                                          $datadir                 = $postgresql::datadir,
-                                          $restore_command         = undef,
-                                          $archive_cleanup_command = undef,
+                                          $masterhost               = undef,
+                                          $masterusername           = undef,
+                                          $masterpassword           = undef,
+                                          $masterport               = $postgresql::params::port_default,
+                                          $datadir                  = $postgresql::datadir,
+                                          $restore_command          = undef,
+                                          $archive_cleanup_command  = undef,
+                                          $recovery_min_apply_delay = undef,
+                                          $primary_slot_name        = undef,
                                         ) inherits postgresql::params {
   Exec {
     path => '/usr/sbin:/usr/bin:/sbin:/bin',

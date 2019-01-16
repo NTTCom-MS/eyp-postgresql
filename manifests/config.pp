@@ -52,6 +52,7 @@ class postgresql::config(
                           $log_file_mode                    = '0600',
                           $manage_pghba                     = true,
                           $manage_configfile                = true,
+                          $max_replication_slots            = '5',
                         ) inherits postgresql::params {
 
   Postgresql_psql {

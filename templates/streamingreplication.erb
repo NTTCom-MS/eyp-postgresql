@@ -6,10 +6,16 @@
 
 standby_mode = 'on'
 primary_conninfo = 'host=<%= @masterhost %> port=<%= @masterport %> user=<%= @masterusername %> password=<%= @masterpassword %>'
+<% if defined?(@primary_slot_name) -%>
+primary_slot_name = <%= @primary_slot_name %>
+<% end -%>
 trigger_file = '/tmp/postgresql.enable_master_mode'
 <% if defined?(@restore_command) -%>
 restore_command='<%= @restore_command %>'
 <% end -%>
 <% if defined?(@archive_cleanup_command) -%>
 archive_cleanup_command='<%= @archive_cleanup_command %>'
+<% end -%>
+<% if defined?(@recovery_min_apply_delay) -%>
+recovery_min_apply_delay = <%= @recovery_min_apply_delay %>
 <% end -%>
