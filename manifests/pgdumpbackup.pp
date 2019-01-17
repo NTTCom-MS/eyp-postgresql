@@ -1,5 +1,6 @@
 define postgresql::pgdumpbackup (
                       $destination,
+                      $ensure           = 'present',
                       $backupname       = $name,
                       $pgroot           = undef,
                       $instance         = undef,
@@ -8,7 +9,6 @@ define postgresql::pgdumpbackup (
                       $mailto           = undef,
                       $idhost           = undef,
                       $basedir          = '/usr/local/bin',
-                      $ensure           = 'present',
                       $username         = 'postgres',
                       #cron
                       $setcronjob       = true,
