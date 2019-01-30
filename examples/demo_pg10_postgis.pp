@@ -9,3 +9,5 @@ class { 'postgresql':
 postgresql::pgdumpbackup { 'demobackup':
   destination => '/tmp',
 }
+
+class { 'postgresql::postgis': }
