@@ -99,6 +99,7 @@ class postgresql::params {
               $reposource =  {
                               '9.2' => 'http://download.postgresql.org/pub/repos/yum/9.2/redhat/rhel-6-x86_64/pgdg-centos92-9.2-7.noarch.rpm',
                               '9.6' => 'https://download.postgresql.org/pub/repos/yum/9.6/redhat/rhel-6-x86_64/pgdg-centos96-9.6-3.noarch.rpm',
+                              '10' => 'https://download.postgresql.org/pub/repos/yum/10/redhat/rhel-6-x86_64/pgdg-centos10-10-2.noarch.rpm',
                               }
               $reponame = {
                             '9.2' => 'pgdg-centos92',
@@ -112,10 +113,12 @@ class postgresql::params {
               $reposource =  {
                               '9.2' => 'https://download.postgresql.org/pub/repos/yum/9.2/redhat/rhel-7-x86_64/pgdg-centos92-9.2-3.noarch.rpm',
                               '9.6' => 'https://download.postgresql.org/pub/repos/yum/9.6/redhat/rhel-7-x86_64/pgdg-centos96-9.6-3.noarch.rpm',
+                              '10' => 'https://download.postgresql.org/pub/repos/yum/10/redhat/rhel-7-x86_64/pgdg-centos10-10-2.noarch.rpm',
                               }
               $reponame = {
                             '9.2' => 'pgdg-centos92',
                             '9.6' => 'pgdg-centos96',
+                            '10' => 'pgdg-centos10',
                           }
             }
             default: { fail("Unsupported CentOS version! - ${::operatingsystemrelease}")  }
