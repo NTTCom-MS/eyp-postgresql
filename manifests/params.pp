@@ -52,6 +52,12 @@ class postgresql::params {
                   '10' => 'postgresql10-contrib',
                 }
 
+      $postgis = {
+                  '23_10' => 'postgis23_10',
+                  '24_10' => 'postgis24_10',
+                  '25_10' => 'postgis25_10',
+                }
+
       case $::operatingsystem
       {
         'RedHat':
