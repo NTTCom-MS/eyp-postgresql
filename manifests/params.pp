@@ -21,7 +21,7 @@ class postgresql::params {
       $datadir_default = {
                             '9.2' => '/var/lib/pgsql/9.2/data',
                             '9.6' => '/var/lib/pgsql/9.6/data',
-                            '10' => '/var/lib/pgsql/9.6/data',
+                            '10' => '/var/lib/pgsql/10/data',
                         }
 
       $packagename= {
