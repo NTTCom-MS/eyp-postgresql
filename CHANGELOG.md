@@ -3,6 +3,7 @@
 ## 0.1.64
 
 * added postgres 10 support for RHEL 6/7 and CentOS 6/7
+* postGIS basic support
 
 ## 0.1.63
 
