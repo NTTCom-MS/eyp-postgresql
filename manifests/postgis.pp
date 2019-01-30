@@ -25,7 +25,7 @@ class postgresql::postgis (
   {
     package { $postgresql::params::postgis[$version]:
       ensure  => 'installed',
-      require => Class['::postgresql::config'],
+      require => Class[ [ '::postgresql::config', '::epel' ] ],
       before  => Class['::postgresql::service'],
     }
   }
