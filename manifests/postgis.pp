@@ -10,6 +10,8 @@ class postgresql::postgis (
     fail('unable to install postgis - unsupported version')
   }
 
+  include ::epel
+
   if($datadir==undef)
   {
     $datadir_path=$postgresql::params::datadir_default[$version]
