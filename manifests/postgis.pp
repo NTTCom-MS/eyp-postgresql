@@ -19,9 +19,9 @@ class postgresql::postgis (
     $datadir_path = $datadir
   }
 
-  if(!defined(Package[$postgresql::params::contrib[$version]]))
+  if(!defined(Package[$postgresql::params::postgis[$version]]))
   {
-    package { $postgresql::params::contrib[$version]:
+    package { $postgresql::params::postgis[$version]:
       ensure  => 'installed',
       require => Class['::postgresql::config'],
       before  => Class['::postgresql::service'],
