@@ -1,5 +1,5 @@
 class postgresql::postgis (
-                            $version       = $postgresql::version,
+                            $version       = '25_10',
                             $datadir       = $postgresql::datadir,
                             $track_utility = true,
                             $track         = 'all',
