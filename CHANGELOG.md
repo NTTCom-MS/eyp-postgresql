@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.1.64
+
+* added postgres 10 support for RHEL 6/7
+
 ## 0.1.63
 
 * set max_replication_slots to 5 by default
