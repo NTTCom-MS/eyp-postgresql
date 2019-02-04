@@ -33,6 +33,7 @@ define postgresql::pgdumpbackup (
     group   => $username,
     mode    => '0750',
     content => file("${module_name}/backup_pgdump.sh"),
+    require => Class['::postgresql::service'],
   }
 
   file { "${basedir}/pgdumpbackup.config":
@@ -41,11 +42,13 @@ define postgresql::pgdumpbackup (
     group   => $username,
     mode    => '0640',
     content => template("${module_name}/backup/backup_pgdump_config.erb"),
+    require => Class['::postgresql::service'],
   }
 
   exec { "mkdir p ${destination} backup":
     command => "mkdir -p ${destination}",
     creates => $destination,
+    require => Class['::postgresql::service'],
   }
 
   file { $destination:
