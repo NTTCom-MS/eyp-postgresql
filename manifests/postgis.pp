@@ -1,9 +1,6 @@
 class postgresql::postgis (
                             $version       = '25_10',
                             $datadir       = $postgresql::datadir,
-                            $track_utility = true,
-                            $track         = 'all',
-                            $max           = '10000',
                           ) inherits postgresql::params {
   if($postgresql::params::postgis[$version]==undef)
   {
