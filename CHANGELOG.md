@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.1.66
+
+* changed default max_wal_senders from 0 to 5
+
 ## 0.1.65
 
 * Added service dependency for **postgresql::pgdumpbackup**
