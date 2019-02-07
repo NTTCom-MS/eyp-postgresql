@@ -620,7 +620,8 @@ have some tests to check both presence and absence of any feature
 * Add more postgres versions
 * tablespaces management
 * Rewrite class relationships
-* Improve default configa: https://github.com/le0pard/pgtune/blob/master/webpack/selectors/configuration.js
+* Improve default config: https://github.com/le0pard/pgtune/blob/master/webpack/selectors/configuration.jsç
+* postgresql::postgis and postgresql::pgstatsstatementsneed to be tranformed to a define since extension is per DB (and DB parameter needs to be included, probably with $name as a default)
 
 ### Contributing
 
