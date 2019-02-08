@@ -9,7 +9,7 @@ define postgresql::extension(
 
   if($dbname != undef)
   {
-    if(defined?(Postgresql::Db[$dbname]))
+    if defined(Postgresql::Db[$dbname])
     {
       Postgresql::Db[$dbname] -> Postgresql_psql["CREATE EXTENSION ${extension_name}"]
     }
