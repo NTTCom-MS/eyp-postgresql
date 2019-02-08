@@ -26,15 +26,4 @@ class postgresql::postgis (
       before  => Class['::postgresql::service'],
     }
   }
-
-  #https://postgis.net/install/
-
-  postgresql::extension { 'postgis': }
-  postgresql::extension { 'postgis_topology': }
-  postgresql::extension { 'postgis_sfcgal': }
-  postgresql::extension { 'fuzzystrmatch': }
-  postgresql::extension { 'address_standardizer': }
-  postgresql::extension { 'address_standardizer_data_us': }
-  postgresql::extension { 'postgis_tiger_geocoder': }
-
 }

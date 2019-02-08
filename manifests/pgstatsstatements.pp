@@ -28,7 +28,4 @@ class postgresql::pgstatsstatements (
     content => template("${module_name}/pgstatsstatements/pgstatsstatements.erb"),
     order   => '80',
   }
-
-  postgresql::extension { 'pg_stat_statements': }
-
 }

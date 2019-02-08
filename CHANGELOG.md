@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 0.1.67
+
+* added dbname flag to **postgresql::extension**
+* created **postgresql::pgstatsstatements::extension** and **postgresql::postgis::extension** to enable these extensions on an arbitrary DB
+
 ## 0.1.66
 
 * changed default max_wal_senders from 0 to 5
