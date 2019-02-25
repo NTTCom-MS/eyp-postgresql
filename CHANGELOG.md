@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.1.68
+
+* modified default value for **archive_mode** to true
+
 ## 0.1.67
 
 * added dbname flag to **postgresql::extension**

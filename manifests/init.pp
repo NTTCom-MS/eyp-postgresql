@@ -59,7 +59,7 @@ class postgresql(
                   $autovacuum_freeze_max_age       = undef,
                   $timezone                        = $postgresql::params::timezone_default,
                   $superuser_reserved_connections  = '5',
-                  $archive_mode                    = false,
+                  $archive_mode                    = true,
                   $archive_command_custom          = undef,
                   $archive_dir                     = undef,
                   $archive_dir_user                = undef,
