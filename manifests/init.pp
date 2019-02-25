@@ -120,7 +120,7 @@ class postgresql(
 
   if($archive_dir!=undef)
   {
-    #tenim un munt de muntatge local, per exemple un NFS pels arvhivats
+    #tenim un munt de muntatge local, per exemple un NFS pels arxivats
     validate_absolute_path($archive_dir)
 
     exec { "mkdir -p ${archive_dir} postgres archive command ${version} ${datadir_path}":
