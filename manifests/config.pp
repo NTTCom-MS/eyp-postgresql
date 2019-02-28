@@ -11,25 +11,25 @@
 class postgresql::config inherits postgresql {
 
   Postgresql_psql {
-    port => $port,
+    port => $postgresql::port,
   }
 
-  if($datadir==undef)
+  if($postgresql::datadir==undef)
   {
     $datadir_path=$postgresql::params::datadir_default[$version]
   }
   else
   {
-    $datadir_path = $datadir
+    $datadir_path = $postgresql::datadir
   }
 
-  if($pidfile==undef)
+  if($postgresql::pidfile==undef)
   {
     $pidfilename=$postgresql::params::pidfile[$version]
   }
   else
   {
-    $pidfilename=$pidfile
+    $pidfilename=$postgresql::pidfile
   }
 
   # postgres >= 9.5
@@ -42,7 +42,7 @@ class postgresql::config inherits postgresql {
     }
   }
 
-  if($manage_configfile)
+  if($postgresql::manage_configfile)
   {
     concat { "${datadir_path}/postgresql.conf":
       ensure => 'present',
@@ -58,7 +58,7 @@ class postgresql::config inherits postgresql {
     }
   }
 
-  if($manage_pghba)
+  if($postgresql::manage_pghba)
   {
     concat { "${datadir_path}/pg_hba.conf":
       ensure => 'present',
@@ -81,7 +81,7 @@ class postgresql::config inherits postgresql {
       owner   => 'root',
       group   => 'root',
       mode    => '0644',
-      content => "PGPORT=${port}\n",
+      content => "PGPORT=${postgresql::port}\n",
     }
   }
 
@@ -90,7 +90,7 @@ class postgresql::config inherits postgresql {
     owner   => 'root',
     group   => 'root',
     mode    => '0644',
-    content => "alias psql='psql -p ${port}'\n",
+    content => "alias psql='psql -p ${postgresql::port}'\n",
   }
 
 }
