@@ -1,11 +1,4 @@
-class postgresql::install (
-                            $version           = $postgresql::params::version_default,
-                            $datadir           = $postgresql::datadir,
-                            $initdb            = true,
-                            $overcommit_memory = '2',
-                            $shmmax            = ceiling(sprintf('%f', $::memorysize_mb)*786432),
-                            $shmall            = ceiling(ceiling(sprintf('%f', $::memorysize_mb)*786432)/$::eyp_postgresql_pagesize),
-                          ) inherits postgresql::params {
+class postgresql::install inherits postgresql {
 
   Exec {
     path => '/usr/sbin:/usr/bin:/sbin:/bin',

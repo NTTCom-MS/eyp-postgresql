@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.2.0
+
+* Major rewrite of ::postgresql class
+
 ## 0.1.68
 
 * modified default value for **archive_mode** to true

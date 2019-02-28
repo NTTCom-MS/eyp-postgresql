@@ -33,6 +33,9 @@ class postgresql(
                   $shmall                          = ceiling(ceiling(sprintf('%f', $::memorysize_mb)*786432)/$::eyp_postgresql_pagesize),
                   # service
                   $manage_service                  = true,
+                  $manage_docker_service           = true,
+                  $ensure                          = 'running',
+                  $enable                          = true,
                   # config
                   $listen                          = [ '*' ],
                   $port                            = $postgresql::params::port_default,
@@ -188,66 +191,9 @@ class postgresql(
     }
   }
 
-
-  class { '::postgresql::install':
-    version           => $version,
-    datadir           => $datadir_path,
-    initdb            => $initdb,
-    overcommit_memory => $overcommit_memory,
-    shmmax            => $shmmax,
-    shmall            => $shmall,
-  } ->
-
-  class { '::postgresql::config':
-    version                         => $version,
-    pidfile                         => $pidfilename,
-    datadir                         => $datadir_path,
-    listen                          => $listen,
-    port                            => $port,
-    max_connections                 => $max_connections,
-    wal_level                       => $wal_level,
-    max_wal_senders                 => $max_wal_senders,
-    checkpoint_segments             => $checkpoint_segments,
-    wal_keep_segments               => $wal_keep_segments,
-    hot_standby                     => $hot_standby,
-    log_directory                   => $log_directory,
-    log_filename                    => $log_filename,
-    track_activities                => $track_activities,
-    track_counts                    => $track_counts,
-    autovacuum                      => $autovacuum,
-    autovacuum_vacuum_scale_factor  => $autovacuum_vacuum_scale_factor,
-    autovacuum_vacuum_threshold     => $autovacuum_vacuum_threshold,
-    autovacuum_analyze_scale_factor => $autovacuum_analyze_scale_factor,
-    autovacuum_analyze_threshold    => $autovacuum_analyze_threshold,
-    autovacuum_freeze_max_age       => $autovacuum_freeze_max_age,
-    log_autovacuum_min_duration     => $log_autovacuum_min_duration,
-    timezone                        => $timezone,
-    log_timezone                    => $log_timezone,
-    superuser_reserved_connections  => $superuser_reserved_connections,
-    archive_mode                    => $archive_mode,
-    archive_command                 => $archive_command,
-    archive_timeout                 => $archive_timeout,
-    maintenance_work_mem            => $maintenance_work_mem,
-    wal_buffers                     => $wal_buffers,
-    work_mem                        => $work_mem,
-    shared_buffers                  => $shared_buffers,
-    lc_messages                     => $lc_messages,
-    lc_monetary                     => $lc_monetary,
-    lc_numeric                      => $lc_numeric,
-    lc_time                         => $lc_time,
-    default_text_search_config      => $default_text_search_config,
-    shared_preload_libraries        => $shared_preload_libraries,
-    search_path                     => $search_path,
-    log_min_duration_statement      => $log_min_duration_statement,
-    log_file_mode                   => $log_file_mode,
-    manage_pghba                    => $manage_pghba,
-    manage_configfile               => $manage_configfile,
-    max_replication_slots           => $max_replication_slots,
-  } ~>
-
-  class { '::postgresql::service':
-    version        => $version,
-    manage_service => $manage_service,
-  }
+  class { '::postgresql::install': } ->
+  class { '::postgresql::config': } ~>
+  class { '::postgresql::service': } ->
+  Class['::postgresql']
 
 }

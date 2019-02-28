@@ -1,10 +1,4 @@
-class postgresql::service (
-                        $manage_service        = true,
-                        $manage_docker_service = true,
-                        $ensure                = 'running',
-                        $enable                = true,
-                        $version               = $postgresql::params::version_default,
-                      ) inherits postgresql::params {
+class postgresql::service inherits postgresql {
   #
   validate_bool($manage_docker_service)
   validate_bool($manage_service)
