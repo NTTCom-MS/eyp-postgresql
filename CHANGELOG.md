@@ -2,7 +2,7 @@
 
 ## 0.2.0
 
-* Major rewrite of ::postgresql class
+* Major rewrite of **::postgresql** class
 
 ## 0.1.68
 
