@@ -5,6 +5,7 @@ class postgresql::pgstatsstatements (
                                       $track         = 'all',
                                       $max           = '10000',
                                       $dbname        = undef,
+                                      $port          = $postgresql::port,
                                     ) inherits postgresql::params {
   if($postgresql::params::contrib[$version]==undef)
   {
@@ -32,6 +33,7 @@ class postgresql::pgstatsstatements (
     {
       postgresql::postgis::extension{ $dbname:
         require => Package[$postgresql::params::contrib[$version]],
+        port    => $port,
       }
     }
   }

@@ -1,6 +1,7 @@
 class postgresql::postgis (
                             $version = '25_10',
                             $dbname  = undef,
+                            $port    = $postgresql::port,
                           ) inherits postgresql::params {
   if($postgresql::params::postgis[$version]==undef)
   {
@@ -20,6 +21,7 @@ class postgresql::postgis (
     if($dbname!=undef)
     {
       postgresql::postgis::extension{ $dbname:
+        port    => $port,
         require => Package[$postgresql::params::postgis[$version]],
       }
     }

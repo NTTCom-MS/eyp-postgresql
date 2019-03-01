@@ -1,7 +1,7 @@
 define postgresql::db (
                         $owner,
                         $dbname = $name,
-                        $port   = undef,
+                        $port   = $postgresql::port,
                       ) {
 
   Postgresql_psql {
