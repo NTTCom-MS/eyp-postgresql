@@ -11,3 +11,13 @@ postgresql::pgdumpbackup { 'demobackup':
 }
 
 class { 'postgresql::postgis': }
+
+postgresql::hba_rule { 'demo':
+  user     => 'demo',
+  database => 'demo',
+  address  => '192.168.0.0/16',
+}
+
+postgresql::role { 'demo':
+  password    => 'demopass',
+}
