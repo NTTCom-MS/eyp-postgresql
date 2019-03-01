@@ -31,7 +31,7 @@ class postgresql::pgstatsstatements (
 
     if($dbname!=undef)
     {
-      postgresql::postgis::extension{ $dbname:
+      postgresql::pgstatsstatements::extension{ $dbname:
         require => Package[$postgresql::params::contrib[$version]],
         port    => $port,
       }
