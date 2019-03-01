@@ -72,12 +72,12 @@ describe 'postgresql class' do
 
     #echo "SELECT nspname FROM pg_namespace WHERE nspname='jordi'" | psql -U postgres | grep jordi
     it "schema jordi" do
-      expect(shell("echo \"SELECT nspname FROM pg_namespace WHERE nspname='jordi'\" | psql -U postgres -h 127.0.0.1 -p 5436 | grep jordi").exit_code).to be_zero
+      expect(shell("echo \"SELECT nspname FROM pg_namespace WHERE nspname='jordi'\" | psql -U postgres -h 127.0.0.1 -p 5410 | grep jordi").exit_code).to be_zero
     end
 
     #SELECT rolname FROM pg_roles WHERE rolname=
     it "role replicator" do
-      expect(shell("echo \"SELECT rolname FROM pg_roles WHERE rolname='replicator'\" | psql -U postgres -h 127.0.0.1 -p 5436 | grep replicator").exit_code).to be_zero
+      expect(shell("echo \"SELECT rolname FROM pg_roles WHERE rolname='replicator'\" | psql -U postgres -h 127.0.0.1 -p 5410 | grep replicator").exit_code).to be_zero
     end
 
     it "postgres version" do

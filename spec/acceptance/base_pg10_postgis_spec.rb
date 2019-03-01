@@ -79,16 +79,16 @@ describe 'postgresql class' do
     end
 
     #echo "SELECT nspname FROM pg_namespace WHERE nspname='jordi'" | psql -U postgres | grep jordi
-    it "schema jordi" do
-      expect(shell("echo \"SELECT nspname FROM pg_namespace WHERE nspname='jordi'\" | psql -U postgres -h 127.0.0.1 -p 5436 | grep jordi").exit_code).to be_zero
+    it "schema demopostgis" do
+      expect(shell("echo \"SELECT nspname FROM pg_namespace WHERE nspname='demopostgis'\" | psql -U postgres -h 127.0.0.1 -p 5510 | grep demopostgis").exit_code).to be_zero
     end
 
     #SELECT rolname FROM pg_roles WHERE rolname=
-    it "role replicator" do
-      expect(shell("echo \"SELECT rolname FROM pg_roles WHERE rolname='replicator'\" | psql -U postgres -h 127.0.0.1 -p 5436 | grep replicator").exit_code).to be_zero
+    it "role demopostgis" demopostgis
+      expect(shell("echo \"SELECT rolname FROM pg_roles WHERE rolname='replicator'\" | psql -U postgres -h 127.0.0.1 -p 5510 | grep demopostgis").exit_code).to be_zero
     end
 
-    it "postgres version" do
+    it "postgres version 10" do
       expect(shell("echo \"select version()\" | psql -U postgres -p 5510 | grep \"PostgreSQL 10\"").exit_code).to be_zero
     end
 
