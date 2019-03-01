@@ -4,20 +4,30 @@ class { 'postgresql':
   checkpoint_segments => '8',
   wal_keep_segments   => '8',
   version             => '10',
+  port                => '5436'
 }
 
-postgresql::pgdumpbackup { 'demobackup':
-  destination => '/tmp',
+postgresql::hba_rule { 'test':
+  user     => 'demopostgis',
+  database => 'demopostgis',
+  address  => '192.168.56.0/24',
 }
 
-class { 'postgresql::postgis': }
-
-postgresql::hba_rule { 'demo':
-  user     => 'demo',
-  database => 'demo',
-  address  => '192.168.0.0/16',
+postgresql::role { 'demopostgis':
+  replication => true,
+  password    => 'demopostgispassword',
+  port        => '5436'
 }
 
-postgresql::role { 'demo':
-  password    => 'demopass',
+postgresql::schema { 'demopostgis':
+  owner => 'demopostgis',
+  port  => '5436'
+}
+
+postgresql::db { 'demopostgis':
+  owner => 'demopostgis',
+}
+
+class { 'postgresql::postgis':
+  dbname => 'demopostgis',
 }
