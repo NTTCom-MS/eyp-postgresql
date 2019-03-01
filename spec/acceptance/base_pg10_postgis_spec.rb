@@ -84,7 +84,7 @@ describe 'postgresql class' do
     end
 
     #SELECT rolname FROM pg_roles WHERE rolname=
-    it "role demopostgis" demopostgis
+    it "role demopostgis" do
       expect(shell("echo \"SELECT rolname FROM pg_roles WHERE rolname='replicator'\" | psql -U postgres -h 127.0.0.1 -p 5510 | grep demopostgis").exit_code).to be_zero
     end
 
