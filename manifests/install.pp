@@ -6,7 +6,7 @@ class postgresql::install inherits postgresql {
 
   if($postgresql::datadir==undef)
   {
-    $datadir_path=$postgresql::params::datadir_default[$version]
+    $datadir_path=$postgresql::params::datadir_default[$postgresql::version]
   }
   else
   {

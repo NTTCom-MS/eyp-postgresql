@@ -4,8 +4,8 @@ class postgresql::hba::reload inherits postgresql {
     port => $postgresql::port,
   }
 
-  postgresql_psql { "pg_reload_conf":
-    command     => "SELECT pg_reload_conf();",
+  postgresql_psql { 'pg_reload_conf':
+    command     => 'SELECT pg_reload_conf();',
     require     => Class['::postgresql::service'],
     refreshonly => true,
   }

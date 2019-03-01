@@ -13,7 +13,7 @@ class postgresql::config inherits postgresql {
 
   if($postgresql::datadir==undef)
   {
-    $datadir_path=$postgresql::params::datadir_default[$version]
+    $datadir_path=$postgresql::params::datadir_default[$postgresql::version]
   }
   else
   {
@@ -22,7 +22,7 @@ class postgresql::config inherits postgresql {
 
   if($postgresql::pidfile==undef)
   {
-    $pidfilename=$postgresql::params::pidfile[$version]
+    $pidfilename=$postgresql::params::pidfile[$postgresql::version]
   }
   else
   {
@@ -34,7 +34,7 @@ class postgresql::config inherits postgresql {
 
   if($postgresql::params::systemd)
   {
-    systemd::service::dropin { $postgresql::params::servicename[$version]:
+    systemd::service::dropin { $postgresql::params::servicename[$postgresql::version]:
       env_vars => [ "PGDATA=${datadir_path}" ],
     }
   }
@@ -57,7 +57,7 @@ class postgresql::config inherits postgresql {
 
   if($postgresql::params::sysconfig)
   {
-    file { "/etc/sysconfig/pgsql/${postgresql::params::servicename[$version]}":
+    file { "/etc/sysconfig/pgsql/${postgresql::params::servicename[$postgresql::version]}":
       ensure  => 'present',
       owner   => 'root',
       group   => 'root',
