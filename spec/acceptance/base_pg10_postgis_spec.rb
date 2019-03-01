@@ -47,11 +47,11 @@ describe 'postgresql class' do
       expect(apply_manifest(pp).exit_code).to eq(0)
     end
 
-    describe package($packagename96) do
+    describe package($packagename10) do
       it { is_expected.to be_installed }
     end
 
-    describe service($servicename96) do
+    describe service($servicename10) do
       it { should be_enabled }
       it { is_expected.to be_running }
     end
@@ -60,7 +60,7 @@ describe 'postgresql class' do
       it { should be_listening }
     end
 
-    describe file($postgresconf96) do
+    describe file($postgresconf10) do
       it { should be_file }
       its(:content) { should match 'wal_level = hot_standby' }
       its(:content) { should match 'max_connections = 100' }
@@ -71,7 +71,7 @@ describe 'postgresql class' do
       its(:content) { should match 'puppet managed file' }
     end
 
-    describe file($pghba96) do
+    describe file($pghba10) do
       it { should be_file }
       its(:content) { should match '# rule: test' }
       its(:content) { should match 'host	replication	replicator	192.168.56.0/24			md5' }
