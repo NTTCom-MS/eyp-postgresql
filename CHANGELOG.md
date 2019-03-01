@@ -4,6 +4,7 @@
 
 * Major rewrite of **::postgresql** class - No incompatible change introduced
 * pg_hba reload instead of service restart
+* added a variable to install extension for a specific DB by default for **postgresql::pgstatsstatements** and **postgresql::postgis**
 
 ## 0.1.68
 
