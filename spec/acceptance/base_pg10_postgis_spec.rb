@@ -74,7 +74,7 @@ describe 'postgresql class' do
     describe file($pghba10) do
       it { should be_file }
       its(:content) { should match '# rule: test' }
-      its(:content) { should match 'host	replication	replicator	192.168.56.0/24			md5' }
+      its(:content) { should match 'host	demopostgis	demopostgis	192.168.56.0/24			md5' }
       its(:content) { should match 'puppet managed file' }
     end
 
@@ -85,7 +85,7 @@ describe 'postgresql class' do
 
     #SELECT rolname FROM pg_roles WHERE rolname=
     it "role demopostgis" do
-      expect(shell("echo \"SELECT rolname FROM pg_roles WHERE rolname='replicator'\" | psql -U postgres -h 127.0.0.1 -p 5510 | grep demopostgis").exit_code).to be_zero
+      expect(shell("echo \"SELECT rolname FROM pg_roles WHERE rolname='demopostgis'\" | psql -U postgres -h 127.0.0.1 -p 5510 | grep demopostgis").exit_code).to be_zero
     end
 
     it "postgres version 10" do
