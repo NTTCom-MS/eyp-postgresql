@@ -14,7 +14,7 @@ describe 'postgresql class' do
     		checkpoint_segments => '8',
     		wal_keep_segments   => '8',
         version             => '10',
-        port                => '5436'
+        port                => '5410'
     	}
 
     	postgresql::hba_rule { 'test':
@@ -26,12 +26,10 @@ describe 'postgresql class' do
     	postgresql::role { 'replicator':
     		replication => true,
     		password    => 'replicatorpassword',
-        port        => '5436'
     	}
 
     	postgresql::schema { 'jordi':
     		owner => 'replicator',
-        port  => '5438'
     	}
 
       EOF
@@ -50,7 +48,7 @@ describe 'postgresql class' do
       it { is_expected.to be_running }
     end
 
-    describe port(5436) do
+    describe port(5410) do
       it { should be_listening }
     end
 
@@ -83,7 +81,7 @@ describe 'postgresql class' do
     end
 
     it "postgres version" do
-      expect(shell("echo \"select version()\" | psql -U postgres | grep \"PostgreSQL 10\"").exit_code).to be_zero
+      expect(shell("echo \"select version()\" | psql -U postgres -p 5410 | grep \"PostgreSQL 10\"").exit_code).to be_zero
     end
 
   end

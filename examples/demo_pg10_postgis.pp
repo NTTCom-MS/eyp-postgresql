@@ -4,7 +4,7 @@ class { 'postgresql':
   checkpoint_segments => '8',
   wal_keep_segments   => '8',
   version             => '10',
-  port                => '5436'
+  port                => '5510'
 }
 
 postgresql::hba_rule { 'test':
@@ -16,12 +16,10 @@ postgresql::hba_rule { 'test':
 postgresql::role { 'demopostgis':
   replication => true,
   password    => 'demopostgispassword',
-  port        => '5436'
 }
 
 postgresql::schema { 'demopostgis':
   owner => 'demopostgis',
-  port  => '5436'
 }
 
 postgresql::db { 'demopostgis':

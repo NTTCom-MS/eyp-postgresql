@@ -14,7 +14,7 @@ describe 'postgresql class' do
     		checkpoint_segments => '8',
     		wal_keep_segments   => '8',
         version             => '10',
-        port                => '5439'
+        port                => '5510'
     	}
 
     	postgresql::hba_rule { 'test':
@@ -26,12 +26,10 @@ describe 'postgresql class' do
     	postgresql::role { 'demopostgis':
     		replication => true,
     		password    => 'demopostgispassword',
-        port        => '5436'
     	}
 
     	postgresql::schema { 'demopostgis':
     		owner => 'demopostgis',
-        port  => '5436'
     	}
 
       postgresql::db { 'demopostgis':
@@ -58,7 +56,7 @@ describe 'postgresql class' do
       it { is_expected.to be_running }
     end
 
-    describe port(5436) do
+    describe port(5510) do
       it { should be_listening }
     end
 
@@ -91,7 +89,11 @@ describe 'postgresql class' do
     end
 
     it "postgres version" do
-      expect(shell("echo \"select version()\" | psql -U postgres | grep \"PostgreSQL 10\"").exit_code).to be_zero
+      expect(shell("echo \"select version()\" | psql -U postgres -p 5510 | grep \"PostgreSQL 10\"").exit_code).to be_zero
+    end
+
+    it "postgres postgis extension" do
+      expect(shell("echo \"select extname from pg_extension\" | psql -U postgres -d demopostgis -p 5510 | grep \"postgis\"").exit_code).to be_zero
     end
 
   end

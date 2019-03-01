@@ -25,12 +25,10 @@ describe 'postgresql class' do
     	postgresql::role { 'replicator':
     		replication => true,
     		password    => 'replicatorpassword',
-        port        => '5432'
     	}
 
     	postgresql::schema { 'jordi':
     		owner => 'replicator',
-        port  => '5432'
     	}
 
       EOF
