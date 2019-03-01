@@ -3,6 +3,15 @@
 # 01-99: user defined rules
 class postgresql::hba::config inherits postgresql {
 
+  if($postgresql::datadir==undef)
+  {
+    $datadir_path=$postgresql::params::datadir_default[$postgresql::version]
+  }
+  else
+  {
+    $datadir_path = $postgresql::datadir
+  }
+
   if($postgresql::manage_pghba)
   {
     concat { "${datadir_path}/pg_hba.conf":
