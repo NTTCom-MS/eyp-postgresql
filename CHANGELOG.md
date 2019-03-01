@@ -2,7 +2,8 @@
 
 ## 0.2.0
 
-* Major rewrite of **::postgresql** class
+* Major rewrite of **::postgresql** class - No incompatible change introduced
+* pg_hba reload instead of service restart
 
 ## 0.1.68
 
