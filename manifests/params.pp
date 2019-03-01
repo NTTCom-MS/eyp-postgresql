@@ -110,6 +110,7 @@ class postgresql::params {
               $reponame = {
                             '9.2' => 'pgdg-centos92',
                             '9.6' => 'pgdg-centos96',
+                            '10' => 'pgdg-centos10',
                           }
 
             }
