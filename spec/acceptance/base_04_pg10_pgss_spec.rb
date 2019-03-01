@@ -92,7 +92,7 @@ describe 'postgresql class' do
       expect(shell("echo \"select version()\" | psql -U postgres -p 5610 | grep \"PostgreSQL 10\"").exit_code).to be_zero
     end
 
-    it "postgres postgis extension" do
+    it "postgres pg_stat_statements extension" do
       expect(shell("echo \"select extname from pg_extension\" | psql -U postgres -d demopgss -p 5610 | grep \"pg_stat_statements\"").exit_code).to be_zero
     end
 
