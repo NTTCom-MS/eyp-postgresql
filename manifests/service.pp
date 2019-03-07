@@ -1,28 +1,16 @@
-class postgresql::service (
-                        $manage_service        = true,
-                        $manage_docker_service = true,
-                        $ensure                = 'running',
-                        $enable                = true,
-                        $version               = $postgresql::params::version_default,
-                      ) inherits postgresql::params {
-  #
-  validate_bool($manage_docker_service)
-  validate_bool($manage_service)
-  validate_bool($enable)
-
-  validate_re($ensure, [ '^running$', '^stopped$' ], "Not a valid daemon status: ${ensure}")
+class postgresql::service inherits postgresql {
 
   $is_docker_container_var=getvar('::eyp_docker_iscontainer')
   $is_docker_container=str2bool($is_docker_container_var)
 
   if( $is_docker_container==false or
-      $manage_docker_service)
+      $postgresql::manage_docker_service)
   {
-    if($manage_service)
+    if($postgresql::manage_service)
     {
-      service { $postgresql::params::servicename[$version]:
-        ensure => $ensure,
-        enable => $enable,
+      service { $postgresql::params::servicename[$postgresql::version]:
+        ensure => $postgresql::ensure,
+        enable => $postgresql::enable,
       }
     }
   }

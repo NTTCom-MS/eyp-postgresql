@@ -621,6 +621,7 @@ have some tests to check both presence and absence of any feature
 * tablespaces management
 * Rewrite class relationships
 * Improve default config: https://github.com/le0pard/pgtune/blob/master/webpack/selectors/configuration.jsç
+* Move **postgresql::hba_rule** to **postgresql::hba** namespace
 
 ### Contributing
 

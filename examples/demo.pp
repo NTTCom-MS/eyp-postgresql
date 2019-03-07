@@ -9,3 +9,13 @@ class { 'postgresql':
 postgresql::pgdumpbackup { 'demobackup':
   destination => '/tmp',
 }
+
+postgresql::hba_rule { 'demo':
+  user     => 'demo',
+  database => 'demo',
+  address  => '192.168.0.0/16',
+}
+
+postgresql::role { 'demo':
+  password    => 'demopass',
+}

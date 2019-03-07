@@ -4,7 +4,14 @@ class postgresql::pgstatsstatements (
                                       $track_utility = true,
                                       $track         = 'all',
                                       $max           = '10000',
+                                      $dbname        = undef,
+                                      $port          = $postgresql::port,
                                     ) inherits postgresql::params {
+  if($postgresql::params::contrib[$version]==undef)
+  {
+    fail('unable to install postgis - unsupported version')
+  }
+
   if($datadir==undef)
   {
     $datadir_path=$postgresql::params::datadir_default[$version]
@@ -20,6 +27,14 @@ class postgresql::pgstatsstatements (
       ensure  => 'installed',
       require => Class['::postgresql::config'],
       before  => Class['::postgresql::service'],
+    }
+
+    if($dbname!=undef)
+    {
+      postgresql::pgstatsstatements::extension{ $dbname:
+        require => Package[$postgresql::params::contrib[$version]],
+        port    => $port,
+      }
     }
   }
 

@@ -1,7 +1,7 @@
 define postgresql::schema (
                             $owner,
                             $schemaname = $name,
-                            $port       = undef,
+                            $port       = $postgresql::port,
                           ) {
 
   Postgresql_psql {

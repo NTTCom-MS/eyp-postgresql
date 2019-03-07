@@ -1,6 +1,6 @@
 define postgresql::extension(
                               $extension_name = $name,
-                              $port           = undef,
+                              $port           = $postgresql::port,
                               $dbname         = undef,
                             ) {
   Postgresql_psql {

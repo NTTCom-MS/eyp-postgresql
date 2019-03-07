@@ -1,40 +1,33 @@
-class postgresql::install (
-                            $version           = $postgresql::params::version_default,
-                            $datadir           = $postgresql::datadir,
-                            $initdb            = true,
-                            $overcommit_memory = '2',
-                            $shmmax            = ceiling(sprintf('%f', $::memorysize_mb)*786432),
-                            $shmall            = ceiling(ceiling(sprintf('%f', $::memorysize_mb)*786432)/$::eyp_postgresql_pagesize),
-                          ) inherits postgresql::params {
+class postgresql::install inherits postgresql {
 
   Exec {
     path => '/usr/sbin:/usr/bin:/sbin:/bin',
   }
 
-  if($datadir==undef)
+  if($postgresql::datadir==undef)
   {
-    $datadir_path=$postgresql::params::datadir_default[$version]
+    $datadir_path=$postgresql::params::datadir_default[$postgresql::version]
   }
   else
   {
-    $datadir_path = $datadir
+    $datadir_path = $postgresql::datadir
   }
 
-  package { $postgresql::params::reponame[$version]:
+  package { $postgresql::params::reponame[$postgresql::version]:
     ensure   => 'installed',
-    source   => $postgresql::params::reposource[$version],
+    source   => $postgresql::params::reposource[$postgresql::version],
     provider => $postgresql::params::repoprovider,
   }
 
-  package { $postgresql::params::packagename[$version]:
+  package { $postgresql::params::packagename[$postgresql::version]:
     ensure  => 'installed',
-    require => Package[$postgresql::params::reponame[$version]],
+    require => Package[$postgresql::params::reponame[$postgresql::version]],
   }
 
   exec { "mkdir p ${datadir_path}":
     command => "mkdir -p ${datadir_path}",
     creates => $datadir_path,
-    require => Package[$postgresql::params::packagename[$version]],
+    require => Package[$postgresql::params::packagename[$postgresql::version]],
   }
 
   # FATAL:  data directory "/var/lib/pgsql/9.2/data" has group or world access
@@ -58,18 +51,18 @@ class postgresql::install (
     require => Exec["mkdir p ${datadir_path}"],
   }
 
-  if($initdb)
+  if($postgresql::initdb)
   {
     #initdb
     #com a postgres
     #-bash-4.1$ PGDATA="/var/lib/pgsql/9.2/data" /usr/pgsql-9.2/bin/initdb
     #creates => /var/lib/pgsql/9.2/data/pg_hba.conf
     exec { 'initdb postgresql':
-      command     => $postgresql::params::initdb[$version],
+      command     => $postgresql::params::initdb[$postgresql::version],
       environment => "PGDATA=${datadir_path}",
       user        => $postgresql::params::postgresuser,
       creates     => "${datadir_path}/pg_hba.conf",
-      require     => [File[$datadir_path], Package[$postgresql::params::packagename[$version]]],
+      require     => [File[$datadir_path], Package[$postgresql::params::packagename[$postgresql::version]]],
     }
 
     $before_initdb=Exec['initdb postgresql']
@@ -81,10 +74,10 @@ class postgresql::install (
 
   if(defined(Class['sysctl']))
   {
-    if($overcommit_memory!=undef)
+    if($postgresql::overcommit_memory!=undef)
     {
       sysctl::set { 'vm.overcommit_memory':
-        value  => $overcommit_memory,
+        value  => $postgresql::overcommit_memory,
         before => $before_initdb,
       }
     }
@@ -100,10 +93,10 @@ class postgresql::install (
     # $ sysctl -w kernel.shmmax=17179869184
     #
 
-    if($shmmax!=undef)
+    if($postgresql::shmmax!=undef)
     {
       sysctl::set { 'kernel.shmmax':
-        value  => $shmmax,
+        value  => $postgresql::shmmax,
         before => $before_initdb,
       }
     }
@@ -114,10 +107,10 @@ class postgresql::install (
     # $ sysctl -w kernel.shmall=4194304
     #
 
-    if($shmall!=undef)
+    if($postgresql::shmall!=undef)
     {
       sysctl::set { 'kernel.shmall':
-        value  => $shmall,
+        value  => $postgresql::shmall,
         before => $before_initdb,
       }
     }

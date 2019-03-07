@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## 0.2.0
+
+* Major rewrite of **::postgresql** class - No incompatible change introduced
+* **pg_hba.conf**: reload service on changes instead of service restart
+* added a variable to install extension for a specific DB by default for **postgresql::pgstatsstatements** and **postgresql::postgis**
+
+## 0.1.68
+
+* modified default value for **archive_mode** to true
+
 ## 0.1.67
 
 * added dbname flag to **postgresql::extension**

@@ -24,12 +24,17 @@ matrix:
     bundler_args:
     script: bundle exec rake validate
   - rvm: default
-    env: BEAKER_set="centos6-docker"
+    env: BEAKER_set="centos6-docker" PG_VERSION="pg9"
     dist: trusty
     bundler_args:
-    script: sudo service docker restart ; sleep 10 && bundle exec rspec spec/acceptance/*_spec.rb
+    script: sudo service docker restart ; sleep 10 && bundle exec rspec spec/acceptance/pg9*_spec.rb
   - rvm: default
-    env: BEAKER_set="centos7-docker"
+    env: BEAKER_set="centos6-docker" PG_VERSION="pg10"
     dist: trusty
     bundler_args:
-    script: sudo service docker restart ; sleep 10 && bundle exec rspec spec/acceptance/*_spec.rb
+    script: sudo service docker restart ; sleep 10 && bundle exec rspec spec/acceptance/pg1*_spec.rb
+  - rvm: default
+    env: BEAKER_set="centos7-docker" PG_VERSION="ALL"
+    dist: trusty
+    bundler_args:
+    script: sudo service docker restart ; sleep 10 && bundle exec rspec spec/acceptance/pg9*_spec.rb spec/acceptance/pg1*_spec.rb

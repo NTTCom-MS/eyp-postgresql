@@ -4,7 +4,7 @@ define postgresql::role (
                           $login       = true,
                           $superuser   = false,
                           $replication = false,
-                          $port        = undef,
+                          $port        = $postgresql::port,
                         ) {
   Exec {
     path => '/usr/sbin:/usr/bin:/sbin:/bin',
