@@ -15,10 +15,11 @@ class postgresql::hba::config inherits postgresql {
   if($postgresql::manage_pghba)
   {
     concat { "${datadir_path}/pg_hba.conf":
-      ensure => 'present',
-      owner  => $postgresql::params::postgresuser,
-      group  => $postgresql::params::postgresgroup,
-      mode   => '0600',
+      ensure  => 'present',
+      owner   => $postgresql::params::postgresuser,
+      group   => $postgresql::params::postgresgroup,
+      mode    => '0600',
+      require => Class['::postgresql::config'],
     }
 
     concat::fragment{ "header pg_hba ${datadir_path}":
