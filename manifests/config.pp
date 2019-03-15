@@ -17,7 +17,7 @@ class postgresql::config inherits postgresql {
   }
   else
   {
-    $datadir_path = $postgresql::datadir
+    $datadir_path=$postgresql::datadir
   }
 
   if($postgresql::pidfile==undef)
