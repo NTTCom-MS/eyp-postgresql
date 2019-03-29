@@ -81,6 +81,5 @@ describe 'postgresql class' do
     it "role replicator" do
       expect(shell("echo \"SELECT rolname FROM pg_roles WHERE rolname='replicator'\" | psql -U postgres -h 127.0.0.1 -p 5436 | grep replicator").exit_code).to be_zero
     end
-
   end
 end

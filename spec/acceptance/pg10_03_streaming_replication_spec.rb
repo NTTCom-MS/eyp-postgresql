@@ -3,7 +3,7 @@ require_relative './version.rb'
 
 describe 'postgresql class' do
 
-  context 'basic setup postgres 10' do
+  context 'streaming replication setup postgres 10' do
     # Using puppet_apply as a helper
     it 'should work with no errors' do
       pp = <<-EOF
@@ -14,24 +14,10 @@ describe 'postgresql class' do
     		checkpoint_segments => '8',
     		wal_keep_segments   => '8',
         version             => '10',
-        port                => '5410',
-        archive_dir         => '/archivedir',
+        port                => '5710',
+        archive_mode        => false,
     	}
 
-    	postgresql::hba_rule { 'test':
-    		user     => 'replicator',
-    		database => 'replication',
-    		address  => '192.168.56.0/24',
-    	}
-
-    	postgresql::role { 'replicator':
-    		replication => true,
-    		password    => 'replicatorpassword',
-    	}
-
-    	postgresql::schema { 'jordi':
-    		owner => 'replicator',
-    	}
 
       EOF
 
