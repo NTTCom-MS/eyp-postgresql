@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.2.1
+
+* set timeout to pg_basebackup to 0
+
 ## 0.2.0
 
 * Major rewrite of **::postgresql** class - No incompatible change introduced
