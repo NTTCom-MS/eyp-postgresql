@@ -76,7 +76,7 @@ class postgresql(
                   $archived_wals_month             = '*',
                   $archived_wals_monthday          = '*',
                   $archived_wals_weekday           = '*',
-                  $maintenance_work_mem            = '10MB',
+                  $maintenance_work_mem            = '64MB',
                   $wal_buffers                     = '-1',
                   $work_mem                        = '8MB',
                   $shared_buffers                  = sprintf('%dMB',ceiling(sprintf('%f', $::memorysize_mb)/4)),
@@ -90,6 +90,7 @@ class postgresql(
                   $manage_pghba                    = true,
                   $manage_configfile               = true,
                   $max_replication_slots           = '5',
+                  $effective_cache_size            = sprintf('%dMB',ceiling(sprintf('%f', ($::memorysize_mb)/4)*3)),
                 ) inherits postgresql::params {
 
   validate_array($listen)

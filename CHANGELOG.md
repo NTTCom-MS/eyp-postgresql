@@ -3,6 +3,8 @@
 ## 0.2.1
 
 * set timeout to pg_basebackup to 0
+* added **effective_cache_size** variable (default: 3/4 memory size)
+* changed default **maintenance_work_mem** to 64MB
 
 ## 0.2.0
 
