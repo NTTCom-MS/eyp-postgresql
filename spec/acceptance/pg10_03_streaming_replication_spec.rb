@@ -3,7 +3,7 @@ require_relative './version.rb'
 
 describe 'postgresql class' do
 
-  context 'basic setup postgres 10' do
+  context 'streaming replication setup postgres 10' do
     # Using puppet_apply as a helper
     it 'should work with no errors' do
       pp = <<-EOF
@@ -14,23 +14,14 @@ describe 'postgresql class' do
     		checkpoint_segments => '8',
     		wal_keep_segments   => '8',
         version             => '10',
-        port                => '5410',
-        archive_dir         => '/archivedir',
+        port                => '5710',
+        archive_mode        => false,
     	}
 
-    	postgresql::hba_rule { 'test':
-    		user     => 'replicator',
-    		database => 'replication',
+      postgresql::hba_rule { 'test':
+    		user     => 'demoreplication',
+    		database => 'demoreplication',
     		address  => '192.168.56.0/24',
-    	}
-
-    	postgresql::role { 'replicator':
-    		replication => true,
-    		password    => 'replicatorpassword',
-    	}
-
-    	postgresql::schema { 'jordi':
-    		owner => 'replicator',
     	}
 
       EOF
@@ -49,7 +40,7 @@ describe 'postgresql class' do
       it { is_expected.to be_running }
     end
 
-    describe port(5410) do
+    describe port(5710) do
       it { should be_listening }
     end
 
@@ -67,22 +58,22 @@ describe 'postgresql class' do
     describe file($pghba10) do
       it { should be_file }
       its(:content) { should match '# rule: test' }
-      its(:content) { should match 'host	replication	replicator	192.168.56.0/24			md5' }
+      its(:content) { should match 'host	demoreplication	demoreplication	192.168.56.0/24			md5' }
       its(:content) { should match 'puppet managed file' }
     end
 
     #echo "SELECT nspname FROM pg_namespace WHERE nspname='jordi'" | psql -U postgres | grep jordi
     it "schema jordi" do
-      expect(shell("echo \"SELECT nspname FROM pg_namespace WHERE nspname='jordi'\" | psql -U postgres -h 127.0.0.1 -p 5410 | grep jordi").exit_code).to be_zero
+      expect(shell("echo \"SELECT nspname FROM pg_namespace WHERE nspname='jordi'\" | psql -U postgres -h 127.0.0.1 -p 5710 | grep jordi").exit_code).to be_zero
     end
 
     #SELECT rolname FROM pg_roles WHERE rolname=
     it "role replicator" do
-      expect(shell("echo \"SELECT rolname FROM pg_roles WHERE rolname='replicator'\" | psql -U postgres -h 127.0.0.1 -p 5410 | grep replicator").exit_code).to be_zero
+      expect(shell("echo \"SELECT rolname FROM pg_roles WHERE rolname='replicator'\" | psql -U postgres -h 127.0.0.1 -p 5710 | grep replicator").exit_code).to be_zero
     end
 
     it "postgres version" do
-      expect(shell("echo \"select version()\" | psql -U postgres -p 5410 | grep \"PostgreSQL 10\"").exit_code).to be_zero
+      expect(shell("echo \"select version()\" | psql -U postgres -p 5710 | grep \"PostgreSQL 10\"").exit_code).to be_zero
     end
 
   end

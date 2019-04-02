@@ -3,7 +3,7 @@ require_relative './version.rb'
 
 describe 'postgresql class' do
 
-  context 'basic setup postgres 10 postgis' do
+  context 'postgres 10 postgis' do
     # Using puppet_apply as a helper
     it 'should work with no errors' do
       pp = <<-EOF

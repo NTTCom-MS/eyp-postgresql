@@ -76,7 +76,7 @@ class postgresql(
                   $archived_wals_month             = '*',
                   $archived_wals_monthday          = '*',
                   $archived_wals_weekday           = '*',
-                  $maintenance_work_mem            = '10MB',
+                  $maintenance_work_mem            = '64MB',
                   $wal_buffers                     = '-1',
                   $work_mem                        = '8MB',
                   $shared_buffers                  = sprintf('%dMB',ceiling(sprintf('%f', $::memorysize_mb)/4)),
@@ -90,6 +90,7 @@ class postgresql(
                   $manage_pghba                    = true,
                   $manage_configfile               = true,
                   $max_replication_slots           = '5',
+                  $effective_cache_size            = sprintf('%dMB',ceiling(sprintf('%f', ($::memorysize_mb)/4)*3)),
                 ) inherits postgresql::params {
 
   validate_array($listen)
@@ -130,17 +131,16 @@ class postgresql(
       command => "mkdir -p ${archive_dir}",
       creates => $archive_dir,
       require => Class['::postgresql::install'],
-      before  => Class['::postgresql::service'],
       tag     => 'post-streaming_replication',
     }
 
     file { $archive_dir:
-      ensure  => 'directory',
-      owner   => $archive_dir_user,
-      group   => $archive_dir_group,
-      mode    => $archive_dir_mode,
-      require => Exec["mkdir -p ${archive_dir} postgres archive command ${version} ${datadir_path}"],
-      tag     => 'post-streaming_replication',
+      ensure => 'directory',
+      owner  => $archive_dir_user,
+      group  => $archive_dir_group,
+      mode   => $archive_dir_mode,
+      before => Class['::postgresql::service'],
+      tag    => 'post-streaming_replication',
     }
 
     if($archive_dir!=undef and $archive_command_custom==undef)
@@ -197,9 +197,7 @@ class postgresql(
 
   class { '::postgresql::service':
     before => Class['::postgresql::hba::reload'],
-  } ->
-
-  Class['::postgresql']
+  }
 
   class { '::postgresql::hba::config':
     require => Class['::postgresql::install'],

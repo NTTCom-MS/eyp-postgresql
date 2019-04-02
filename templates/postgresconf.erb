@@ -270,7 +270,7 @@ hot_standby = <%= scope.function_bool2onoff([@hot_standby]) %>			# "on" allows q
 #cpu_tuple_cost = 0.01			# same scale as above
 #cpu_index_tuple_cost = 0.005		# same scale as above
 #cpu_operator_cost = 0.0025		# same scale as above
-#effective_cache_size = 128MB
+effective_cache_size = <%= @effective_cache_size %>
 
 # - Genetic Query Optimizer -
 
