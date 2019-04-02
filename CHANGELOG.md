@@ -2,6 +2,8 @@
 
 ## 0.2.2
 
+* added **effective_cache_size** variable (default: 3/4 memory size)
+* changed default **maintenance_work_mem** to 64MB
 
 ## 0.2.1
 
