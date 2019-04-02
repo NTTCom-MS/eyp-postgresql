@@ -131,7 +131,6 @@ class postgresql(
       command => "mkdir -p ${archive_dir}",
       creates => $archive_dir,
       require => Class['::postgresql::install'],
-      before  => Class['::postgresql::service'],
       tag     => 'post-streaming_replication',
     }
 
@@ -140,7 +139,7 @@ class postgresql(
       owner   => $archive_dir_user,
       group   => $archive_dir_group,
       mode    => $archive_dir_mode,
-      require => Exec["mkdir -p ${archive_dir} postgres archive command ${version} ${datadir_path}"],
+      before  => Class['::postgresql::service'],
       tag     => 'post-streaming_replication',
     }
 
