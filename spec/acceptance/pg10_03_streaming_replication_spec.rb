@@ -35,7 +35,7 @@ describe 'postgresql class' do
       it { is_expected.to be_running }
     end
 
-    describe port(5410) do
+    describe port(5710) do
       it { should be_listening }
     end
 
@@ -59,16 +59,16 @@ describe 'postgresql class' do
 
     #echo "SELECT nspname FROM pg_namespace WHERE nspname='jordi'" | psql -U postgres | grep jordi
     it "schema jordi" do
-      expect(shell("echo \"SELECT nspname FROM pg_namespace WHERE nspname='jordi'\" | psql -U postgres -h 127.0.0.1 -p 5410 | grep jordi").exit_code).to be_zero
+      expect(shell("echo \"SELECT nspname FROM pg_namespace WHERE nspname='jordi'\" | psql -U postgres -h 127.0.0.1 -p 5710 | grep jordi").exit_code).to be_zero
     end
 
     #SELECT rolname FROM pg_roles WHERE rolname=
     it "role replicator" do
-      expect(shell("echo \"SELECT rolname FROM pg_roles WHERE rolname='replicator'\" | psql -U postgres -h 127.0.0.1 -p 5410 | grep replicator").exit_code).to be_zero
+      expect(shell("echo \"SELECT rolname FROM pg_roles WHERE rolname='replicator'\" | psql -U postgres -h 127.0.0.1 -p 5710 | grep replicator").exit_code).to be_zero
     end
 
     it "postgres version" do
-      expect(shell("echo \"select version()\" | psql -U postgres -p 5410 | grep \"PostgreSQL 10\"").exit_code).to be_zero
+      expect(shell("echo \"select version()\" | psql -U postgres -p 5710 | grep \"PostgreSQL 10\"").exit_code).to be_zero
     end
 
   end
