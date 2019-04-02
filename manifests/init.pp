@@ -135,12 +135,12 @@ class postgresql(
     }
 
     file { $archive_dir:
-      ensure  => 'directory',
-      owner   => $archive_dir_user,
-      group   => $archive_dir_group,
-      mode    => $archive_dir_mode,
-      before  => Class['::postgresql::service'],
-      tag     => 'post-streaming_replication',
+      ensure => 'directory',
+      owner  => $archive_dir_user,
+      group  => $archive_dir_group,
+      mode   => $archive_dir_mode,
+      before => Class['::postgresql::service'],
+      tag    => 'post-streaming_replication',
     }
 
     if($archive_dir!=undef and $archive_command_custom==undef)
