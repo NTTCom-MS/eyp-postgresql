@@ -18,6 +18,11 @@ describe 'postgresql class' do
         archive_mode        => false,
     	}
 
+      postgresql::hba_rule { 'test':
+    		user     => 'demoreplication',
+    		database => 'demoreplication',
+    		address  => '192.168.56.0/24',
+    	}
 
       EOF
 
@@ -53,7 +58,7 @@ describe 'postgresql class' do
     describe file($pghba10) do
       it { should be_file }
       its(:content) { should match '# rule: test' }
-      its(:content) { should match 'host	replication	replicator	192.168.56.0/24			md5' }
+      its(:content) { should match 'host	demoreplication	demoreplication	192.168.56.0/24			md5' }
       its(:content) { should match 'puppet managed file' }
     end
 
