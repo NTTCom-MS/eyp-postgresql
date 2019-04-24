@@ -51,7 +51,28 @@ Installs and configures PostgreSQL on CentOS 6 and 7
 
 ### Beginning with postgresql
 
-Currently, it only supports PostgreSQL 9.2 and 9.6
+Install a postgres Using [puppet-masterless](https://github.com/jordiprats/puppet-masterless):
+
+* Make sure git is installed
+```
+yum install git
+```
+
+Clone puppet-masterless to /opt and install dependencies:
+
+```
+cd /opt/
+git clone https://github.com/jordiprats/puppet-masterless
+cd puppet-masterless/
+bash setup.sh
+```
+
+Install puppet module and apply demo .pp:
+
+```
+./localpuppetmaster.sh -d /tmp/postgres -r https://github.com/jordiprats/eyp-postgresql
+./localpuppetmaster.sh -d /tmp/postgres -s /tmp/postgres/modules/postgresql/examples/demo_pg10.pp
+```
 
 ## Usage
 

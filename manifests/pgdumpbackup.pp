@@ -23,8 +23,8 @@ define postgresql::pgdumpbackup (
     path => '/usr/sbin:/usr/bin:/sbin:/bin',
   }
 
-  validate_absolute_path($basedir)
-  validate_absolute_path($destination)
+  # validate_absolute_path($basedir)
+  # validate_absolute_path($destination)
 
   #source => "puppet:///modules/${module_name}/backup_pgdump.sh",
   file { "${basedir}/pgdumpbackup.sh":

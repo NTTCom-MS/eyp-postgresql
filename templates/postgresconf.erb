@@ -584,6 +584,6 @@ default_text_search_config = '<%= @default_text_search_config %>'
 # CUSTOMIZED OPTIONS
 #------------------------------------------------------------------------------
 
-<% if defined?(@shared_preload_libraries) -%>
+<% if @shared_preload_libraries.any? -%>
 shared_preload_libraries = '<%= @shared_preload_libraries.join(',') %>'
 <% end -%>

@@ -85,15 +85,13 @@ class postgresql(
                   $lc_numeric                      = 'en_US.UTF-8',
                   $lc_time                         = 'en_US.UTF-8',
                   $default_text_search_config      = 'pg_catalog.english',
-                  $shared_preload_libraries        = undef,
+                  $shared_preload_libraries        = [],
                   $search_path                     = [ '"$user"', 'public' ],
                   $manage_pghba                    = true,
                   $manage_configfile               = true,
                   $max_replication_slots           = '5',
                   $effective_cache_size            = sprintf('%dMB',ceiling(sprintf('%f', ($::memorysize_mb)/4)*3)),
                 ) inherits postgresql::params {
-
-  validate_array($listen)
 
   Exec {
     path => '/usr/sbin:/usr/bin:/sbin:/bin',
@@ -117,15 +115,10 @@ class postgresql(
     $datadir_path = $datadir
   }
 
-  if($shared_preload_libraries!=undef)
-  {
-    validate_array($shared_preload_libraries)
-  }
-
   if($archive_dir!=undef)
   {
     #tenim un munt de muntatge local, per exemple un NFS pels arxivats
-    validate_absolute_path($archive_dir)
+    # validate_absolute_path($archive_dir)
 
     exec { "mkdir -p ${archive_dir} postgres archive command ${version} ${datadir_path}":
       command => "mkdir -p ${archive_dir}",
