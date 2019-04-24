@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 0.3.0
+
+* **INCOMPATIBLE CHANGE**:
+  - enabled wal_compression by default for postgres >= 9.5
+
 ## 0.2.2
 
 * added **effective_cache_size** variable (default: 3/4 memory size)
