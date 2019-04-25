@@ -23,7 +23,7 @@ then
   exit 3
 fi
 
-if [ -z "${PENDING_RESTART}" -eq 1 ];
+if [ "${PENDING_RESTART}" -eq 1 ];
 then
   echo "OK - no pending restart"
   exit 0
