@@ -1,5 +1,5 @@
 # SELECT pg_reload_conf();
-class postgresql::hba::reload inherits postgresql {
+class postgresql::config::reload inherits postgresql {
   Postgresql_psql {
     port => $postgresql::port,
   }
