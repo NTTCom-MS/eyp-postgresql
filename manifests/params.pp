@@ -125,8 +125,12 @@ class postgresql::params {
               $reponame = {
                             '9.2' => 'pgdg-centos92',
                             '9.6' => 'pgdg-centos96',
-                            '10' => 'pgdg-centos10',
+                            '10' => 'pgdg-redhat-repo',
                           }
+              # NOTA:
+              # # rpm -qi -p https://download.postgresql.org/pub/repos/yum/10/redhat/rhel-7-x86_64/pgdg-centos10-10-2.noarch.rpm
+              # Name        : pgdg-redhat-repo
+
             }
             default: { fail("Unsupported CentOS version! - ${::operatingsystemrelease}")  }
           }
