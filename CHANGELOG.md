@@ -2,6 +2,9 @@
 
 ## 0.3.0
 
+* Moved **pg_reload_conf()** from **postgresql::hba::reload** to **postgresql::config::reload**
+*
+* Fixed package name for postgres 10 repo
 * **INCOMPATIBLE CHANGE**:
   - enabled wal_compression by default for postgres >= 9.5
 

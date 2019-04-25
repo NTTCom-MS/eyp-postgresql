@@ -185,9 +185,12 @@ class postgresql(
     }
   }
 
-  class { '::postgresql::install': } ->
+  class { '::postgresql::install': }
 
-  class { '::postgresql::config': } ~>
+  class { '::postgresql::config':
+    require => Class['::postgresql::install'],
+    notify  => Class['::postgresql::config::reload'],
+  }
 
   class { '::postgresql::service':
     before => Class['::postgresql::config::reload'],

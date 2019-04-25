@@ -12,6 +12,8 @@ class postgresql::service inherits postgresql {
         ensure => $postgresql::ensure,
         enable => $postgresql::enable,
       }
+
+      
     }
   }
 }
