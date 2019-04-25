@@ -14,7 +14,6 @@
 #      2
 # (1 row)
 
-
 PENDING_RESTART=$(psql -p <%= @port %> -t -c "select count(*) from (select pending_restart from pg_settings group by pending_restart) as pending_restart;" -U postgres | grep -v "^$")
 
 if [ $? -ne 0 ] || [ -z "${PENDING_RESTART}" ];

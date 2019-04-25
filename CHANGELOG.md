@@ -4,6 +4,7 @@
 
 * Moved **pg_reload_conf()** from **postgresql::hba::reload** to **postgresql::config::reload**
 * Postgres config reload on change instead of service restart
+  - Postgres service will be restarted if there are changes that need to restart the service - **/usr/local/bin/check_postgres_pending_restart**
 * Fixed package name for postgres 10 repo
 * **INCOMPATIBLE CHANGE**:
   - enabled wal_compression by default for postgres >= 9.5
