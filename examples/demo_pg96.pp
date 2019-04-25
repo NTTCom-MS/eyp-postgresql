@@ -3,7 +3,7 @@ class { 'postgresql':
   max_wal_senders     => '3',
   checkpoint_segments => '8',
   wal_keep_segments   => '8',
-  port                => '5432'
+  port                => '5432',
   version             => '9.6',
 }
 
