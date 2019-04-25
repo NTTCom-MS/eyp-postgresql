@@ -18,7 +18,7 @@ class postgresql::install inherits postgresql {
     owner   => 'root',
     group   => 'root',
     mode    => '0700',
-    content => file("${module_name}/check_postgres_pending_restart.erb"),
+    content => template("${module_name}/check_postgres_pending_restart.erb"),
   }
 
   package { $postgresql::params::reponame[$postgresql::version]:
