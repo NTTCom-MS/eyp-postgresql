@@ -1,5 +1,5 @@
 # TODO: log_min_duration_statement
-#
+# HINT:  Valid units for this parameter are "kB", "MB", "GB", and "TB".
 #
 # @summary postgres installation class
 #
