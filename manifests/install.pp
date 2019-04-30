@@ -13,6 +13,14 @@ class postgresql::install inherits postgresql {
     $datadir_path = $postgresql::datadir
   }
 
+  file { '/usr/local/bin/check_postgres_pending_restart':
+    ensure  => 'present',
+    owner   => 'root',
+    group   => 'root',
+    mode    => '0700',
+    content => template("${module_name}/check_postgres_pending_restart.erb"),
+  }
+
   package { $postgresql::params::reponame[$postgresql::version]:
     ensure   => 'installed',
     source   => $postgresql::params::reposource[$postgresql::version],

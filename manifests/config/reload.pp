@@ -1,8 +1,10 @@
 # SELECT pg_reload_conf();
-class postgresql::hba::reload inherits postgresql {
+class postgresql::config::reload inherits postgresql {
   Postgresql_psql {
     port => $postgresql::port,
   }
+
+  #TODO: contemplar servei no gestionat
 
   postgresql_psql { 'pg_reload_conf':
     command     => 'SELECT pg_reload_conf();',

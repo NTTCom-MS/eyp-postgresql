@@ -1,0 +1,32 @@
+#!/bin/bash
+
+# no pending restart:
+# postgres=# select count(*) from (select pending_restart from pg_settings group by pending_restart) as pending_restart;
+#  count
+# -------
+#      1
+# (1 row)
+#
+# pending restart:
+# postgres=# select count(*) from (select pending_restart from pg_settings group by pending_restart) as pending_restart;
+#  count
+# -------
+#      2
+# (1 row)
+
+PENDING_RESTART=$(psql -p <%= @port %> -t -c "select count(*) from (select pending_restart from pg_settings group by pending_restart) as pending_restart;" -U postgres | grep -v "^$")
+
+if [ $? -ne 0 ] || [ -z "${PENDING_RESTART}" ];
+then
+  echo "ERROR getting value"
+  exit 3
+fi
+
+if [ "${PENDING_RESTART}" -eq 1 ];
+then
+  echo "OK - no pending restart"
+  exit 0
+else
+  echo "CRITICAL - postgres is pending restart"
+  exit 1
+fi
