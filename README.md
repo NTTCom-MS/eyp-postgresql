@@ -18,9 +18,9 @@
 
 ## Overview
 
-manages postgresql:
+This module can manage a postgres configured as:
 * standalone
-* streaming replication
+* streaming replication (master or slave)
 
 ## Module Description
 
@@ -32,13 +32,17 @@ Installs and configures PostgreSQL on CentOS 6 and 7
 
 * Installs PostgreSQL:
 * configures:
-  * postgres.conf
-  * pg_hba
-  * pg_stat_statements
-  * backup script using pg_dump
+  - postgres.conf
+  - pg_hba
+  - pg_stat_statements
+  - backup script using pg_dump
+  - pgsnapshot tool (tool for backing up and restore the database using LVM snapshots or AWS snapshots)
+  - cronjob for vacuum_analyze
 * it can manage the following DB objects:
-  * roles
-  * schemas
+  - roles
+  - schemas
+  - databases
+  - extensions (postgis and pg_stat_statements can be managed using it's own class in the module)
 * if eyp-sysctl is present:
   * overcommit_memory = 2 - total virtual address space on the system is limited to *(SWAP + RAM ·( /proc/sys/vm/overcommit_ratio /100))*
   * shmmax: maximum size of shared memory segment (default: ceiling(sprintf('%f', $::memorysize_mb)·786432))
@@ -619,12 +623,12 @@ Backups using pgsnapshot:
 * **logdir**: Log directory (default: /var/log/pgsnapshot)
 * **force_ami**: Force a specific AMI for the restored instance (default: undef, use the same AMI as the running instance)
 * cron settings:
-  * **setcronjob**: create a cronjob (default: true)
-  * **hour_cronjob**: hour (default: 2)
-  * **minute_cronjob**: minute (default: 0)
-  * **month_cronjob**: month (default: undef)
-  * **monthday_cronjob**: monthday (default: undef)
-  * **weekday_cronjob**: weekday (default: undef)
+  - **setcronjob**: create a cronjob (default: true)
+  - **hour_cronjob**: hour (default: 2)
+  - **minute_cronjob**: minute (default: 0)
+  - **month_cronjob**: month (default: undef)
+  - **monthday_cronjob**: monthday (default: undef)
+  - **weekday_cronjob**: weekday (default: undef)
 
 
 ## Limitations
@@ -640,9 +644,9 @@ have some tests to check both presence and absence of any feature
 
 * Add more postgres versions
 * tablespaces management
-* Rewrite class relationships
 * Improve default config: https://github.com/le0pard/pgtune/blob/master/webpack/selectors/configuration.jsç
 * Move **postgresql::hba_rule** to **postgresql::hba** namespace
+* Add validations for memory settings (KB, MB, GB...)
 
 ### Contributing
 
