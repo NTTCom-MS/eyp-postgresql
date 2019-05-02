@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.3.1
+
+* Updated metadata for **eyp-systemd 0.2.0** 
+
 ## 0.3.0
 
 * Moved **pg_reload_conf()** from **postgresql::hba::reload** to **postgresql::config::reload**
