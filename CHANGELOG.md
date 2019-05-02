@@ -2,7 +2,7 @@
 
 ## 0.3.1
 
-* Updated metadata for **eyp-systemd 0.2.0** 
+* Updated metadata for **eyp-systemd 0.2.0**
 
 ## 0.3.0
 
