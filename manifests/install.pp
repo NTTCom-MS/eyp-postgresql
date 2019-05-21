@@ -95,7 +95,7 @@ class postgresql::install inherits postgresql {
 
   cron { 'postgresql cronjob gzip_pglog_cronjob':
     ensure   => $ensure_gzip_pglog_cronjob,
-    command  => "find ${postgresql::datadir}/pg_log -type f -iname \\*log -mtime +${postgresql::maxdays_gzip_pglog_cronjob} -exec gzip -${postgresql::gzip_level_pglog_cronjob} {} \\;",
+    command  => "find ${postgresql::datadir_path}/pg_log -type f -iname \\*log -mtime +${postgresql::maxdays_gzip_pglog_cronjob} -exec gzip -${postgresql::gzip_level_pglog_cronjob} {} \\;",
     user     => 'root',
     hour     => $postgresql::hour_gzip_pglog_cronjob,
     minute   => $postgresql::minute_gzip_pglog_cronjob,
@@ -119,7 +119,7 @@ class postgresql::install inherits postgresql {
 
   cron { 'postgresql cronjob purge_pglog_cronjob':
     ensure   => $ensure_purge_pglog_cronjob,
-    command  => "find ${postgresql::datadir}/pg_log -type f -mtime +${postgresql::maxdays_purge_pglog_cronjob} -delete",
+    command  => "find ${postgresql::datadir_path}/pg_log -type f -mtime +${postgresql::maxdays_purge_pglog_cronjob} -delete",
     user     => 'root',
     hour     => $postgresql::hour_purge_pglog_cronjob,
     minute   => $postgresql::minute_purge_pglog_cronjob,
