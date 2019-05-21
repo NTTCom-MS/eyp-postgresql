@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.3.2
+
+* added cronjobs under puppet management to compress and purge **pg_log** directory
+
 ## 0.3.1
 
 * Updated metadata for **eyp-systemd 0.2.0**
