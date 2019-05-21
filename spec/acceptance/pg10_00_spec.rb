@@ -85,5 +85,21 @@ describe 'postgresql class' do
       expect(shell("echo \"select version()\" | psql -U postgres -p 5410 | grep \"PostgreSQL 10\"").exit_code).to be_zero
     end
 
+    it "postgres pg_log compression" do
+      expect(shell("crontab -l | grep gzip_pglog_cronjob").exit_code).to be_zero
+    end
+
+    it "postgres pg_log compression gzip" do
+      expect(shell("crontab -l | grep \"gzip -9\"").exit_code).to be_zero
+    end
+
+    it "postgres purge pg_log" do
+      expect(shell("crontab -l | grep purge_pglog_cronjob").exit_code).to be_zero
+    end
+
+    it "postgres purge pg_log delete" do
+      expect(shell("crontab -l | grep delete").exit_code).to be_zero
+    end
+
   end
 end
