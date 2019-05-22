@@ -2,7 +2,7 @@
 
 ## 0.3.2
 
-* added cronjobs under puppet management to compress and purge **pg_log** directory
+* added compress and purge **pg_log** directory cronjobs under puppet management 
 
 ## 0.3.1
 
