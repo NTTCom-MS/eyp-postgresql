@@ -643,10 +643,11 @@ have some tests to check both presence and absence of any feature
 ### TODO
 
 * Add more postgres versions
-* tablespaces management
+* Tablespace management
 * Improve default config: https://github.com/le0pard/pgtune/blob/master/webpack/selectors/configuration.jsç
 * Move **postgresql::hba_rule** to **postgresql::hba** namespace
 * Add validations for memory settings (KB, MB, GB...)
+* Manage replication slots: https://postgresqlspace.wordpress.com/2015/06/18/replication-slots-in-postgres/
 
 ### Contributing
 
