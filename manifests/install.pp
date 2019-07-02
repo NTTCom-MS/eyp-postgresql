@@ -80,6 +80,54 @@ class postgresql::install inherits postgresql {
     $before_initdb=undef
   }
 
+  #
+  # pg_log: compression
+  #
+
+  if($postgresql::set_gzip_pglog_cronjob)
+  {
+    $ensure_gzip_pglog_cronjob = 'present'
+  }
+  else
+  {
+    $ensure_gzip_pglog_cronjob = 'absent'
+  }
+
+  cron { 'postgresql cronjob gzip_pglog_cronjob':
+    ensure   => $ensure_gzip_pglog_cronjob,
+    command  => "find ${postgresql::datadir_path}/pg_log -type f -iname \\*log -mtime +${postgresql::maxdays_gzip_pglog_cronjob} -exec gzip -${postgresql::gzip_level_pglog_cronjob} {} \\;",
+    user     => 'root',
+    hour     => $postgresql::hour_gzip_pglog_cronjob,
+    minute   => $postgresql::minute_gzip_pglog_cronjob,
+    month    => $postgresql::month_gzip_pglog_cronjob,
+    monthday => $postgresql::monthday_gzip_pglog_cronjob,
+    weekday  => $postgresql::weekday_gzip_pglog_cronjob,
+  }
+
+  #
+  # pg_log: purge old logs
+  #
+
+  if($postgresql::set_purge_pglog_cronjob)
+  {
+    $ensure_purge_pglog_cronjob='present'
+  }
+  else
+  {
+    $ensure_purge_pglog_cronjob='absent'
+  }
+
+  cron { 'postgresql cronjob purge_pglog_cronjob':
+    ensure   => $ensure_purge_pglog_cronjob,
+    command  => "find ${postgresql::datadir_path}/pg_log -type f -mtime +${postgresql::maxdays_purge_pglog_cronjob} -delete",
+    user     => 'root',
+    hour     => $postgresql::hour_purge_pglog_cronjob,
+    minute   => $postgresql::minute_purge_pglog_cronjob,
+    month    => $postgresql::month_purge_pglog_cronjob,
+    monthday => $postgresql::monthday_purge_pglog_cronjob,
+    weekday  => $postgresql::weekday_purge_pglog_cronjob,
+  }
+
   if(defined(Class['sysctl']))
   {
     if($postgresql::overcommit_memory!=undef)
