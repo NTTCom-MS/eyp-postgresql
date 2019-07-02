@@ -1,11 +1,8 @@
 # CHANGELOG
 
-## 0.3.3
-
-* added **log_line_prefix**
-
 ## 0.3.2
 
+* added **log_line_prefix**
 * added compress and purge **pg_log** directory cronjobs under puppet management
 
 ## 0.3.1
