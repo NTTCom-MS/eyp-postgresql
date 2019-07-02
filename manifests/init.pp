@@ -107,6 +107,7 @@ class postgresql(
                   $max_replication_slots           = '5',
                   $effective_cache_size            = sprintf('%dMB',ceiling(sprintf('%f', ($::memorysize_mb)/4)*3)),
                   $wal_compression                 = true,
+                  $log_line_prefix                 = undef,
                 ) inherits postgresql::params {
 
   Exec {

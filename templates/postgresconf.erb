@@ -402,6 +402,9 @@ log_min_duration_statement = <%= @log_min_duration_statement %>
 #log_duration = off
 #log_error_verbosity = default		# terse, default, or verbose messages
 #log_hostname = off
+<% if defined?(@log_line_prefix) -%>
+log_line_prefix = '<%= @log_line_prefix %>'
+<% end -%>
 #log_line_prefix = ''			# special values:
 					#   %a = application name
 					#   %u = user name
