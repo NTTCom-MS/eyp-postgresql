@@ -31,7 +31,7 @@
 
 ## 0.2.1
 
-* set timeout to pg_basebackup to 0
+* set timeout for pg_basebackup to 0
 
 ## 0.2.0
 
