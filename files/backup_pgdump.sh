@@ -1,8 +1,5 @@
 #!/bin/bash
-
 # puppet managed file
-
-# 0.1.42 - adaptat estil
 
 function echo_error()
 {
@@ -10,12 +7,10 @@ function echo_error()
   ERROR=1;
 }
 
-
 function echo_info()
 {
   echo $(date +"%F %T %z") $@ 1>&2;
 }
-
 
 function checkdirs()
 {
