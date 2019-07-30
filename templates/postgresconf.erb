@@ -424,7 +424,7 @@ log_line_prefix = '<%= @log_line_prefix %>'
 					#   %q = stop here in non-session
 					#        processes
 					#   %% = '%'
-#log_lock_waits = off			# log lock waits >= deadlock_timeout
+log_lock_waits = <%= scope.function_bool2onoff([@log_lock_waits]) %>			# log lock waits >= deadlock_timeout
 #log_statement = 'none'			# none, ddl, mod, all
 #log_temp_files = -1			# log temporary files equal or larger
 					# than the specified size in kilobytes;
@@ -549,7 +549,7 @@ default_text_search_config = '<%= @default_text_search_config %>'
 # LOCK MANAGEMENT
 #------------------------------------------------------------------------------
 
-#deadlock_timeout = 1s
+deadlock_timeout = <%= @deadlock_timeout %>
 #max_locks_per_transaction = 64		# min 10
 					# (change requires restart)
 # Note:  Each lock table slot uses ~270 bytes of shared memory, and there are

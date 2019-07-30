@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 0.3.3
+
+* enabled **log_lock_waits** by default
+* added **deadlock_timeout** variable
+
 ## 0.3.2
 
 * added **log_line_prefix**
