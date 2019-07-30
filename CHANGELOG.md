@@ -4,6 +4,7 @@
 
 * enabled **log_lock_waits** by default
 * added **deadlock_timeout** variable
+* added **postgres::repo** and **postgres::client** classes to be able to install postgres client without installing postgres server
 
 ## 0.3.2
 
