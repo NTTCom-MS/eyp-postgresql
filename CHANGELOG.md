@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 0.3.3
+
+* enabled **log_lock_waits** by default
+* added **deadlock_timeout** variable
+* added **postgres::repo** and **postgres::client** classes to be able to install postgres client without installing postgres server
+
 ## 0.3.2
 
 * added **log_line_prefix**
@@ -25,7 +31,7 @@
 
 ## 0.2.1
 
-* set timeout to pg_basebackup to 0
+* set timeout for pg_basebackup to 0
 
 ## 0.2.0
 

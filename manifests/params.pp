@@ -25,10 +25,16 @@ class postgresql::params {
                         }
 
       $packagename= {
-                      '9.2' => [ 'postgresql92', 'postgresql92-server' ],
-                      '9.6' => [ 'postgresql96', 'postgresql96-server' ],
-                      '10' => [ 'postgresql10', 'postgresql10-server' ],
+                      '9.2' => [ 'postgresql92-server' ],
+                      '9.6' => [ 'postgresql96-server' ],
+                      '10'  => [ 'postgresql10-server' ],
                     }
+
+      $packagename_client = {
+                              '9.2' => [ 'postgresql92' ],
+                              '9.6' => [ 'postgresql96' ],
+                              '10'  => [ 'postgresql10' ],
+                            }
 
       $servicename = {
                         '9.2' => 'postgresql-9.2',

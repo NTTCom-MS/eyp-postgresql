@@ -21,11 +21,17 @@ class postgresql::install inherits postgresql {
     content => template("${module_name}/check_postgres_pending_restart.erb"),
   }
 
-  package { $postgresql::params::reponame[$postgresql::version]:
-    ensure   => 'installed',
-    source   => $postgresql::params::reposource[$postgresql::version],
-    provider => $postgresql::params::repoprovider,
+  class { 'postgresql::repo':
+    version => $postgresql::version,
   }
+
+  ->
+
+  class { 'postgresql::client':
+    version => $postgresql::version,
+  }
+
+  ->
 
   package { $postgresql::params::packagename[$postgresql::version]:
     ensure  => 'installed',
