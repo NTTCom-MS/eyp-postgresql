@@ -4,7 +4,7 @@ class postgresql::client(
 
   include ::postgresql::repo
 
-  package { $postgresql::params::packagename[$version]:
+  package { $postgresql::params::packagename_client[$version]:
     ensure  => 'installed',
     require => Package[$postgresql::params::reponame[$version]],
   }
