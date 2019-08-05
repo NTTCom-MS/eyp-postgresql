@@ -3,6 +3,7 @@
 ## 0.3.4
 
 * added flag to control autorestart: When a config change requires the service to be restarted it can be done automatically if restart_if_needed is set to true (default: true)
+* renamed recovery.conf ERB template
 
 ## 0.3.3
 

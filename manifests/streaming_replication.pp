@@ -57,7 +57,7 @@ class postgresql::streaming_replication (
     owner   => $postgresql::params::postgresuser,
     group   => $postgresql::params::postgresgroup,
     mode    => '0600',
-    content => template("${module_name}/streamingreplication.erb"),
+    content => template("${module_name}/recoveryconf.erb"),
     require => Exec['init streaming replication'],
     before  => Class['::postgresql::config'],
   }
