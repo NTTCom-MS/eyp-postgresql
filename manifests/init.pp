@@ -51,6 +51,7 @@ class postgresql(
                   $manage_docker_service           = true,
                   $ensure                          = 'running',
                   $enable                          = true,
+                  $restart_if_needed               = true,
                   # config
                   $listen                          = [ '*' ],
                   $port                            = $postgresql::params::port_default,
