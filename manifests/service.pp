@@ -16,7 +16,6 @@ class postgresql::service inherits postgresql {
       if($postgresql::restart_if_needed)
       {
         Exec['check pending restart'] {
-          command => '/bin/bash -c \'echo FORCING RESTART\'',
           notify  => Service[$postgresql::params::servicename[$postgresql::version]],
         }
       }
