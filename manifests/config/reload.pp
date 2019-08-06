@@ -10,5 +10,6 @@ class postgresql::config::reload inherits postgresql {
     command     => 'SELECT pg_reload_conf();',
     refreshonly => true,
     require     => Class['::postgresql::service'],
+    notify      => Class['::postgresql::service'],
   }
 }
