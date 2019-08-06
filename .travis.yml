@@ -32,7 +32,12 @@ matrix:
     env: BEAKER_set="centos6-docker" PG_VERSION="pg10"
     dist: trusty
     bundler_args:
-    script: sudo service docker restart ; sleep 10 && bundle exec rspec spec/acceptance/pg1*_spec.rb
+    script: sudo service docker restart ; sleep 10 && bundle exec rspec spec/acceptance/pg10*_spec.rb
+  - rvm: default
+    env: BEAKER_set="centos6-docker" PG_VERSION="pg11"
+    dist: trusty
+    bundler_args:
+    script: sudo service docker restart ; sleep 10 && bundle exec rspec spec/acceptance/pg11*_spec.rb
   - rvm: default
     env: BEAKER_set="centos7-docker" PG_VERSION="ALL"
     dist: trusty
