@@ -82,7 +82,7 @@ describe 'postgresql class' do
     end
 
     it "postgres version" do
-      expect(shell("echo \"select version()\" | psql -U postgres -p 5411 | grep \"PostgreSQL 10\"").exit_code).to be_zero
+      expect(shell("echo \"select version()\" | psql -U postgres -p 5411 | grep \"PostgreSQL 11\"").exit_code).to be_zero
     end
 
     it "postgres pg_log compression" do
