@@ -221,7 +221,7 @@ class postgresql(
   }
 
   class { '::postgresql::service':
-    require => Class['::postgresql::config::reload'],
+    before => Class['::postgresql::config::reload'],
   }
 
 }
