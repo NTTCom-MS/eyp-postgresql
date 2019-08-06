@@ -4,7 +4,8 @@ class { 'postgresql':
   checkpoint_segments => '8',
   wal_keep_segments   => '8',
   version             => '10',
-  port                => '6432',
+  max_connections     => '300',
+  restart_if_needed   => false,
 }
 
 postgresql::pgdumpbackup { 'demobackup':
