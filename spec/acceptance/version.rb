@@ -20,6 +20,11 @@ when 'RedHat'
   $postgresconf10 = '/var/lib/pgsql/10/data/postgresql.conf'
   $pghba10        = '/var/lib/pgsql/10/data/pg_hba.conf'
 
+  $packagename11  = 'postgresql11'
+  $servicename11  = 'postgresql-11'
+  $postgresconf11 = '/var/lib/pgsql/11/data/postgresql.conf'
+  $pghba11        = '/var/lib/pgsql/11/data/pg_hba.conf'
+
 when 'Debian'
   $packagename92 = ''
   $servicename92 = ''

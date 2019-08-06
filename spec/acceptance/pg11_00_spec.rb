@@ -40,11 +40,11 @@ describe 'postgresql class' do
       expect(apply_manifest(pp).exit_code).to eq(0)
     end
 
-    describe package($packagename10) do
+    describe package($packagename11) do
       it { is_expected.to be_installed }
     end
 
-    describe service($servicename10) do
+    describe service($servicename11) do
       it { should be_enabled }
       it { is_expected.to be_running }
     end
@@ -53,7 +53,7 @@ describe 'postgresql class' do
       it { should be_listening }
     end
 
-    describe file($postgresconf10) do
+    describe file($postgresconf11) do
       it { should be_file }
       its(:content) { should match 'wal_level = hot_standby' }
       its(:content) { should match 'max_connections = 100' }
@@ -64,7 +64,7 @@ describe 'postgresql class' do
       its(:content) { should match 'puppet managed file' }
     end
 
-    describe file($pghba10) do
+    describe file($pghba11) do
       it { should be_file }
       its(:content) { should match '# rule: test' }
       its(:content) { should match 'host	replication	replicator	192.168.56.0/24			md5' }
@@ -73,16 +73,16 @@ describe 'postgresql class' do
 
     #echo "SELECT nspname FROM pg_namespace WHERE nspname='jordi'" | psql -U postgres | grep jordi
     it "schema jordi" do
-      expect(shell("echo \"SELECT nspname FROM pg_namespace WHERE nspname='jordi'\" | psql -U postgres -h 127.0.0.1 -p 5410 | grep jordi").exit_code).to be_zero
+      expect(shell("echo \"SELECT nspname FROM pg_namespace WHERE nspname='jordi'\" | psql -U postgres -h 127.0.0.1 -p 5411 | grep jordi").exit_code).to be_zero
     end
 
     #SELECT rolname FROM pg_roles WHERE rolname=
     it "role replicator" do
-      expect(shell("echo \"SELECT rolname FROM pg_roles WHERE rolname='replicator'\" | psql -U postgres -h 127.0.0.1 -p 5410 | grep replicator").exit_code).to be_zero
+      expect(shell("echo \"SELECT rolname FROM pg_roles WHERE rolname='replicator'\" | psql -U postgres -h 127.0.0.1 -p 5411 | grep replicator").exit_code).to be_zero
     end
 
     it "postgres version" do
-      expect(shell("echo \"select version()\" | psql -U postgres -p 5410 | grep \"PostgreSQL 10\"").exit_code).to be_zero
+      expect(shell("echo \"select version()\" | psql -U postgres -p 5411 | grep \"PostgreSQL 10\"").exit_code).to be_zero
     end
 
     it "postgres pg_log compression" do
