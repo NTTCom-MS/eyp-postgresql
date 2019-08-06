@@ -4,6 +4,7 @@
 
 * added flag to control autorestart: When a config change requires the service to be restarted it can be done automatically if restart_if_needed is set to true (default: true)
 * renamed recovery.conf ERB template
+* added support for **PostgreSQL 11**
 
 ## 0.3.3
 
