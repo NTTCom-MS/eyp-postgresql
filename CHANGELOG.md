@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.3.5
+
+* added **default_transaction_read_only** under puppet management
+
 ## 0.3.4
 
 * added flag to control autorestart: When a config change requires the service to be restarted it can be done automatically if restart_if_needed is set to true (default: true)
