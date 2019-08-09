@@ -111,6 +111,7 @@ class postgresql(
                   $log_line_prefix                 = undef,
                   $log_lock_waits                  = true,
                   $deadlock_timeout                = '1s',
+                  $default_transaction_read_only   = false,
                 ) inherits postgresql::params {
 
   Exec {
