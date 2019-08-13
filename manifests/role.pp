@@ -1,3 +1,7 @@
+# postgres=# select * from pg_roles;
+#        rolname       | rolsuper | rolinherit | rolcreaterole | rolcreatedb | rolcanlogin | rolreplication | rolconnlimit | rolpassword | rolvaliduntil | rolbypassrls |                   rolconfig
+#    |  oid
+# (...)
 define postgresql::role (
                           $password,
                           $rolename    = $name,
