@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.3.6
+
+* added **inherit** flag to **postgresql::role**
+
 ## 0.3.5
 
 * added **default_transaction_read_only** under puppet management
