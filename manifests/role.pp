@@ -4,6 +4,7 @@ define postgresql::role (
                           $login       = true,
                           $superuser   = false,
                           $replication = false,
+                          $inherit     = true,
                           $port        = $postgresql::port,
                         ) {
   Exec {
@@ -27,21 +28,27 @@ define postgresql::role (
   $login_sql=$login ? { true => 'LOGIN', default => 'NOLOGIN' }
 
   postgresql_psql {"ALTER ROLE \"${rolename}\" ${login_sql}":
-    unless  => "SELECT rolname FROM pg_roles WHERE rolname ='${rolename}' and rolcanlogin =${login}",
+    unless  => "SELECT rolname FROM pg_roles WHERE rolname='${rolename}' and rolcanlogin=${login}",
     require => [Class['::postgresql::service'], Postgresql_psql["CREATE ROLE ${rolename}"]],
   }
 
   $superuser_sql=$superuser ? { true => 'SUPERUSER', default => 'NOSUPERUSER' }
 
   postgresql_psql {"ALTER ROLE \"${rolename}\" ${superuser_sql}":
-    unless  => "SELECT rolname FROM pg_roles WHERE rolname ='${rolename}' and rolsuper =${superuser}",
+    unless  => "SELECT rolname FROM pg_roles WHERE rolname='${rolename}' and rolsuper=${superuser}",
     require => [Class['::postgresql::service'], Postgresql_psql["CREATE ROLE ${rolename}"]],
   }
 
   $replication_sql=$replication ? { true => 'REPLICATION', default => '' }
 
   postgresql_psql {"ALTER ROLE \"${rolename}\" ${replication_sql}":
-    unless  => "SELECT rolname FROM pg_roles WHERE rolname ='${rolename}' and rolreplication =${replication}",
+    unless  => "SELECT rolname FROM pg_roles WHERE rolname='${rolename}' and rolreplication=${replication}",
+    require => [Class['::postgresql::service'], Postgresql_psql["CREATE ROLE ${rolename}"]],
+  }
+
+  $inherit_sql = $inherit ? { true => 'INHERIT', default => 'NOINHERIT' }
+  postgresql_psql {"ALTER ROLE \"${rolename}\" ${inherit_sql}":
+    unless  => "SELECT rolname FROM pg_roles WHERE rolname='${rolename}' and rolinherit=${inherit}",
     require => [Class['::postgresql::service'], Postgresql_psql["CREATE ROLE ${rolename}"]],
   }
 
@@ -50,7 +57,7 @@ define postgresql::role (
   #
 
   postgresql_psql { "CREATE ROLE ${rolename}":
-    command => "CREATE ROLE ${rolename} ${login_sql} ${superuser_sql} ${replication_sql} ${password_sql};",
+    command => "CREATE ROLE ${rolename} ${login_sql} ${superuser_sql} ${replication_sql} ${password_sql} ${inherit_sql};",
     unless  => "SELECT rolname FROM pg_roles WHERE rolname='${rolename}'",
     require => Class['::postgresql::service'],
   }
