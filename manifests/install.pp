@@ -44,6 +44,19 @@ class postgresql::install inherits postgresql {
     require => Package[$postgresql::params::packagename[$postgresql::version]],
   }
 
+  if($postgresql::install_contrib)
+  {
+    if(!defined(Package[$postgresql::params::contrib[$version]]))
+    {
+      package { $postgresql::params::contrib[$version]:
+        ensure  => 'installed',
+        require => Package[$postgresql::params::packagename[$postgresql::version]],
+        before  => Class['::postgresql::service'],
+      }
+    }
+  }
+
+
   # FATAL:  data directory "/var/lib/pgsql/9.2/data" has group or world access
   # DETAIL:  Permissions should be u=rwx (0700).
   # [root@evx2401660 9.2]# ls -la
