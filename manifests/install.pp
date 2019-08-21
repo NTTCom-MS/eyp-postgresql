@@ -44,7 +44,7 @@ class postgresql::install inherits postgresql {
     require => Package[$postgresql::params::packagename[$postgresql::version]],
   }
 
-  if($postresql::install_contrib)
+  if($postgresql::install_contrib)
   {
     if(!defined(Package[$postgresql::params::contrib[$version]]))
     {
