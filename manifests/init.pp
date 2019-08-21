@@ -27,6 +27,7 @@ class postgresql(
                   $version                         = $postgresql::params::version_default,
                   $datadir                         = undef,
                   # install
+                  $install_contrib                 = false,
                   $initdb                          = true,
                   $overcommit_memory               = '2',
                   $shmmax                          = ceiling(sprintf('%f', $::memorysize_mb)*786432),

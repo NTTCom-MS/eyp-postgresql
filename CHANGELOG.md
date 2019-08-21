@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.3.7
+
+* added **install_contrib** flag to **postgresql**
+
 ## 0.3.6
 
 * added **inherit** flag to **postgresql::role**
