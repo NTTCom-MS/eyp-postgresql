@@ -8,7 +8,7 @@ class { 'postgresql':
   version             => '9.6',
 }
 
-class { 'postgresql::streaming_replication':
+class { 'postgresql::recoveryconf':
   masterhost     => '192.168.56.11',
   masterusername => 'replicator',
   masterpassword => 'replicatorpassword',

@@ -146,7 +146,7 @@ class postgresql(
       command => "mkdir -p ${archive_dir}",
       creates => $archive_dir,
       require => Class['::postgresql::install'],
-      tag     => 'post-streaming_replication',
+      tag     => 'post-recoveryconf',
     }
 
     file { $archive_dir:
@@ -155,7 +155,7 @@ class postgresql(
       group  => $archive_dir_group,
       mode   => $archive_dir_mode,
       before => Class['::postgresql::service'],
-      tag    => 'post-streaming_replication',
+      tag    => 'post-recoveryconf',
     }
 
     if($archive_dir!=undef and $archive_command_custom==undef)

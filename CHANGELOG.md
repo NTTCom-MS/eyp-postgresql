@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.3.7
+
+* renamed **postgresql::streaming_replication** to **postgresql::recoveryconf**. Class **postgresql::streaming_replication** still exists just for compatibility
+
 ## 0.3.6
 
 * added **inherit** flag to **postgresql::role**
