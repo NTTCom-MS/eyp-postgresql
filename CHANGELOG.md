@@ -3,6 +3,7 @@
 ## 0.3.7
 
 * renamed **postgresql::streaming_replication** to **postgresql::recoveryconf**. Class **postgresql::streaming_replication** still exists just for compatibility
+* added support for **PostgreSQL 12**
 
 ## 0.3.6
 
