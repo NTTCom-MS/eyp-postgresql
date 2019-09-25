@@ -1,6 +1,6 @@
 class postgresql::params {
 
-  $version_default='9.2'
+  $version_default='11'
 
   $port_default='5432'
   $log_directory_default='pg_log'

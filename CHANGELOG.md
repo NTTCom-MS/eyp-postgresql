@@ -1,7 +1,8 @@
 # CHANGELOG
 
-## 0.3.7
+## 0.4.0
 
+* **INCOMPATIBLE CHANGE**: set default PostgreSQL version to **PostgreSQL 11**
 * renamed **postgresql::streaming_replication** to **postgresql::recoveryconf**. Class **postgresql::streaming_replication** still exists just for compatibility
   - improved recoveryconf management
 * added support for **PostgreSQL 12**

@@ -5,7 +5,7 @@ class { 'postgresql':
   wal_keep_segments   => '8' ,
   hot_standby         => true,
   initdb              => false,
-  version             => '9.6',
+  version             => '11',
 }
 
 class { 'postgresql::recoveryconf':
