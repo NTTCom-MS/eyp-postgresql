@@ -11,7 +11,9 @@ primary_conninfo = 'host=<%= @masterhost %><% if defined?(@masterport) %> port=<
 <% if defined?(@primary_slot_name) -%>
 primary_slot_name = <%= @primary_slot_name %>
 <% end -%>
-trigger_file = '/tmp/postgresql.enable_master_mode'
+<% if @standby_mode -%>
+trigger_file = '<%= @trigger_file %>'
+<% end -%>
 <% if defined?(@restore_command) -%>
 restore_command='<%= @restore_command %>'
 <% end -%>

@@ -13,6 +13,7 @@ class postgresql::recoveryconf(
                                 $primary_slot_name        = undef,
                                 $init_with_pg_basebackup  = true,
                                 $standby_mode             = true,
+                                $trigger_file             = '/tmp/postgresql.enable_master_mode',
                               ) inherits postgresql::params {
   Exec {
     path => '/usr/sbin:/usr/bin:/sbin:/bin',
