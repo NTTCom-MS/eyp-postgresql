@@ -1,5 +1,5 @@
 #
-# compatibility
+# compatibility - please use postgresql::recoveryconf instead
 #
 class postgresql::streaming_replication (
                                           $masterhost               = undef,

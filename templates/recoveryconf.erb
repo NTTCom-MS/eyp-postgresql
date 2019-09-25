@@ -4,8 +4,10 @@
 
 # streaming replication
 
-standby_mode = 'on'
-primary_conninfo = 'host=<%= @masterhost %> port=<%= @masterport %> user=<%= @masterusername %> password=<%= @masterpassword %>'
+standby_mode = <%= scope.function_bool2onoff([@standby_mode]) %>
+<% if defined?(@masterhost) and @standby_mode -%>
+primary_conninfo = 'host=<%= @masterhost %><% if defined?(@masterport) %> port=<%= @masterport %><% end %><% if defined?(@masterusername) %> user=<%= @masterusername %><% end %><% if defined?(@masterpassword) %> password=<%= @masterpassword %><% end %>'
+<% end -%>
 <% if defined?(@primary_slot_name) -%>
 primary_slot_name = <%= @primary_slot_name %>
 <% end -%>

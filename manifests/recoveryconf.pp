@@ -11,6 +11,8 @@ class postgresql::recoveryconf(
                                 $archive_cleanup_command  = undef,
                                 $recovery_min_apply_delay = undef,
                                 $primary_slot_name        = undef,
+                                $init_with_pg_basebackup  = true,
+                                $standby_mode             = true,
                               ) inherits postgresql::params {
   Exec {
     path => '/usr/sbin:/usr/bin:/sbin:/bin',
@@ -25,32 +27,28 @@ class postgresql::recoveryconf(
     $datadir_path = $datadir
   }
 
-  if($masterhost==undef or $masterusername==undef or $masterpassword==undef)
+  if($masterhost!=undef and $init_with_pg_basebackup and $standby_mode)
   {
-    fail("masterhost (${masterhost}), masterusername (${masterusername}) and masterpassword (${masterpassword}) are required")
-  }
+    file { "${postgresql::params::postgreshome}/.pgpass":
+      ensure  => 'present',
+      owner   => $postgresql::params::postgresuser,
+      group   => $postgresql::params::postgresuser,
+      mode    => '0600',
+      content => "${masterhost}:${masterport}:*:${masterusername}:${masterpassword}\n",
+      require => Class['::postgresql::install'],
+    }
 
-  #TODO: postgres home
-
-  file { "${postgresql::params::postgreshome}/.pgpass":
-    ensure  => 'present',
-    owner   => $postgresql::params::postgresuser,
-    group   => $postgresql::params::postgresuser,
-    mode    => '0600',
-    content => "${masterhost}:${masterport}:*:${masterusername}:${masterpassword}\n",
-    require => Class['::postgresql::install'],
+    exec { 'init streaming replication':
+      command => "bash -xc 'pg_basebackup -D ${datadir_path} -h ${masterhost} -p ${masterport} -U ${masterusername} -w -v -X stream > $(dirname ${datadir_path})/.streaming_replication_init.log 2>&1'",
+      user    => $postgresql::params::postgresuser,
+      creates => "${datadir_path}/recovery.conf",
+      require => File["${postgresql::params::postgreshome}/.pgpass"],
+      before  => Class['::postgresql::config'],
+      timeout => 0,
+    }
+    -> Exec <| tag == 'post-recoveryconf' |>
+    -> File <| tag == 'post-recoveryconf' |>
   }
-
-  exec { 'init streaming replication':
-    command => "bash -xc 'pg_basebackup -D ${datadir_path} -h ${masterhost} -p ${masterport} -U ${masterusername} -w -v -X stream > $(dirname ${datadir_path})/.streaming_replication_init.log 2>&1'",
-    user    => $postgresql::params::postgresuser,
-    creates => "${datadir_path}/recovery.conf",
-    require => File["${postgresql::params::postgreshome}/.pgpass"],
-    before  => Class['::postgresql::config'],
-    timeout => 0,
-  }
-  -> Exec <| tag == 'post-recoveryconf' |>
-  -> File <| tag == 'post-recoveryconf' |>
 
   file { "${datadir_path}/recovery.conf":
     ensure  => 'present',
