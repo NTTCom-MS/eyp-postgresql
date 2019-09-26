@@ -3,7 +3,7 @@ require_relative './version.rb'
 
 describe 'postgresql class' do
 
-  context 'postgres 10 postgis' do
+  context 'postgres 11 postgis' do
     # Using puppet_apply as a helper
     it 'should work with no errors' do
       pp = <<-EOF
@@ -13,8 +13,8 @@ describe 'postgresql class' do
     		max_wal_senders     => '3',
     		checkpoint_segments => '8',
     		wal_keep_segments   => '8',
-        version             => '10',
-        port                => '5510'
+        version             => '11',
+        port                => '5511'
     	}
 
     	postgresql::hba_rule { 'test':
@@ -38,7 +38,7 @@ describe 'postgresql class' do
 
       class { 'postgresql::postgis':
         dbname  => 'demopostgis',
-        version => '25_10',
+        version => '25_11',
       }
 
       EOF
@@ -81,20 +81,20 @@ describe 'postgresql class' do
 
     #echo "SELECT nspname FROM pg_namespace WHERE nspname='jordi'" | psql -U postgres | grep jordi
     it "schema demopostgis" do
-      expect(shell("echo \"SELECT nspname FROM pg_namespace WHERE nspname='demopostgis'\" | psql -U postgres -h 127.0.0.1 -p 5510 | grep demopostgis").exit_code).to be_zero
+      expect(shell("echo \"SELECT nspname FROM pg_namespace WHERE nspname='demopostgis'\" | psql -U postgres -h 127.0.0.1 -p 5511 | grep demopostgis").exit_code).to be_zero
     end
 
     #SELECT rolname FROM pg_roles WHERE rolname=
     it "role demopostgis" do
-      expect(shell("echo \"SELECT rolname FROM pg_roles WHERE rolname='demopostgis'\" | psql -U postgres -h 127.0.0.1 -p 5510 | grep demopostgis").exit_code).to be_zero
+      expect(shell("echo \"SELECT rolname FROM pg_roles WHERE rolname='demopostgis'\" | psql -U postgres -h 127.0.0.1 -p 5511 | grep demopostgis").exit_code).to be_zero
     end
 
     it "postgres version 10" do
-      expect(shell("echo \"select version()\" | psql -U postgres -p 5510 | grep \"PostgreSQL 10\"").exit_code).to be_zero
+      expect(shell("echo \"select version()\" | psql -U postgres -p 5511 | grep \"PostgreSQL 11\"").exit_code).to be_zero
     end
 
     it "postgres postgis extension" do
-      expect(shell("echo \"select extname from pg_extension\" | psql -U postgres -d demopostgis -p 5510 | grep \"postgis\"").exit_code).to be_zero
+      expect(shell("echo \"select extname from pg_extension\" | psql -U postgres -d demopostgis -p 5511 | grep \"postgis\"").exit_code).to be_zero
     end
 
   end

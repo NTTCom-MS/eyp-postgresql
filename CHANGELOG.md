@@ -2,9 +2,11 @@
 
 ## 0.4.0
 
-* **INCOMPATIBLE CHANGE**: set default PostgreSQL version to **PostgreSQL 11**
+* **INCOMPATIBLE CHANGES**:
+  - set default PostgreSQL version to **PostgreSQL 11**
+  - version number for **postgresql::postgis** is now mandatory (there's no default)
 * renamed **postgresql::streaming_replication** to **postgresql::recoveryconf**. Class **postgresql::streaming_replication** still exists just for compatibility
-  - improved recoveryconf management
+  - improved recoveryconf management adding more variables
 * added support for **PostgreSQL 12**
 
 ## 0.3.6

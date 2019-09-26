@@ -19,3 +19,15 @@ postgresql::hba_rule { 'demo':
 postgresql::role { 'demo':
   password    => 'demopass',
 }
+
+postgresql::db { 'demo':
+  owner => 'demo',
+}
+
+postgresql::db { 'monit':
+  owner => 'postgres',
+}
+
+postgresql::role { 'postgres':
+  superuser => true,
+}
