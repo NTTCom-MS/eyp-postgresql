@@ -37,8 +37,8 @@ describe 'postgresql class' do
       }
 
       class { 'postgresql::postgis':
-        dbname  => 'demopostgis',
         version => '25_10',
+        dbname  => 'demopostgis',
       }
 
       EOF
