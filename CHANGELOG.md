@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.4.1
+
+* added postgis support to PostgreSQL 11 
+
 ## 0.4.0
 
 * **INCOMPATIBLE CHANGES**:

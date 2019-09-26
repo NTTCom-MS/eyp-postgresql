@@ -76,6 +76,9 @@ class postgresql::params {
                   '23_10' => 'postgis23_10',
                   '24_10' => 'postgis24_10',
                   '25_10' => 'postgis25_10',
+                  '23_11' => 'postgis23_11',
+                  '24_11' => 'postgis24_11',
+                  '25_11' => 'postgis25_11',
                 }
 
       case $::operatingsystem
