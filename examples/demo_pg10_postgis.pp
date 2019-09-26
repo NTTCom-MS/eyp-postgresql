@@ -28,4 +28,5 @@ postgresql::db { 'demopostgis':
 
 class { 'postgresql::postgis':
   dbname  => 'demopostgis',
+  version => '25_10',
 }

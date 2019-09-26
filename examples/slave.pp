@@ -5,10 +5,10 @@ class { 'postgresql':
   wal_keep_segments   => '8' ,
   hot_standby         => true,
   initdb              => false,
-  version             => '9.6',
+  version             => '11',
 }
 
-class { 'postgresql::streaming_replication':
+class { 'postgresql::recoveryconf':
   masterhost     => '192.168.56.11',
   masterusername => 'replicator',
   masterpassword => 'replicatorpassword',

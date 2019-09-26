@@ -3,7 +3,7 @@ class { 'postgresql':
   max_wal_senders     => '3',
   checkpoint_segments => '8',
   wal_keep_segments   => '8',
-  version             => '11',
+  version             => '12',
 }
 
 postgresql::pgdumpbackup { 'demobackup':
@@ -18,16 +18,4 @@ postgresql::hba_rule { 'demo':
 
 postgresql::role { 'demo':
   password    => 'demopass',
-}
-
-postgresql::db { 'demo':
-  owner => 'demo',
-}
-
-postgresql::db { 'monit':
-  owner => 'postgres',
-}
-
-postgresql::role { 'postgres':
-  superuser => true,
 }

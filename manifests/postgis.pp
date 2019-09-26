@@ -1,5 +1,5 @@
 class postgresql::postgis (
-                            $version = '25_10',
+                            $version,
                             $dbname  = undef,
                             $port    = $postgresql::port,
                           ) inherits postgresql::params {
