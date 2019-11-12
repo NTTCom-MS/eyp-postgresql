@@ -36,6 +36,7 @@ class postgresql::config inherits postgresql {
   {
     systemd::service::dropin { $postgresql::params::servicename[$postgresql::version]:
       env_vars => [ "PGDATA=${datadir_path}" ],
+      before   => Class['postgresql::service'],
     }
   }
 
