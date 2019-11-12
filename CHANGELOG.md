@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.4.2
+
+* fixed **systemd::dropin** dependency
+
 ## 0.4.1
 
 * added postgis support to PostgreSQL 11
