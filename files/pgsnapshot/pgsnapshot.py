@@ -967,10 +967,11 @@ restore_to_vm=""
 list_backups=False
 force_ami=""
 list_retored_instances=False
+debug=False
 
 # parse opts
 try:
-    options, remainder = getopt.getopt(sys.argv[1:], 'l:s:ac:dk:r:LhK:A:R', [
+    options, remainder = getopt.getopt(sys.argv[1:], 'l:s:ac:dk:r:LDhK:A:R', [
                                                                 'lvm-disk=',
                                                                 "config="
                                                                 'snapshot-size=',
@@ -979,6 +980,7 @@ try:
                                                                 'keep-aws-snaps-days=',
                                                                 'restore-to-vm=',
                                                                 'list-backups',
+                                                                'debug',
                                                                 'keep-lvm-snaps=',
                                                                 'force-ami=',
                                                                 'list-restored-instances'
@@ -1006,6 +1008,8 @@ for opt, arg in options:
         list_retored_instances = True
     elif opt in ('-L', '--list-backups'):
         list_backups = True
+    elif opt in ('-D', '--debug'):
+        debug = True
     elif opt in ('-g', '--logdir'):
         logdir = arg
     elif opt in ('-r', '--restore-to-vm'):
@@ -1057,7 +1061,10 @@ fileHandler = logging.FileHandler(logFile)
 fileHandler.setFormatter(logFormatter)
 rootLogger.addHandler(fileHandler)
 
-rootLogger.setLevel(0)
+if debug:
+    rootLogger.setLevel(0)
+else:
+    rootLogger.setLevel(40)
 
 try:
     lvm_disk=config.get('pgsnapshot', 'lvmdisk').strip('"')
