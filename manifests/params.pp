@@ -7,6 +7,9 @@ class postgresql::params {
   $log_filename_default='postgresql-%Y%m%d.log'
   $timezone_default='Europe/Andorra'
 
+  $pgbouncer_service_name = 'pgbouncer'
+  $pgbouncer_package_name = 'pgbouncer'
+
   case $::osfamily
   {
     'redhat':
