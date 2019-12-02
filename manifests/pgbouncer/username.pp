@@ -1,4 +1,4 @@
-define postgresql::pgbouncer::database(
+define postgresql::pgbouncer::username(
                                         $password_md5,
                                         $username = $name,
                                         $order    = '42',
