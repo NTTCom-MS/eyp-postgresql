@@ -1,0 +1,6 @@
+<% if defined?(@description) -%>
+;;;
+;;; <%= @description %>
+;;;
+<% end -%>
+<%= @database %>= host=<%= @host %> port=<%= @port %> user=<%= @username %> dbname=<%= @remote_database %>
