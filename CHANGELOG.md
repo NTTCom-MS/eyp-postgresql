@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## 0.4.3
+## 0.4.4
 
 * added pgbouncer support
 
