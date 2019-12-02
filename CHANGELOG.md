@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.4.3
+
+* added pgbouncer support
+
 ## 0.4.2
 
 * fixed **systemd::dropin** dependency
