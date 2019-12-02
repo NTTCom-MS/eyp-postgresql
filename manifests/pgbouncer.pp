@@ -6,6 +6,10 @@ class postgresql::pgbouncer (
                 $service_ensure        = 'running',
                 $service_enable        = true,
                 $auth_type             = 'md5',
+                $listen_addr           = '127.0.0.1',
+                $listen_port           = '6432',
+                $logfile               = '/var/log/pgbouncer/pgbouncer.log',
+                $pool_mode             = 'session',
               ) inherits postgresql::pgbouncer::params {
 
   class { '::postgresql::pgbouncer::install': } ->

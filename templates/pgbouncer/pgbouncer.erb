@@ -17,7 +17,7 @@
 ;;; Administrative settings
 ;;;
 
-logfile = /var/log/pgbouncer/pgbouncer.log
+logfile = <%= @logfile %>
 pidfile = /var/run/pgbouncer/pgbouncer.pid
 
 ;;;
@@ -25,8 +25,8 @@ pidfile = /var/run/pgbouncer/pgbouncer.pid
 ;;;
 
 ;; IP address or * which means all IPs
-listen_addr = 127.0.0.1
-listen_port = 6432
+listen_addr = <%= @listen_addr %>
+listen_port = <%= @listen_port %>
 
 ;; Unix socket is also used for -R.
 ;; On Debian it should be /var/run/postgresql
@@ -115,7 +115,7 @@ stats_users = stats, postgres
 ;;   session      - after client disconnects (default)
 ;;   transaction  - after transaction finishes
 ;;   statement    - after statement finishes
-;pool_mode = session
+pool_mode = <%= @pool_mode %>
 
 ;; Query for cleaning connection immediately after releasing from
 ;; client.  No need to put ROLLBACK here, pgbouncer does not reuse
