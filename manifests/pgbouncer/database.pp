@@ -8,7 +8,7 @@ define postgresql::pgbouncer::database(
                                         $order           = '42',
                                         $description     = undef,
                                       ) {
-  concat::fragment{ "postgres pgbouncer database ${database} ${user}":
+  concat::fragment{ "postgres pgbouncer database ${database} ${username}":
     order   => "10-${order}",
     target  => '/etc/pgbouncer/pgbouncer-databases.ini',
     content => template("${module_name}/pgbouncer/database-entry.erb"),

@@ -26,4 +26,10 @@ class postgresql::pgbouncer::config inherits postgresql::pgbouncer {
     content => template("${module_name}/pgbouncer/databases-header.erb"),
   }
 
+    concat { '/etc/pgbouncer/userlist.txt':
+      ensure => 'present',
+      owner  => 'root',
+      group  => 'root',
+      mode   => '0644',
+    }
 }
