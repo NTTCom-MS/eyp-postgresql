@@ -113,6 +113,9 @@ class postgresql(
                   $log_lock_waits                  = true,
                   $deadlock_timeout                = '1s',
                   $default_transaction_read_only   = false,
+                  $max_worker_processes            = $::processorcount,
+                  $max_parallel_workers            = $::processorcount,
+                  $max_parallel_workers_per_gather = ceiling(sprintf('%f', ($::memorysize_mb)/2)),
                 ) inherits postgresql::params {
 
   Exec {

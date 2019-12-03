@@ -155,6 +155,22 @@ maintenance_work_mem = <%= @maintenance_work_mem %>		# min 1MB
 #effective_io_concurrency = 1		# 1-1000; 0 disables prefetching
 
 
+<% if scope.function_versioncmp([@version, '9.6']) >= 0 -%>
+# Sets the maximum number of background processes that the system can support. This parameter can only be set at server start. The default is 8.
+max_worker_processes = <%= @max_worker_processes %>
+<% end -%>
+
+<% if scope.function_versioncmp([@version, '10']) >= 0 -%>
+# Sets the maximum number of workers that the system can support for parallel queries. The default value is 8
+max_parallel_workers = <%= @max_parallel_workers %>
+<% end -%>
+
+<% if scope.function_versioncmp([@version, '9.6']) >= 0 -%>
+# Sets the maximum number of workers that can be started by a single Gather or Gather Merge node.
+# The default value is 2. Setting this value to 0 disables parallel query execution.
+max_parallel_workers_per_gather = <%= @max_parallel_workers_per_gather %>
+<% end -%>
+
 #------------------------------------------------------------------------------
 # WRITE AHEAD LOG
 #------------------------------------------------------------------------------
