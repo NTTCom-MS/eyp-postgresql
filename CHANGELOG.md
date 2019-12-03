@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 0.4.5
+
+* Added version dependent flags:
+  - max_worker_processes
+  - max_parallel_workers
+  - max_parallel_workers_per_gather
+
 ## 0.4.4
 
 * added pgbouncer support
