@@ -115,7 +115,7 @@ class postgresql(
                   $default_transaction_read_only   = false,
                   $max_worker_processes            = $::processorcount,
                   $max_parallel_workers            = $::processorcount,
-                  $max_parallel_workers_per_gather = max(2, ceiling(sprintf('%f', ($::processorcount+1)/2))),
+                  $max_parallel_workers_per_gather = max(2, ceiling(sprintf('%f', ($::processorcount)/2))),
                 ) inherits postgresql::params {
 
   Exec {
