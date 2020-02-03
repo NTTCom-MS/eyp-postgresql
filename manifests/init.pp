@@ -116,6 +116,8 @@ class postgresql(
                   $max_worker_processes            = $::processorcount,
                   $max_parallel_workers            = $::processorcount,
                   $max_parallel_workers_per_gather = max(2, ceiling(sprintf('%f', ($::processorcount)/2))),
+                  $ensure_nagios_checks            = 'present',
+                  $basedir_nagios_checks           = '/usr/local/bin',
                 ) inherits postgresql::params {
 
   Exec {
@@ -207,6 +209,11 @@ class postgresql(
       # segurament es un: i have no idea what i'm doing o son proves, deixem un cd .
       $archive_command='cd .'
     }
+  }
+
+  class { '::postgresql::checks':
+    ensure  => $ensure_nagios_checks,
+    basedir => $basedir_nagios_checks,
   }
 
   class { '::postgresql::install': }

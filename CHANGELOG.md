@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.4.6
+
+* added nagios compatible check for postgres replication
+
 ## 0.4.5
 
 * Added version dependent flags:
