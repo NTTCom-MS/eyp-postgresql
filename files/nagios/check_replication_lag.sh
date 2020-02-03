@@ -6,7 +6,7 @@ USERNAME=postgres
 MAXLAG=18000
 WARNINGLAG=14400
 
-while getopts 'hd:U:e:' OPT;
+while getopts 'U:l:w:h' OPT;
 do
     case $OPT in
         U)  USERNAME="$OPTARG"
