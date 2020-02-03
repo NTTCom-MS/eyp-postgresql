@@ -5,6 +5,7 @@ class postgresql::checks(
   exec { "mkdir p ${basedir}":
     command => "mkdir -p ${basedir}",
     creates => $basedir,
+    path    => '/usr/sbin:/usr/bin:/sbin:/bin',
   }
 
   file { "${basedir}/check_replication_lag":
