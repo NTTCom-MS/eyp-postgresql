@@ -5,7 +5,6 @@ services:
   - docker
 script:
   - bundle exec rspec spec/acceptance
-bundler_args: --without system_tests
 matrix:
   include:
   - rvm: default

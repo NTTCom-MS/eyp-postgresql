@@ -1,4 +1,5 @@
 #!/bin/bash
+# puppet managed file
 
 PATH="/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin"
 

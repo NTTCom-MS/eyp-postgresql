@@ -71,6 +71,11 @@ describe 'postgresql class' do
       its(:content) { should match 'puppet managed file' }
     end
 
+    describe file('/usr/local/bin/check_replication_lag') do
+      it { should be_file }
+      its(:content) { should match 'puppet managed file' }
+    end
+
     #echo "SELECT nspname FROM pg_namespace WHERE nspname='jordi'" | psql -U postgres | grep jordi
     it "schema jordi" do
       expect(shell("echo \"SELECT nspname FROM pg_namespace WHERE nspname='jordi'\" | psql -U postgres -h 127.0.0.1 -p 5411 | grep jordi").exit_code).to be_zero

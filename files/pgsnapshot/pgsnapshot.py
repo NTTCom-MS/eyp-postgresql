@@ -18,6 +18,8 @@ from email.MIMEMultipart import MIMEMultipart
 from email.MIMEText import MIMEText
 from random import randint
 
+# puppet managed file
+
 def sendReportEmail(errors, to_addr, id_host):
     global logFile
 

@@ -1,4 +1,5 @@
 #!/bin/bash
+# puppet managed file
 
 if [ -z "$1" ];
 then
