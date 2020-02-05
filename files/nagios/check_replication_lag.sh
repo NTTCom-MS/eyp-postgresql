@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# puppet managed file
+
 PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 
 USERNAME=postgres
