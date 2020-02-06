@@ -38,13 +38,18 @@ fi
 
 REPLAY_DATE=$(psql -U "${USERNAME}" -c 'select pg_last_xact_replay_timestamp();' -t | head -n1)
 
+if [ -z "${REPLAY_DATE}" ];
+then
+   echo "UNKNOWN: unable to to get data from postgres - check select pg_last_xact_replay_timestamp();"
+   exit 3
+fi
+
 NOW_TS="$(date +%s)"
 REPLAY_TS="$(date -d "${REPLAY_DATE}" '+%s')"
 
 DIFF_TS="ERROR"
 
 let DIFF_TS=NOW_TS-REPLAY_TS
-
 
 if ! [[ $DIFF_TS =~ ^[0-9]+$ ]];
 then
