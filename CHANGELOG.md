@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.4.7
+
+* bugfix **check_replication_lag**
+
 ## 0.4.6
 
 * added nagios compatible check for postgres replication
