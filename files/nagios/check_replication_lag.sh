@@ -36,7 +36,7 @@ then
     exit 1
 fi
 
-REPLAY_DATE=$(psql -U "${USERNAME}" -c 'select pg_last_xact_replay_timestamp();' -t | head -n1)
+REPLAY_DATE=$(psql -U "${USERNAME}" -c 'select pg_last_xact_replay_timestamp();' -t 2>/dev/null | head -n1)
 
 if [ -z "${REPLAY_DATE}" ];
 then
