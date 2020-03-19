@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.4.8
+
+* added compliance check for **check_postgres_datadir**
+
 ## 0.4.7
 
 * bugfix **check_replication_lag**
