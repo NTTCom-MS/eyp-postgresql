@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.4.9
+
+* added **max_standby_archive_delay** and **max_standby_streaming_delay**
+
 ## 0.4.8
 
 * added compliance check for **check_postgres_datadir**
