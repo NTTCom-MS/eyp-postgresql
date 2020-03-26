@@ -61,7 +61,6 @@ class postgresql(
                   $max_wal_senders                 = '5',
                   $checkpoint_segments             = '16',
                   $wal_keep_segments               = '0',
-                  $hot_standby                     = false,
                   $pidfile                         = undef,
                   $log_directory                   = $postgresql::params::log_directory_default,
                   $log_filename                    = $postgresql::params::log_filename_default,
@@ -116,6 +115,9 @@ class postgresql(
                   $max_worker_processes            = $::processorcount,
                   $max_parallel_workers            = $::processorcount,
                   $max_parallel_workers_per_gather = max(2, ceiling(sprintf('%f', ($::processorcount)/2))),
+                  $hot_standby                     = false,
+                  $max_standby_archive_delay       = '30s',
+                  $max_standby_streaming_delay     = '30s',
                   $ensure_nagios_checks            = 'present',
                   $basedir_nagios_checks           = '/usr/local/bin',
                 ) inherits postgresql::params {
