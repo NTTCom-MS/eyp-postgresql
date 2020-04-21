@@ -6,7 +6,7 @@ define postgresql::hba_rule (
                               $auth_method = 'md5',
                               $auth_option = undef, # TODO: sera clau valor, fer hash
                               $description = $name,
-                              $order       = '01',
+                              $order       = '42',
                               $datadir     = $postgresql::datadir,
                             ) {
   include ::postgresql
