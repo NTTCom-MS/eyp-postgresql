@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.4.11
+
+* added options for setting default local entries on pg_hba
+
 ## 0.4.10
 
 * Updated pg repo URL

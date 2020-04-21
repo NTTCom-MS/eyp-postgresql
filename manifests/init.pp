@@ -120,6 +120,8 @@ class postgresql(
                   $max_standby_streaming_delay     = '30s',
                   $ensure_nagios_checks            = 'present',
                   $basedir_nagios_checks           = '/usr/local/bin',
+                  $add_hba_default_local_rules     = true,
+                  $default_local_authmethod        = 'trust',
                 ) inherits postgresql::params {
 
   Exec {
