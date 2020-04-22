@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 0.4.12
+
+* added more autovacuum settings
+* added bonjour options
+* added checkpoint settings
+* added effective_io_concurrency setting; for SSD disks
+
 ## 0.4.11
 
 * added options for setting default local entries on pg_hba

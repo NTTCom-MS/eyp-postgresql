@@ -1,5 +1,5 @@
 #
-# puppet managed file - do NOT edit
+# puppet managed file
 #
 
 # -----------------------------
@@ -71,9 +71,9 @@ superuser_reserved_connections = <%= @superuser_reserved_connections %>	# (chang
 #unix_socket_group = ''			# (change requires restart)
 #unix_socket_permissions = 0777		# begin with 0 to use octal notation
 					# (change requires restart)
-#bonjour = off				# advertise server via Bonjour
+bonjour = <%= scope.function_bool2onoff([@bonjour]) %>				# advertise server via Bonjour
 					# (change requires restart)
-#bonjour_name = ''			# defaults to the computer name
+bonjour_name = '<%= @bonjour_name %>'			# defaults to the computer name
 					# (change requires restart)
 
 # - Security and Authentication -
@@ -142,7 +142,7 @@ maintenance_work_mem = <%= @maintenance_work_mem %>		# min 1MB
 #vacuum_cost_page_hit = 1		# 0-10000 credits
 #vacuum_cost_page_miss = 10		# 0-10000 credits
 #vacuum_cost_page_dirty = 20		# 0-10000 credits
-#vacuum_cost_limit = 200		# 1-10000 credits
+vacuum_cost_limit = <%= @vacuum_cost_limit %>		# 1-10000 credits
 
 # - Background Writer -
 
@@ -152,7 +152,7 @@ maintenance_work_mem = <%= @maintenance_work_mem %>		# min 1MB
 
 # - Asynchronous Behavior -
 
-#effective_io_concurrency = 1		# 1-1000; 0 disables prefetching
+effective_io_concurrency = <%= @effective_io_concurrency %>		# 1-1000; 0 disables prefetching
 
 
 <% if scope.function_versioncmp([@version, '9.6']) >= 0 -%>
@@ -205,8 +205,8 @@ wal_compression = <%= scope.function_bool2onoff([@wal_compression]) %>
 <% if scope.function_versioncmp([@version, '9.5']) < 0 -%>
 checkpoint_segments = <%= @checkpoint_segments %>		# in logfile segments, min 1, 16MB each
 <% end -%>
-#checkpoint_timeout = 5min		# range 30s-1h
-#checkpoint_completion_target = 0.5	# checkpoint target duration, 0.0 - 1.0
+checkpoint_timeout = <%= @checkpoint_timeout %>		# range 30s-1h
+checkpoint_completion_target = <%= @checkpoint_completion_target %>	# checkpoint target duration, 0.0 - 1.0
 #checkpoint_warning = 30s		# 0 disables
 
 # - Archiving -
@@ -482,9 +482,10 @@ log_autovacuum_min_duration = <%= @log_autovacuum_min_duration %>	# -1 disables,
 					# their durations, > 0 logs only
 					# actions running at least this number
 					# of milliseconds.
-#autovacuum_max_workers = 3		# max number of autovacuum subprocesses
+autovacuum_max_workers = <%= @autovacuum_max_workers %>		# max number of autovacuum subprocesses
 					# (change requires restart)
-#autovacuum_naptime = 1min		# time between autovacuum runs
+autovacuum_naptime = <%= @autovacuum_naptime %>		# time between autovacuum runs
+
 					# vacuum
 autovacuum_vacuum_threshold = <%= @autovacuum_vacuum_threshold %>	# min number of row updates before
 autovacuum_vacuum_scale_factor = <%= @autovacuum_vacuum_scale_factor %>	# fraction of table size before vacuum
@@ -499,7 +500,7 @@ autovacuum_freeze_max_age = <%= @autovacuum_freeze_max_age %>	# maximum XID age 
 #autovacuum_vacuum_cost_delay = 20ms	# default vacuum cost delay for
 					# autovacuum, in milliseconds;
 					# -1 means use vacuum_cost_delay
-#autovacuum_vacuum_cost_limit = -1	# default vacuum cost limit for
+#autovacuum_vacuum_cost_limit = <%= @autovacuum_vacuum_cost_limit %>	# default vacuum cost limit for
 					# autovacuum, -1 means use
 					# vacuum_cost_limit
 
