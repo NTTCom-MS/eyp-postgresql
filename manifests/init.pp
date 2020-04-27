@@ -60,7 +60,7 @@ class postgresql(
                   $bonjour_name                    = '',
                   $max_connections                 = '100',
                   $wal_level                       = 'hot_standby',
-                  $max_wal_senders                 = '5',
+                  $max_wal_senders                 = '10',
                   $checkpoint_segments             = '16',
                   $wal_keep_segments               = '0',
                   $pidfile                         = undef,
