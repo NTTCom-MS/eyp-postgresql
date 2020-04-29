@@ -131,6 +131,7 @@ class postgresql(
                   $basedir_nagios_checks           = '/usr/local/bin',
                   $add_hba_default_local_rules     = true,
                   $default_local_authmethod        = 'trust',
+                  $pause_replica                   = undef,
                 ) inherits postgresql::params {
 
   Exec {
@@ -247,6 +248,44 @@ class postgresql(
 
   class { '::postgresql::service':
     before => Class['::postgresql::config::reload'],
+  }
+
+  if($pause_replica!=undef)
+  {
+    if(versioncmp($version, '10')>0)
+    {
+      if($pause_replica)
+      {
+        postgresql_psql {"SELECT pg_wal_replay_pause()":
+          unless  => "SELECT pg_is_wal_replay_paused()",
+          require => Class['::postgresql::service'],
+        }
+      }
+      else
+      {
+        postgresql_psql {"SELECT pg_wal_replay_resume()":
+          onlyif  => "SELECT pg_is_wal_replay_paused()",
+          require => Class['::postgresql::service'],
+        }
+      }
+    }
+    else
+    {
+      if($pause_replica)
+      {
+        postgresql_psql {"SELECT pg_xlog_replay_pause()":
+          unless  => "SELECT pg_is_wal_replay_paused()",
+          require => Class['::postgresql::service'],
+        }
+      }
+      else
+      {
+        postgresql_psql {"SELECT pg_xlog_replay_resume()":
+          onlyif  => "SELECT pg_is_wal_replay_paused()",
+          require => Class['::postgresql::service'],
+        }
+      }
+    }
   }
 
 }
