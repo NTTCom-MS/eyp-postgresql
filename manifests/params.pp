@@ -177,9 +177,42 @@ class postgresql::params {
             default: { fail("Unsupported CentOS version! - ${::operatingsystemrelease}")  }
           }
         }
-        default: { fail('Unsupported')}
+        default: { fail('Unsupported flavor')}
       }
     }
+    'Debian':
+    {
+      $repoprovider = 'apt'
+      $sysconfig=false
+
+      $postgresuser='postgres'
+      $postgresgroup='postgres'
+      $postgreshome='/var/lib/pgsql'
+      case $::operatingsystem
+      {
+        'Ubuntu':
+        {
+          case $::operatingsystemrelease
+          {
+            /^1[468].*$/:
+            {
+            }
+            default: { fail("Unsupported Ubuntu version! - ${::operatingsystemrelease}")  }
+          }
+        }
+        'Debian':
+        {
+          case $::operatingsystemrelease
+          {
+            /^[89].*$/:
+            {
+            }
+            /^10.*$/:
+            {
+            }
+            default: { fail("Unsupported Debian version! - ${::operatingsystemrelease}")  }
+          }
+        }
     default: { fail('Unsupported OS!')  }
   }
 }

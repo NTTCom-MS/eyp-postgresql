@@ -256,15 +256,15 @@ class postgresql(
     {
       if($pause_replica)
       {
-        postgresql_psql {"SELECT pg_wal_replay_pause()":
-          unless  => "SELECT pg_is_wal_replay_paused()",
+        postgresql_psql { 'SELECT pg_wal_replay_pause()':
+          unless  => 'SELECT pg_is_wal_replay_paused()',
           require => Class['::postgresql::service'],
         }
       }
       else
       {
-        postgresql_psql {"SELECT pg_wal_replay_resume()":
-          onlyif  => "SELECT pg_is_wal_replay_paused()",
+        postgresql_psql { 'SELECT pg_wal_replay_resume()':
+          onlyif  => 'SELECT pg_is_wal_replay_paused()',
           require => Class['::postgresql::service'],
         }
       }
@@ -273,15 +273,15 @@ class postgresql(
     {
       if($pause_replica)
       {
-        postgresql_psql {"SELECT pg_xlog_replay_pause()":
-          unless  => "SELECT pg_is_wal_replay_paused()",
+        postgresql_psql { 'SELECT pg_xlog_replay_pause()':
+          unless  => 'SELECT pg_is_xlog_replay_paused()',
           require => Class['::postgresql::service'],
         }
       }
       else
       {
-        postgresql_psql {"SELECT pg_xlog_replay_resume()":
-          onlyif  => "SELECT pg_is_wal_replay_paused()",
+        postgresql_psql { 'SELECT pg_xlog_replay_resume()':
+          onlyif  => 'SELECT pg_is_xlog_replay_paused()',
           require => Class['::postgresql::service'],
         }
       }
