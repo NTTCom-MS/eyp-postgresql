@@ -10,6 +10,53 @@ class postgresql::params {
   $pgbouncer_service_name = 'pgbouncer'
   $pgbouncer_package_name = 'pgbouncer'
 
+  $servicename = {
+                    '9.2' => 'postgresql-9.2',
+                    '9.6' => 'postgresql-9.6',
+                    '10' => 'postgresql-10',
+                    '11' => 'postgresql-11',
+                    '12' => 'postgresql-12',
+                  }
+
+  $pidfile = {
+                    '9.2' => '/var/lock/subsys/postgresql-9.2',
+                    '9.6' => undef,
+                    '10' => undef,
+                    '11' => undef,
+                    '12' => undef,
+                  }
+  $initdb = {
+              '9.2' => '/usr/pgsql-9.2/bin/initdb',
+              '9.6' => '/usr/pgsql-9.6/bin/initdb',
+              '10' => '/usr/pgsql-10/bin/initdb',
+              '11' => '/usr/pgsql-11/bin/initdb',
+              '12' => '/usr/pgsql-12/bin/initdb',
+            }
+  $contrib = {
+              '9.2' => 'postgresql92-contrib',
+              '9.6' => 'postgresql96-contrib',
+              '10' => 'postgresql10-contrib',
+              '11' => 'postgresql11-contrib',
+              '12' => 'postgresql12-contrib',
+            }
+
+  $postgis = {
+              '23_10' => 'postgis23_10',
+              '24_10' => 'postgis24_10',
+              '25_10' => 'postgis25_10',
+              '23_11' => 'postgis23_11',
+              '24_11' => 'postgis24_11',
+              '25_11' => 'postgis25_11',
+            }
+
+  $datadir_default = {
+                        '9.2' => '/var/lib/pgsql/9.2/data',
+                        '9.6' => '/var/lib/pgsql/9.6/data',
+                        '10' => '/var/lib/pgsql/10/data',
+                        '11' => '/var/lib/pgsql/11/data',
+                        '12' => '/var/lib/pgsql/12/data',
+                    }
+
   case $::osfamily
   {
     'redhat':
@@ -20,14 +67,6 @@ class postgresql::params {
       $postgresuser='postgres'
       $postgresgroup='postgres'
       $postgreshome='/var/lib/pgsql'
-
-      $datadir_default = {
-                            '9.2' => '/var/lib/pgsql/9.2/data',
-                            '9.6' => '/var/lib/pgsql/9.6/data',
-                            '10' => '/var/lib/pgsql/10/data',
-                            '11' => '/var/lib/pgsql/11/data',
-                            '12' => '/var/lib/pgsql/12/data',
-                        }
 
       $packagename= {
                       '9.2' => [ 'postgresql92-server' ],
@@ -44,45 +83,6 @@ class postgresql::params {
                               '11'  => [ 'postgresql11' ],
                               '12'  => [ 'postgresql12' ],
                             }
-
-      $servicename = {
-                        '9.2' => 'postgresql-9.2',
-                        '9.6' => 'postgresql-9.6',
-                        '10' => 'postgresql-10',
-                        '11' => 'postgresql-11',
-                        '12' => 'postgresql-12',
-                      }
-
-      $pidfile = {
-                        '9.2' => '/var/lock/subsys/postgresql-9.2',
-                        '9.6' => undef,
-                        '10' => undef,
-                        '11' => undef,
-                        '12' => undef,
-                      }
-      $initdb = {
-                  '9.2' => '/usr/pgsql-9.2/bin/initdb',
-                  '9.6' => '/usr/pgsql-9.6/bin/initdb',
-                  '10' => '/usr/pgsql-10/bin/initdb',
-                  '11' => '/usr/pgsql-11/bin/initdb',
-                  '12' => '/usr/pgsql-12/bin/initdb',
-                }
-      $contrib = {
-                  '9.2' => 'postgresql92-contrib',
-                  '9.6' => 'postgresql96-contrib',
-                  '10' => 'postgresql10-contrib',
-                  '11' => 'postgresql11-contrib',
-                  '12' => 'postgresql12-contrib',
-                }
-
-      $postgis = {
-                  '23_10' => 'postgis23_10',
-                  '24_10' => 'postgis24_10',
-                  '25_10' => 'postgis25_10',
-                  '23_11' => 'postgis23_11',
-                  '24_11' => 'postgis24_11',
-                  '25_11' => 'postgis25_11',
-                }
 
       case $::operatingsystem
       {
