@@ -35,7 +35,7 @@ class postgresql::install inherits postgresql {
 
   package { $postgresql::params::packagename[$postgresql::version]:
     ensure  => 'installed',
-    require => Package[$postgresql::params::reponame[$postgresql::version]],
+    require => Class['::postgresql::repo']
   }
 
   exec { "mkdir p ${datadir_path}":
