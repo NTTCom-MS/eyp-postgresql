@@ -1,0 +1,8 @@
+{
+  "puppet_task_version": 1,
+  "supports_noop": false,
+  "input_method": "stdin",
+  "description": "check if replica is paused",
+  "parameters": {
+  }
+}

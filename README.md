@@ -50,8 +50,9 @@ Installs and configures PostgreSQL on CentOS 6 and 7
 
 ### Setup Requirements
 
-* This module requires pluginsync enabled and **optionally** *eyp/sysctl* module installed to be able to manage **kernel.shmmax**, **kernel.shmall** and **vm.overcommit_memory**
+* This module requires **optionally** *eyp/sysctl* module installed to be able to manage **kernel.shmmax**, **kernel.shmall** and **vm.overcommit_memory**
 * Mountpoints **must** be already in place (datadir, archive_dir...) and datadir **must be empty**
+* Python module **psycopg2** is just required to be able to use tasks
 
 ### Beginning with postgresql
 

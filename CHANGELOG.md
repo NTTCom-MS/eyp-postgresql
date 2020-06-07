@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 0.4.13
+
+* added ability to control whether the replica should be paused
+* added support for **Debian** and **Ubuntu**
+
 ## 0.4.12
 
 * added more autovacuum settings
