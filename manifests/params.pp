@@ -57,6 +57,22 @@ class postgresql::params {
                         '12' => '/var/lib/pgsql/12/data',
                     }
 
+  $packagename= {
+                  '9.2' => [ 'postgresql92-server' ],
+                  '9.6' => [ 'postgresql96-server' ],
+                  '10'  => [ 'postgresql10-server' ],
+                  '11'  => [ 'postgresql11-server' ],
+                  '12'  => [ 'postgresql12-server' ],
+                }
+
+  $packagename_client = {
+                          '9.2' => [ 'postgresql92' ],
+                          '9.6' => [ 'postgresql96' ],
+                          '10'  => [ 'postgresql10' ],
+                          '11'  => [ 'postgresql11' ],
+                          '12'  => [ 'postgresql12' ],
+                        }
+
   case $::osfamily
   {
     'redhat':
@@ -67,22 +83,6 @@ class postgresql::params {
       $postgresuser='postgres'
       $postgresgroup='postgres'
       $postgreshome='/var/lib/pgsql'
-
-      $packagename= {
-                      '9.2' => [ 'postgresql92-server' ],
-                      '9.6' => [ 'postgresql96-server' ],
-                      '10'  => [ 'postgresql10-server' ],
-                      '11'  => [ 'postgresql11-server' ],
-                      '12'  => [ 'postgresql12-server' ],
-                    }
-
-      $packagename_client = {
-                              '9.2' => [ 'postgresql92' ],
-                              '9.6' => [ 'postgresql96' ],
-                              '10'  => [ 'postgresql10' ],
-                              '11'  => [ 'postgresql11' ],
-                              '12'  => [ 'postgresql12' ],
-                            }
 
       case $::operatingsystem
       {
