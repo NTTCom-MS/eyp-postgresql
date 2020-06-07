@@ -1,6 +1,10 @@
 # CHANGELOG
 
-## 0.4.15
+## 0.4.17
+
+* fix client dependency
+
+## 0.4.16
 
 * added ability to control whether the replica should be paused
 * added support for **Debian** and **Ubuntu**
