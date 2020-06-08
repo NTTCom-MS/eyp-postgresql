@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## 0.4.24
+## 0.4.25
 
 * fix raspbian bug
 
