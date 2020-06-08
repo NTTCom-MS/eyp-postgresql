@@ -85,100 +85,32 @@ class postgresql::params {
       $postgresgroup='postgres'
       $postgreshome='/var/lib/pgsql'
 
-      case $::operatingsystem
+      $reposource =  {
+                      '9.2' => 'https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm',
+                      '9.6' => 'https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm',
+                      '10' => 'https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm',
+                      '11' => 'https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm',
+                      '12' => 'https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm',
+                      }
+      $reponame = {
+                    '9.2' => 'pgdg-redhat-repo',
+                    '9.6' => 'pgdg-redhat-repo',
+                    '10' => 'pgdg-redhat-repo',
+                    '11' => 'pgdg-redhat-repo',
+                    '12' => 'pgdg-redhat-repo',
+                  }
+
+      case $::operatingsystemrelease
       {
-        'RedHat':
+        /^6.*$/:
         {
-          case $::operatingsystemrelease
-          {
-            /^6.*$/:
-            {
-              $systemd=false
-              $reposource =  {
-                              '9.2' => 'https://download.postgresql.org/pub/repos/yum/reporpms/EL-6-x86_64/pgdg-redhat-repo-latest.noarch.rpm',
-                              '9.6' => 'https://download.postgresql.org/pub/repos/yum/reporpms/EL-6-x86_64/pgdg-redhat-repo-latest.noarch.rpm',
-                              '10' => 'https://download.postgresql.org/pub/repos/yum/reporpms/EL-6-x86_64/pgdg-redhat-repo-latest.noarch.rpm',
-                              '11' => 'https://download.postgresql.org/pub/repos/yum/reporpms/EL-6-x86_64/pgdg-redhat-repo-latest.noarch.rpm',
-                              '12' => 'https://download.postgresql.org/pub/repos/yum/reporpms/EL-6-x86_64/pgdg-redhat-repo-latest.noarch.rpm',
-                              }
-              $reponame = {
-                            '9.2' => 'pgdg-redhat-repo',
-                            '9.6' => 'pgdg-redhat-repo',
-                            '10' => 'pgdg-redhat-repo',
-                            '11' => 'pgdg-redhat-repo',
-                            '12' => 'pgdg-redhat-repo',
-                          }
-            }
-            /^7.*$/:
-              {
-                $systemd=true
-                $reposource =  {
-                                '9.2' => 'https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm',
-                                '9.6' => 'https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm',
-                                '10' => 'https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm',
-                                '11' => 'https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm',
-                                '12' => 'https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm',
-                                }
-                $reponame = {
-                              '9.2' => 'pgdg-redhat-repo',
-                              '9.6' => 'pgdg-redhat-repo',
-                              '10' => 'pgdg-redhat-repo',
-                              '11' => 'pgdg-redhat-repo',
-                              '12' => 'pgdg-redhat-repo',
-                            }
-              }
-            default: { fail("Unsupported RHEL version! - ${::operatingsystemrelease}")  }
-          }
+          $systemd=false
         }
-        'CentOS':
+        /^[78].*$/:
         {
-          case $::operatingsystemrelease
-          {
-            /^6.*$/:
-            {
-              $systemd=false
-              $reposource =  {
-                              '9.2' => 'https://download.postgresql.org/pub/repos/yum/reporpms/EL-6-x86_64/pgdg-redhat-repo-latest.noarch.rpm',
-                              '9.6' => 'https://download.postgresql.org/pub/repos/yum/reporpms/EL-6-x86_64/pgdg-redhat-repo-latest.noarch.rpm',
-                              '10' => 'https://download.postgresql.org/pub/repos/yum/reporpms/EL-6-x86_64/pgdg-redhat-repo-latest.noarch.rpm',
-                              '11' => 'https://download.postgresql.org/pub/repos/yum/reporpms/EL-6-x86_64/pgdg-redhat-repo-latest.noarch.rpm',
-                              '12' => 'https://download.postgresql.org/pub/repos/yum/reporpms/EL-6-x86_64/pgdg-redhat-repo-latest.noarch.rpm',
-                              }
-              $reponame = {
-                            '9.2' => 'pgdg-redhat-repo',
-                            '9.6' => 'pgdg-redhat-repo',
-                            '10' => 'pgdg-redhat-repo',
-                            '11' => 'pgdg-redhat-repo',
-                            '12' => 'pgdg-redhat-repo',
-                          }
-
-            }
-            /^7.*$/:
-            {
-              $systemd=true
-              $reposource =  {
-                              '9.2' => 'https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm',
-                              '9.6' => 'https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm',
-                              '10' => 'https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm',
-                              '11' => 'https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm',
-                              '12' => 'https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm',
-                              }
-              $reponame = {
-                            '9.2' => 'pgdg-redhat-repo',
-                            '9.6' => 'pgdg-redhat-repo',
-                            '10' => 'pgdg-redhat-repo',
-                            '11' => 'pgdg-redhat-repo',
-                            '12' => 'pgdg-redhat-repo',
-                          }
-              # NOTA:
-              # # rpm -qi -p https://download.postgresql.org/pub/repos/yum/10/redhat/rhel-7-x86_64/pgdg-centos10-10-2.noarch.rpm
-              # Name        : pgdg-redhat-repo
-
-            }
-            default: { fail("Unsupported CentOS version! - ${::operatingsystemrelease}")  }
-          }
+          $systemd=true
         }
-        default: { fail('Unsupported flavor')}
+        default: { fail("Unsupported version! - ${::operatingsystemrelease}")  }
       }
     }
     'Debian':
