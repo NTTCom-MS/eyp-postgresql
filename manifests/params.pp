@@ -202,6 +202,7 @@ class postgresql::params {
               {
                 /^10.*$/:
                 {
+                  $systemd=true
                 }
                 default: { fail("Unsupported Debian version! - ${::operatingsystemrelease}")  }
               }
@@ -223,8 +224,17 @@ class postgresql::params {
             {
               case $::operatingsystemrelease
               {
-                /^1[468].*$/:
+                /^14.*$/:
                 {
+                  $systemd=false
+                }
+                /^1[68].*$/:
+                {
+                  $systemd=true
+                }
+                /^20.*$/:
+                {
+                  $systemd=true
                 }
                 default: { fail("Unsupported Ubuntu version! - ${::operatingsystemrelease}")  }
               }
@@ -233,11 +243,17 @@ class postgresql::params {
             {
               case $::operatingsystemrelease
               {
-                /^[89].*$/:
+                /^8.*$/:
                 {
+                  $systemd=false
+                }
+                /^9.*$/:
+                {
+                  $systemd=true
                 }
                 /^10.*$/:
                 {
+                  $systemd=true
                 }
                 default: { fail("Unsupported Debian version! - ${::operatingsystemrelease}")  }
               }
