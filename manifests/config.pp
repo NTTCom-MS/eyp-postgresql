@@ -43,21 +43,10 @@ class postgresql::config inherits postgresql {
   {
     if($postgresql::params::repoprovider=='raspbian10')
     {
-      systemd::service::dropin { 'postgresql@11-main.service':
-        execstart => "-/usr/bin/pg_ctlcluster -o -D ${datadir_path} --skip-systemctl-redirect %i start",
-        before    => Class['postgresql::service'],
+      file { '/etc/postgresql/11/main/postgresql.conf':
+        ensure => 'link',
+        target => "${datadir_path}/postgresql.conf",
       }
-
-      # root@datalore:/var/lib/postgresql/11/main# cat postmaster.opts
-      # /usr/lib/postgresql/11/bin/postgres "-D" "/var/lib/postgresql/11/main" "-c" "config_file=/etc/postgresql/11/main/postgresql.conf"
-      file { "${datadir_path}/postmaster.opts":
-        ensure  => 'present',
-        owner   => $postgresql::params::postgresuser,
-        group   => $postgresql::params::postgresgroup,
-        mode    => '0600',
-        content => "/usr/lib/postgresql/11/bin/postgres \"-D\" \"${datadir_path}\" \"-c\" \"config_file=${datadir_path}/postgresql.conf\"",
-      }
-
     }
     else
     {
