@@ -1,6 +1,6 @@
 {
   "name": "eyp-postgresql",
-  "version": "0.4.23",
+  "version": "0.4.24",
   "author": "eyp",
   "summary": "postgresql and pgbounce installation, configuration and management",
   "license": "Apache-2.0",
