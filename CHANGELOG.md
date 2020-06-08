@@ -1,11 +1,12 @@
 # CHANGELOG
 
-## 0.4.29
+## 0.5.1
 
 * fix raspbian bug
 * fix client dependency
+* added support for **RHEL/CentOS 8**
 
-## 0.4.16
+## 0.5.0
 
 * added ability to control whether the replica should be paused
 * added support for **Debian 8, 9 and 10** and **Ubuntu 14.04, 16.04, 18.04 and 20.04**
