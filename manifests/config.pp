@@ -59,7 +59,7 @@ class postgresql::config inherits postgresql {
       # TO AVOID CRICULAR DEPENDENCY:
       exec { 'ln hba raspberry':
         command => "ln -f -s ${datadir_path}/pg_hba.conf /etc/postgresql/11/main/pg_hba.conf",
-        unless  => "ls -l /etc/postgresql/11/main/pg_hba.conf | grep ${datadir_path}/pg_hba.conf"
+        unless  => "ls -l /etc/postgresql/11/main/pg_hba.conf | grep ${datadir_path}/pg_hba.conf",
         path    => '/usr/sbin:/usr/bin:/sbin:/bin',
       }
 
