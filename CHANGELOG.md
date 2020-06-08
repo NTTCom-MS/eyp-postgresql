@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## 0.4.26
+## 0.4.27
 
 * fix raspbian bug
 * fix client dependency
