@@ -86,14 +86,12 @@ class postgresql::params {
       $postgreshome='/var/lib/pgsql'
 
       $reposource =  {
-                      '9.2' => 'https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm',
                       '9.6' => 'https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm',
                       '10' => 'https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm',
                       '11' => 'https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm',
                       '12' => 'https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm',
                       }
       $reponame = {
-                    '9.2' => 'pgdg-redhat-repo',
                     '9.6' => 'pgdg-redhat-repo',
                     '10' => 'pgdg-redhat-repo',
                     '11' => 'pgdg-redhat-repo',
