@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.4.18
+
+* fix raspbian bug
+
 ## 0.4.17
 
 * fix client dependency

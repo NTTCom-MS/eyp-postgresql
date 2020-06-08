@@ -32,13 +32,6 @@ class postgresql::params {
               '11' => '/usr/pgsql-11/bin/initdb',
               '12' => '/usr/pgsql-12/bin/initdb',
             }
-  $contrib = {
-              '9.2' => 'postgresql92-contrib',
-              '9.6' => 'postgresql96-contrib',
-              '10' => 'postgresql10-contrib',
-              '11' => 'postgresql11-contrib',
-              '12' => 'postgresql12-contrib',
-            }
 
   $postgis = {
               '23_10' => 'postgis23_10',
@@ -72,6 +65,14 @@ class postgresql::params {
                           '11'  => [ 'postgresql11' ],
                           '12'  => [ 'postgresql12' ],
                         }
+
+  $contrib = {
+              '9.2' => 'postgresql92-contrib',
+              '9.6' => 'postgresql96-contrib',
+              '10' => 'postgresql10-contrib',
+              '11' => 'postgresql11-contrib',
+              '12' => 'postgresql12-contrib',
+            }
 
   case $::osfamily
   {
@@ -182,38 +183,68 @@ class postgresql::params {
     }
     'Debian':
     {
-      $repoprovider = 'apt'
-      $sysconfig=false
-
-      $postgresuser='postgres'
-      $postgresgroup='postgres'
-      $postgreshome='/var/lib/pgsql'
-      case $::operatingsystem
+      case $::architecture
       {
-        'Ubuntu':
+        'armv7l':
         {
-          case $::operatingsystemrelease
+          #raspberry
+          $repoprovider = 'raspbian10'
+          $sysconfig=false
+
+          $postgresuser='postgres'
+          $postgresgroup='postgres'
+          $postgreshome='/var/lib/pgsql'
+          case $::operatingsystem
           {
-            /^1[468].*$/:
+            'Debian':
             {
+              case $::operatingsystemrelease
+              {
+                /^10.*$/:
+                {
+                }
+                default: { fail("Unsupported Debian version! - ${::operatingsystemrelease}")  }
+              }
             }
-            default: { fail("Unsupported Ubuntu version! - ${::operatingsystemrelease}")  }
+            default: { fail('Unsupported Debian flavour!')  }
           }
         }
-        'Debian':
+        default:
         {
-          case $::operatingsystemrelease
+          $repoprovider = 'apt'
+          $sysconfig=false
+
+          $postgresuser='postgres'
+          $postgresgroup='postgres'
+          $postgreshome='/var/lib/pgsql'
+          case $::operatingsystem
           {
-            /^[89].*$/:
+            'Ubuntu':
             {
+              case $::operatingsystemrelease
+              {
+                /^1[468].*$/:
+                {
+                }
+                default: { fail("Unsupported Ubuntu version! - ${::operatingsystemrelease}")  }
+              }
             }
-            /^10.*$/:
+            'Debian':
             {
+              case $::operatingsystemrelease
+              {
+                /^[89].*$/:
+                {
+                }
+                /^10.*$/:
+                {
+                }
+                default: { fail("Unsupported Debian version! - ${::operatingsystemrelease}")  }
+              }
             }
-            default: { fail("Unsupported Debian version! - ${::operatingsystemrelease}")  }
+            default: { fail('Unsupported Debian flavour!')  }
           }
         }
-        default: { fail('Unsupported Debian flavour!')  }
       }
     }
     default: { fail('Unsupported OS!')  }

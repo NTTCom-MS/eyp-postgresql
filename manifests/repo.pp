@@ -25,4 +25,5 @@ class postgresql::repo(
       key_source => 'https://www.postgresql.org/media/keys/ACCC4CF8.asc',
     }
   }
+  # raspbian no te repo
 }
