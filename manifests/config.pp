@@ -43,6 +43,20 @@ class postgresql::config inherits postgresql {
   {
     if($postgresql::params::repoprovider=='raspbian10')
     {
+      # Error: /usr/lib/postgresql/11/bin/pg_ctl /usr/lib/postgresql/11/bin/pg_ctl start -D /var/postgres/datadir 
+      # -l /var/log/postgresql/postgresql-11-main.log 
+      # -D /var/postgres/datadir/ -s -o 
+      # -c unix_socket_directories="/var/run/postgresql" 
+      # -c config_file="/etc/postgresql/11/main/postgresql.conf"
+      # -c hba_file="/etc/postgresql/11/main/pg_hba.conf" 
+      # -c ident_file="/etc/postgresql/11/main/pg_ident.conf" 
+      # -c external_pid_file="/var/run/postgresql/11-main.pid"  exited with status 1: 
+
+      file { '/etc/postgresql/11/main/pg_hba.conf':
+        ensure => 'link',
+        target => "${datadir_path}/pg_hba.conf",
+      }
+
       file { '/etc/postgresql/11/main/postgresql.conf':
         ensure => 'link',
         target => "${datadir_path}/postgresql.conf",
