@@ -213,6 +213,7 @@ class postgresql::params {
             default: { fail("Unsupported Debian version! - ${::operatingsystemrelease}")  }
           }
         }
+        default: { fail('Unsupported Debian flavour!')  }
       }
     }
     default: { fail('Unsupported OS!')  }
