@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## 0.4.22
+## 0.4.23
 
 * fix raspbian bug
 
@@ -11,7 +11,7 @@
 ## 0.4.16
 
 * added ability to control whether the replica should be paused
-* added support for **Debian** and **Ubuntu**
+* added support for **Debian 8, 9 and 10** and **Ubuntu 14.04, 16.04, 18.04 and 20.04**
 
 ## 0.4.12
 
