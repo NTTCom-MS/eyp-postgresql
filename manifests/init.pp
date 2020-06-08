@@ -142,7 +142,7 @@ class postgresql(
   {
     if($postgresql::params::repoprovider=='raspbian10')
     {
-      $datadir_path='/run/postgresql/11-main.pid'
+      $pidfilename='/run/postgresql/11-main.pid'
     }
     else
     {
