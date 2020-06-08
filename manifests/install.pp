@@ -13,7 +13,7 @@ class postgresql::install inherits postgresql {
     $datadir_path = $postgresql::datadir
   }
 
-  if($postgresql::params::repoprovider!='raspbian10')
+  if($postgresql::params::repoprovider=='raspbian10')
   {
     $server_install_package_name='postgresql-11'
   }
