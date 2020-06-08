@@ -4,8 +4,11 @@ class postgresql::client(
 
   include ::postgresql::repo
 
-  package { $postgresql::params::packagename_client[$version]:
-    ensure  => 'installed',
-    require => Class['::postgresql::repo'],
+  if($postgresql::params::repoprovider!='raspbian10')
+  {
+    package { $postgresql::params::packagename_client[$version]:
+      ensure  => 'installed',
+      require => Class['::postgresql::repo'],
+    }
   }
 }

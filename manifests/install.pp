@@ -13,6 +13,15 @@ class postgresql::install inherits postgresql {
     $datadir_path = $postgresql::datadir
   }
 
+  if($postgresql::params::repoprovider!='raspbian10')
+  {
+    $server_install_package_name='postgresql-11'
+  }
+  else
+  {
+    $server_install_package_name=$postgresql::params::packagename[$postgresql::version]
+  }
+
   file { '/usr/local/bin/check_postgres_pending_restart':
     ensure  => 'present',
     owner   => 'root',
@@ -33,7 +42,7 @@ class postgresql::install inherits postgresql {
 
   ->
 
-  package { $postgresql::params::packagename[$postgresql::version]:
+  package { $server_install_package_name:
     ensure  => 'installed',
     require => Class['::postgresql::repo']
   }
@@ -41,7 +50,7 @@ class postgresql::install inherits postgresql {
   exec { "mkdir p ${datadir_path}":
     command => "mkdir -p ${datadir_path}",
     creates => $datadir_path,
-    require => Package[$postgresql::params::packagename[$postgresql::version]],
+    require => Package[$server_install_package_name],
   }
 
   if($postgresql::install_contrib)
@@ -50,7 +59,7 @@ class postgresql::install inherits postgresql {
     {
       package { $postgresql::params::contrib[$version]:
         ensure  => 'installed',
-        require => Package[$postgresql::params::packagename[$postgresql::version]],
+        require => Package[$server_install_package_name],
         before  => Class['::postgresql::service'],
       }
     }
@@ -89,7 +98,7 @@ class postgresql::install inherits postgresql {
       environment => "PGDATA=${datadir_path}",
       user        => $postgresql::params::postgresuser,
       creates     => "${datadir_path}/pg_hba.conf",
-      require     => [File[$datadir_path], Package[$postgresql::params::packagename[$postgresql::version]]],
+      require     => [File[$datadir_path], Package[$server_install_package_name]],
     }
 
     $before_initdb=Exec['initdb postgresql']
