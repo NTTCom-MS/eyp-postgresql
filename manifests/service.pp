@@ -20,7 +20,16 @@ class postgresql::service inherits postgresql {
         }
       }
 
-      service { $postgresql::params::servicename[$postgresql::version]:
+      #raspbian postgresql.service
+      if($postgresql::params::repoprovider=='raspbian10')
+      {
+        $postgres_service_name='postgresql@11-main.service'
+      }
+      else
+      {
+        $postgres_service_name=$postgresql::params::servicename[$postgresql::version]
+      }
+      service { $postgres_service_name:
         ensure  => $postgresql::ensure,
         enable  => $postgresql::enable,
         require => Exec['check pending restart'],

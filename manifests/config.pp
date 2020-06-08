@@ -13,7 +13,14 @@ class postgresql::config inherits postgresql {
 
   if($postgresql::datadir==undef)
   {
-    $datadir_path=$postgresql::params::datadir_default[$postgresql::version]
+    if($postgresql::params::repoprovider=='raspbian10')
+    {
+      $datadir_path='/var/lib/postgresql/11/main'
+    }
+    else
+    {
+      $datadir_path=$postgresql::params::datadir_default[$postgresql::version]
+    }
   }
   else
   {
@@ -34,9 +41,19 @@ class postgresql::config inherits postgresql {
 
   if($postgresql::params::systemd)
   {
-    systemd::service::dropin { $postgresql::params::servicename[$postgresql::version]:
-      env_vars => [ "PGDATA=${datadir_path}" ],
-      before   => Class['postgresql::service'],
+    if($postgresql::params::repoprovider=='raspbian10')
+    {
+      systemd::service::dropin { 'postgresql@11-main.service':
+        execstart => "-/usr/bin/pg_ctlcluster -o -D ${datadir_path} --skip-systemctl-redirect %i start",
+        before    => Class['postgresql::service'],
+      }
+    }
+    else
+    {
+      systemd::service::dropin { $postgresql::params::servicename[$postgresql::version]:
+        env_vars => [ "PGDATA=${datadir_path}" ],
+        before   => Class['postgresql::service'],
+      }
     }
   }
 

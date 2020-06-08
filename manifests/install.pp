@@ -6,7 +6,14 @@ class postgresql::install inherits postgresql {
 
   if($postgresql::datadir==undef)
   {
-    $datadir_path=$postgresql::params::datadir_default[$postgresql::version]
+    if($postgresql::params::repoprovider=='raspbian10')
+    {
+      $datadir_path='/var/lib/postgresql/11/main'
+    }
+    else
+    {
+      $datadir_path=$postgresql::params::datadir_default[$postgresql::version]
+    }
   }
   else
   {
@@ -89,12 +96,22 @@ class postgresql::install inherits postgresql {
 
   if($postgresql::initdb)
   {
+
+    if($postgresql::params::repoprovider=='raspbian10')
+    {
+      $initdb_command_path='/usr/lib/postgresql/11/bin/initdb'
+    }
+    else
+    {
+      $initdb_command_path=$postgresql::params::initdb[$postgresql::version]
+    }
+
     #initdb
     #com a postgres
     #-bash-4.1$ PGDATA="/var/lib/pgsql/9.2/data" /usr/pgsql-9.2/bin/initdb
     #creates => /var/lib/pgsql/9.2/data/pg_hba.conf
     exec { 'initdb postgresql':
-      command     => $postgresql::params::initdb[$postgresql::version],
+      command     => $initdb_command_path,
       environment => "PGDATA=${datadir_path}",
       user        => $postgresql::params::postgresuser,
       creates     => "${datadir_path}/pg_hba.conf",
@@ -123,7 +140,7 @@ class postgresql::install inherits postgresql {
 
   cron { 'postgresql cronjob gzip_pglog_cronjob':
     ensure   => $ensure_gzip_pglog_cronjob,
-    command  => "find ${postgresql::datadir_path}/pg_log -type f -iname \\*log -mtime +${postgresql::maxdays_gzip_pglog_cronjob} -exec gzip -${postgresql::gzip_level_pglog_cronjob} {} \\;",
+    command  => "find ${datadir_path}/pg_log -type f -iname \\*log -mtime +${postgresql::maxdays_gzip_pglog_cronjob} -exec gzip -${postgresql::gzip_level_pglog_cronjob} {} \\;",
     user     => 'root',
     hour     => $postgresql::hour_gzip_pglog_cronjob,
     minute   => $postgresql::minute_gzip_pglog_cronjob,
@@ -147,7 +164,7 @@ class postgresql::install inherits postgresql {
 
   cron { 'postgresql cronjob purge_pglog_cronjob':
     ensure   => $ensure_purge_pglog_cronjob,
-    command  => "find ${postgresql::datadir_path}/pg_log -type f -mtime +${postgresql::maxdays_purge_pglog_cronjob} -delete",
+    command  => "find ${datadir_path}/pg_log -type f -mtime +${postgresql::maxdays_purge_pglog_cronjob} -delete",
     user     => 'root',
     hour     => $postgresql::hour_purge_pglog_cronjob,
     minute   => $postgresql::minute_purge_pglog_cronjob,
