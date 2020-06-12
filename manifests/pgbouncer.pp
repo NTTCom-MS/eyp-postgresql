@@ -10,7 +10,7 @@ class postgresql::pgbouncer (
                 $listen_port           = '6432',
                 $logfile               = '/var/log/pgbouncer/pgbouncer.log',
                 $pool_mode             = 'session',
-              ) inherits postgresql::pgbouncer::params {
+              ) inherits postgresql::params {
 
   class { '::postgresql::pgbouncer::install': } ->
   class { '::postgresql::pgbouncer::config': } ~>
