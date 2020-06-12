@@ -6,4 +6,4 @@ class { 'postgresql':
   version             => '11',
 }
 
-class { 'pgbouncer': }
+class { 'postgresql::pgbouncer': }
