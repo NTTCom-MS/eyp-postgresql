@@ -7,4 +7,13 @@ class { 'postgresql':
   add_nagios_checks   => false,
 }
 
+postgresql::role { 'demo':
+  password => 'demopass',
+}
+
+postgresql::db { 'demo':
+  owner         => 'demo',
+  pgbouncer_tag => 'demopgbouncer',
+}
+
 class { 'postgresql::pgbouncer': }
