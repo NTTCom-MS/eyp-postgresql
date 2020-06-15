@@ -42,7 +42,7 @@ class postgresql::pgbouncer::config inherits postgresql::pgbouncer {
   {
     postgresql::role { 'pgbouncer':
       password => $postgresql::pgbouncer::set_pgbouncer_password,
-      host     => $postgresql::pgbouncer::dbhost_pgbouncer,
+      db_host  => $postgresql::pgbouncer::dbhost_pgbouncer,
     }
   }
 }
