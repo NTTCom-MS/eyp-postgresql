@@ -16,6 +16,7 @@ Puppet::Type.type(:postgresql_psql).provide(:postgresql_psql) do
     end
 
     command = [resource[:psql_path]]
+    command.push("-h", resource[:host]) if resource[:host]
     command.push("-d", resource[:db]) if resource[:db]
     command.push("-p", resource[:port]) if resource[:port]
     command.push("-t", "-c", '"' + sql.gsub('"', '\"') + '"')

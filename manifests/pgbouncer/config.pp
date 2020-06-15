@@ -37,4 +37,12 @@ class postgresql::pgbouncer::config inherits postgresql::pgbouncer {
   {
     Postgresql::Pgbouncer::Database <| tag == $postgresql::pgbouncer::realize_dbs_tag |>
   }
+
+  if($postgresql::pgbouncer::set_pgbouncer_password!=undef)
+  {
+    postgresql::role { 'pgbouncer':
+      password => $postgresql::pgbouncer::set_pgbouncer_password,
+      host     => $postgresql::pgbouncer::dbhost_pgbouncer,
+    }
+  }
 }

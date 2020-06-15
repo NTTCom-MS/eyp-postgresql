@@ -74,6 +74,10 @@ Puppet::Type.newtype(:postgresql_psql) do
     desc "The name of the database to execute the SQL command against, this overrides any PGDATABASE value in connect_settings"
   end
 
+  newparam(:host) do
+    desc "The name of the host to execute the SQL command against"
+  end
+
   newparam(:port) do
     desc "The port of the database server to execute the SQL command against, this overrides any PGPORT value in connect_settings."
   end

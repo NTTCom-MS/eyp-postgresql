@@ -21,5 +21,6 @@ postgresql::db { 'demo':
 ->
 
 class { 'postgresql::pgbouncer':
-  realize_dbs_tag => 'demopgbouncer',
+  realize_dbs_tag        => 'demopgbouncer',
+  set_pgbouncer_password => 'pgbouncer',
 }
