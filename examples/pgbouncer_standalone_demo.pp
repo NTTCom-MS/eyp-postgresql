@@ -4,6 +4,7 @@ class { 'postgresql':
   checkpoint_segments => '8',
   wal_keep_segments   => '8',
   version             => '11',
+  add_nagios_checks   => false,
 }
 
 class { 'postgresql::pgbouncer': }
