@@ -11,10 +11,14 @@ postgresql::role { 'demo':
   password => 'demopass',
 }
 
+->
+
 postgresql::db { 'demo':
   owner         => 'demo',
   pgbouncer_tag => 'demopgbouncer',
 }
+
+->
 
 class { 'postgresql::pgbouncer':
   realize_dbs_tag => 'demopgbouncer',
