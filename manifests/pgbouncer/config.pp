@@ -44,5 +44,14 @@ class postgresql::pgbouncer::config inherits postgresql::pgbouncer {
       password => $postgresql::pgbouncer::set_pgbouncer_password,
       db_host  => $postgresql::pgbouncer::dbhost_pgbouncer,
     }
+
+    #user_authentication-sql.erb
+    file { '/etc/pgbouncer/.user_authentication.sql':
+      ensure => 'present',
+      owner  => 'root',
+      group  => 'root',
+      mode   => '0600',
+      content => template("${module_name}/pgbouncer/user_authentication-sql.erb"),
+    }
   }
 }
