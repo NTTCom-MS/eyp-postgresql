@@ -36,6 +36,7 @@ define postgresql::db (
       port            => $port,
       database        => $dbname,
       remote_database => $dbname,
+      tag             => $pgbouncer_tag,
     }
   }
 }
