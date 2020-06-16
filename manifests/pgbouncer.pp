@@ -7,7 +7,7 @@ class postgresql::pgbouncer (
                 $service_enable         = true,
                 $auth_type              = 'md5',
                 $enable_auth_query      = false,
-                $auth_query             = 'SELECT usename, passwd FROM user_authentication($1)',
+                $auth_query             = 'SELECT * FROM pgbouncer.get_auth($1)',
                 $listen_addr            = '127.0.0.1',
                 $listen_port            = '6432',
                 $logfile                = '/var/log/pgbouncer/pgbouncer.log',
