@@ -132,6 +132,7 @@ class postgresql(
                   $basedir_nagios_checks           = '/usr/local/bin',
                   $add_nrpe_sudos_nagios_checks    = true,
                   $add_hba_default_local_rules     = true,
+                  $add_hba_default_localhost_rules = true,
                   $default_local_authmethod        = 'trust',
                   $pause_replica                   = undef,
                 ) inherits postgresql::params {

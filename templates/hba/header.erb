@@ -87,6 +87,8 @@
 
 # "local" is for Unix domain socket connections only
 local   all             all                                     <%= @default_local_authmethod %>
+<% end %>
+<% if @add_hba_default_localhost_rules -%>
 # IPv4 local connections:
 host    all             all             127.0.0.1/32            <%= @default_local_authmethod %>
 # IPv6 local connections:
