@@ -12,6 +12,7 @@ postgresql::hba_rule { 'postgres trust localhost':
   database    => 'all',
   address     => '127.0.0.1/32',
   auth_method => 'trust',
+  order       => 0,
 }
 
 postgresql::hba_rule { 'all':
