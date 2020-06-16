@@ -7,6 +7,13 @@ postgresql::db { 'demo':
   pgbouncer_tag => 'demopgbouncer',
 }
 
+postgresql::hba_rule { 'postgres trust localhost':
+  user        => 'postgres',
+  database    => 'postgres',
+  address     => '127.0.0.1/32',
+  auth_method => 'trust',
+}
+
 postgresql::hba_rule { 'all':
   user     => 'all',
   database => 'all',
