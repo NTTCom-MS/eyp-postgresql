@@ -48,12 +48,14 @@ class postgresql::pgbouncer::config inherits postgresql::pgbouncer {
     postgresql::role { 'pgbouncer':
       password => $postgresql::pgbouncer::set_pgbouncer_password,
       db_host  => $postgresql::pgbouncer::dbhost_pgbouncer,
-      tag      => 'pgbouncer_user',
     }
 
-    ->
+    $password_hash_md5=md5("${postgresql::pgbouncer::set_pgbouncer_password}pgbouncer")
+    $password_hash_sql="md5${password_hash_md5}"
 
-    Postgresql::Pgbouncer::Username <| tag == 'pgbouncer_user' |>
+    postgresql::pgbouncer::username { $rolename:
+      password_md5 => $password_hash_sql,
+    }
 
     #user_authentication-sql.erb
     file { '/etc/pgbouncer/.user_authentication.sql':
