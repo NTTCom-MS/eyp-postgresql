@@ -1,5 +1,6 @@
 postgresql::role { 'demo':
-  password => 'demopass',
+  password      => 'demopass',
+  pgbouncer_tag => 'demopgbouncer',
 }
 
 postgresql::db { 'demo':
@@ -18,6 +19,7 @@ class { 'postgresql':
 
 class { 'postgresql::pgbouncer':
   realize_dbs_tag        => 'demopgbouncer',
+  realize_users_tag        => 'demopgbouncer',
   set_pgbouncer_password => 'pgbouncer',
   enable_auth_query      => true,
 }

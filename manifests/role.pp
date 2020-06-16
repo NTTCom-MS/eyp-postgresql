@@ -4,13 +4,14 @@
 # (...)
 define postgresql::role (
                           $password,
-                          $rolename    = $name,
-                          $login       = true,
-                          $superuser   = false,
-                          $replication = false,
-                          $inherit     = true,
-                          $db_host     = undef,
-                          $port        = $postgresql::port,
+                          $rolename       = $name,
+                          $login          = true,
+                          $superuser      = false,
+                          $replication    = false,
+                          $inherit        = true,
+                          $db_host        = undef,
+                          $port           = $postgresql::port,
+                          $pgbouncer_tag  = undef,
                         ) {
   Exec {
     path => '/usr/sbin:/usr/bin:/sbin:/bin',
@@ -23,6 +24,14 @@ define postgresql::role (
   $password_hash_md5=md5("${password}${rolename}")
   $password_hash_sql="md5${password_hash_md5}"
   $password_sql="ENCRYPTED PASSWORD '${password}'"
+
+  if($pgbouncer_tag!=undef)
+  {
+    @postgresql::pgbouncer::username { $rolename:
+      password_md5 => $password_hash_sql,
+      tag => $pgbouncer_tag,
+    }
+  }
 
   postgresql_psql { "ALTER ROLE ${rolename} ENCRYPTED PASSWORD":
     command => "ALTER ROLE \"${rolename}\" ${password_sql}",
