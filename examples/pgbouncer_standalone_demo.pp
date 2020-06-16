@@ -19,4 +19,5 @@ class { 'postgresql':
 class { 'postgresql::pgbouncer':
   realize_dbs_tag        => 'demopgbouncer',
   set_pgbouncer_password => 'pgbouncer',
+  enable_auth_query      => true,
 }
