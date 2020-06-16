@@ -56,7 +56,7 @@ class postgresql::pgbouncer::config inherits postgresql::pgbouncer {
 
     postgresql_psql { 'pgbouncer user_authentication':
       command => '/etc/pgbouncer/.user_authentication.sql',
-      #unless  => "SELECT usename FROM pg_shadow WHERE usename='${rolename}' and passwd='${password_hash_sql}'",
+      unless  => 'SELECT p.proname FROM pg_proc p WHERE p.proname=\'user_authentication\'',
       require => [ Class['::postgresql::service'], File['/etc/pgbouncer/.user_authentication.sql'] ],
     }
 
