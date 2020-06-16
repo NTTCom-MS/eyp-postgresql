@@ -3,4 +3,9 @@
 ;;; <%= @description %>
 ;;;
 <% end -%>
-<%= @database %>= host=<%= @host %> port=<%= @port %> <% if defined?(@user) %>user=<%= @username %> <% end %>dbname=<%= @remote_database %> <% if defined?(@auth_user) %>auth_user=<%= @auth_user %> <% end %>
+<%= @database %>= <% -%>
+host=<%= @host %> <% -%>
+port=<%= @port %> <% -%>
+<% if defined?(@user) %>user=<%= @username %> <% end -%>
+<% if defined?(@remote_database) %>dbname=<%= @remote_database %> <% end -%>
+<% if defined?(@auth_user) %>auth_user=<%= @auth_user %> <% end -%>
