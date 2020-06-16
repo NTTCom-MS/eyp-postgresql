@@ -90,6 +90,10 @@ listen_port = <%= @listen_port %>
 auth_type = <%= @auth_type %>
 auth_file = /etc/pgbouncer/userlist.txt
 
+<% if defined?(@auth_user) -%>
+auth_user=<%= @auth_user %>
+<% end -%>
+
 ;; Path to HBA-style auth config
 ;auth_hba_file =
 

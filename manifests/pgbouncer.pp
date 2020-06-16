@@ -6,6 +6,7 @@ class postgresql::pgbouncer (
                 $service_ensure         = 'running',
                 $service_enable         = true,
                 $auth_type              = 'md5',
+                $auth_user              = undef,
                 $enable_auth_query      = false,
                 $auth_query             = 'SELECT * FROM pgbouncer.get_auth($1)',
                 $listen_addr            = '127.0.0.1',
