@@ -59,6 +59,7 @@ class postgresql::pgbouncer::config inherits postgresql::pgbouncer {
 
     postgresql::hba_rule { 'pgbouncer':
   		user     => 'pgbouncer',
+      database => 'all',
   		address  => "${postgresql::pgbouncer::src_ip_pgbouncer}/32",
   	}
 
