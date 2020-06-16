@@ -9,7 +9,7 @@ postgresql::db { 'demo':
 
 postgresql::hba_rule { 'postgres trust localhost':
   user        => 'postgres',
-  database    => 'postgres',
+  database    => 'all',
   address     => '127.0.0.1/32',
   auth_method => 'trust',
 }
