@@ -7,6 +7,12 @@ postgresql::db { 'demo':
   pgbouncer_tag => 'demopgbouncer',
 }
 
+postgresql::hba_rule { 'all':
+  user     => 'all',
+  database => 'all',
+  address  => "127.0.0.1/32",
+}
+
 class { 'postgresql':
   wal_level                       => 'hot_standby',
   max_wal_senders                 => '3',
