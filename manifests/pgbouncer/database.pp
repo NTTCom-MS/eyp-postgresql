@@ -4,7 +4,7 @@ define postgresql::pgbouncer::database(
                                         $username        = undef,
                                         $port            = '5432',
                                         $database        = $name,
-                                        $remote_database = undef,
+                                        $remote_database = $name,
                                         $order           = '42',
                                         $description     = undef,
                                         $auth_user       = undef,
