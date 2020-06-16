@@ -50,6 +50,8 @@ class postgresql::pgbouncer::config inherits postgresql::pgbouncer {
       db_host  => $postgresql::pgbouncer::dbhost_pgbouncer,
     }
 
+    fail("${postgresql::pgbouncer::set_pgbouncer_password}pgbouncer")
+
     $password_hash_md5=md5("${postgresql::pgbouncer::set_pgbouncer_password}pgbouncer")
     $password_hash_sql="md5${password_hash_md5}"
 
