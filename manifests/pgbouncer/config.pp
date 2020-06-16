@@ -57,6 +57,11 @@ class postgresql::pgbouncer::config inherits postgresql::pgbouncer {
       password_md5 => $password_hash_sql,
     }
 
+    postgresql::hba_rule { 'pgbouncer':
+  		user     => 'pgbouncer',
+  		address  => "${postgresql::pgbouncer::src_ip_pgbouncer}/32",
+  	}
+
     #user_authentication-sql.erb
     file { '/etc/pgbouncer/.user_authentication.sql':
       ensure  => 'present',
