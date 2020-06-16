@@ -10,7 +10,7 @@ Puppet::Type.type(:postgresql_psql).provide(:postgresql_psql) do
     run_sql_command('SELECT COUNT(*) FROM (' <<  sql << ') count')
   end
 
-  def run_sql_command(sql)
+  def run_sql_file(sql)
     if resource[:search_path]
       sql = "set search_path to #{Array(resource[:search_path]).join(',')}; #{sql}"
     end
@@ -19,7 +19,8 @@ Puppet::Type.type(:postgresql_psql).provide(:postgresql_psql) do
     command.push("-h", resource[:host]) if resource[:host]
     command.push("-d", resource[:db]) if resource[:db]
     command.push("-p", resource[:port]) if resource[:port]
-    command.push("-t", "-c", '"' + sql.gsub('"', '\"') + '"')
+    command.push("-t")
+    command.push("-f", sql)
 
     environment = get_environment
 
@@ -29,6 +30,38 @@ Puppet::Type.type(:postgresql_psql).provide(:postgresql_psql) do
       end
     else
       run_command(command, resource[:psql_user], resource[:psql_group], environment)
+    end
+  end
+
+  def run_sql_command(sql)
+    if resource[:search_path]
+      sql = "set search_path to #{Array(resource[:search_path]).join(',')}; #{sql}"
+    end
+
+    command = [resource[:psql_path]]
+    command.push("-h", resource[:host]) if resource[:host]
+    command.push("-d", resource[:db]) if resource[:db]
+    command.push("-p", resource[:port]) if resource[:port]
+    command.push("-t")
+    command.push("-c", '"' + sql.gsub('"', '\"') + '"')
+
+    environment = get_environment
+
+    if resource[:cwd]
+      Dir.chdir resource[:cwd] do
+        run_command(command, resource[:psql_user], resource[:psql_group], environment)
+      end
+    else
+      run_command(command, resource[:psql_user], resource[:psql_group], environment)
+    end
+  end
+
+  def run_sql(sql)
+    # TODO: wrapper per executar, si el primer caracter es un / es un file
+    if sql[0] = '/'
+      run_sql_file(sql)
+    else
+      run_sql_command(sql)
     end
   end
 
