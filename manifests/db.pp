@@ -32,7 +32,7 @@ define postgresql::db (
   {
     @postgresql::pgbouncer::database { "pgbouncer-${dbname}-${pgbouncer_addr}-${pgbouncer_tag}":
       host            => $pgbouncer_addr,
-      username        => $pgbouncer_auth_user,
+      auth_user       => $pgbouncer_auth_user,
       port            => $port,
       database        => $dbname,
       remote_database => $dbname,
