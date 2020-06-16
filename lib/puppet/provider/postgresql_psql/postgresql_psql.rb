@@ -58,7 +58,7 @@ Puppet::Type.type(:postgresql_psql).provide(:postgresql_psql) do
 
   def run_sql(sql)
     # TODO: wrapper per executar, si el primer caracter es un / es un file
-    if sql[0] = '/'
+    if sql[0] == '/'
       run_sql_file(sql)
     else
       run_sql_command(sql)
