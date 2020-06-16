@@ -18,6 +18,7 @@ class postgresql::pgbouncer (
                 $set_pgbouncer_password = undef,
                 $dbhost_pgbouncer       = '127.0.0.1',
                 $src_ip_pgbouncer       = '127.0.0.1',
+                $verbose                = '0',
               ) inherits postgresql::params {
 
   class { '::postgresql::pgbouncer::install': } ->
