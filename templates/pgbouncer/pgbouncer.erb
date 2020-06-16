@@ -90,10 +90,6 @@ listen_port = <%= @listen_port %>
 auth_type = <%= @auth_type %>
 auth_file = /etc/pgbouncer/userlist.txt
 
-<% if defined?(@auth_user) -%>
-auth_user=<%= @auth_user %>
-<% end -%>
-
 ;; Path to HBA-style auth config
 ;auth_hba_file =
 
@@ -101,6 +97,12 @@ auth_user=<%= @auth_user %>
 ;; must have 2 columns - username and password hash.
 <% if @enable_auth_query -%>
 auth_query = <%= @auth_query %>
+
+<% if defined?(@auth_user) -%>
+auth_user=<%= @auth_user %>
+<% else -%>
+auth_user=pgbouncer
+<% end -%>
 <% else -%>
 ;auth_query = SELECT usename, passwd FROM pg_shadow WHERE usename=$1
 <% end -%>
