@@ -28,7 +28,6 @@ define postgresql::role (
     command => "ALTER ROLE \"${rolename}\" ${password_sql}",
     unless  => "SELECT usename FROM pg_shadow WHERE usename='${rolename}' and passwd='${password_hash_sql}'",
     require => [Class['::postgresql::service'], Postgresql_psql["CREATE ROLE ${rolename}"]],
-
   }
 
   $login_sql=$login ? { true => 'LOGIN', default => 'NOLOGIN' }

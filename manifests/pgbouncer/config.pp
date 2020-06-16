@@ -53,5 +53,12 @@ class postgresql::pgbouncer::config inherits postgresql::pgbouncer {
       mode   => '0600',
       content => template("${module_name}/pgbouncer/user_authentication-sql.erb"),
     }
+
+    postgresql_psql { 'pgbouncer user_authentication':
+      command => '/etc/pgbouncer/.user_authentication.sql',
+      #unless  => "SELECT usename FROM pg_shadow WHERE usename='${rolename}' and passwd='${password_hash_sql}'",
+      require => [ Class['::postgresql::service'], File['/etc/pgbouncer/.user_authentication.sql'] ],
+    }
+
   }
 }
