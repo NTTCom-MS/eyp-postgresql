@@ -1,10 +1,11 @@
 define postgresql::db (
                         $owner,
-                        $dbname              = $name,
-                        $port                = $postgresql::port,
-                        $pgbouncer_tag       = undef,
-                        $pgbouncer_addr      = '127.0.0.1',
-                        $pgbouncer_auth_user = 'pgbouncer',
+                        $dbname                    = $name,
+                        $port                      = $postgresql::port,
+                        $pgbouncer_tag             = undef,
+                        $pgbouncer_addr            = '127.0.0.1',
+                        $pgbouncer_auth_user       = 'pgbouncer',
+                        $pgbouncer_enable_get_auth = true,
                       ) {
 
   Postgresql_psql {
@@ -37,6 +38,7 @@ define postgresql::db (
       database        => $dbname,
       remote_database => $dbname,
       tag             => $pgbouncer_tag,
+      enable_get_auth => $pgbouncer_enable_get_auth,
     }
   }
 }
