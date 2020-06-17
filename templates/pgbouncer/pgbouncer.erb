@@ -148,7 +148,7 @@ pool_mode = <%= @pool_mode %>
 
 ;; Close servers in session pooling mode after a RECONNECT, RELOAD,
 ;; etc. when they are idle instead of at the end of the session.
-server_fast_close = <%= scope.function_bool2onoff([@server_fast_close]) %>
+server_fast_close = <%= scope.function_bool2number([@server_fast_close]) %>
 
 ;; Use <appname - host> as application_name on server.
 ;application_name_add_host = 0
