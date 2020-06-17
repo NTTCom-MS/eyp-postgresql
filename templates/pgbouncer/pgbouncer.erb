@@ -148,7 +148,7 @@ pool_mode = <%= @pool_mode %>
 
 ;; Close servers in session pooling mode after a RECONNECT, RELOAD,
 ;; etc. when they are idle instead of at the end of the session.
-;server_fast_close = 0
+server_fast_close = <%= scope.function_bool2onoff([@server_fast_close]) %>
 
 ;; Use <appname - host> as application_name on server.
 ;application_name_add_host = 0
@@ -161,12 +161,12 @@ pool_mode = <%= @pool_mode %>
 ;;;
 
 ;; Total number of clients that can connect
-;max_client_conn = 100
+max_client_conn = <%= @max_client_conn %>
 
 ;; Default pool size.  20 is good number when transaction pooling
 ;; is in use, in session pooling it needs to be the number of
 ;; max clients you want to handle at any moment
-;default_pool_size = 20
+default_pool_size = <%= @default_pool_size %>
 
 ;; Minimum number of server connections to keep in pool.
 ;min_pool_size = 0

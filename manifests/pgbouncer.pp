@@ -19,6 +19,9 @@ class postgresql::pgbouncer (
                 $dbhost_pgbouncer       = '127.0.0.1',
                 $src_ip_pgbouncer       = '127.0.0.1',
                 $verbose                = '0',
+                $server_fast_close      = false,
+                $max_client_conn        = 200,
+                $default_pool_size      = 100,
               ) inherits postgresql::params {
 
   class { '::postgresql::pgbouncer::install': } ->
