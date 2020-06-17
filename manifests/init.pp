@@ -127,9 +127,12 @@ class postgresql(
                   $hot_standby                     = false,
                   $max_standby_archive_delay       = '30s',
                   $max_standby_streaming_delay     = '30s',
+                  $add_nagios_checks               = true,
                   $ensure_nagios_checks            = 'present',
                   $basedir_nagios_checks           = '/usr/local/bin',
+                  $add_nrpe_sudos_nagios_checks    = true,
                   $add_hba_default_local_rules     = true,
+                  $add_hba_default_localhost_rules = true,
                   $default_local_authmethod        = 'trust',
                   $pause_replica                   = undef,
                 ) inherits postgresql::params {
@@ -232,9 +235,13 @@ class postgresql(
     }
   }
 
-  class { '::postgresql::checks':
-    ensure  => $ensure_nagios_checks,
-    basedir => $basedir_nagios_checks,
+  if($add_nagios_checks)
+  {
+    class { '::postgresql::checks':
+      ensure         => $ensure_nagios_checks,
+      basedir        => $basedir_nagios_checks,
+      add_nrpe_sudos => $add_nrpe_sudos_nagios_checks,
+    }
   }
 
   class { '::postgresql::install': }

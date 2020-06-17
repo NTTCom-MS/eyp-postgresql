@@ -25,7 +25,7 @@ Puppet::Type.newtype(:postgresql_psql) do
     end
 
     def sync
-      output, status = provider.run_sql_command(value)
+      output, status = provider.run_sql(value)
       self.fail("Error executing SQL; psql returned #{status}: '#{output}'") unless status == 0
     end
   end
@@ -72,6 +72,10 @@ Puppet::Type.newtype(:postgresql_psql) do
 
   newparam(:db) do
     desc "The name of the database to execute the SQL command against, this overrides any PGDATABASE value in connect_settings"
+  end
+
+  newparam(:host) do
+    desc "The name of the host to execute the SQL command against"
   end
 
   newparam(:port) do

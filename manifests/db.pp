@@ -1,7 +1,11 @@
 define postgresql::db (
                         $owner,
-                        $dbname = $name,
-                        $port   = $postgresql::port,
+                        $dbname                    = $name,
+                        $port                      = $postgresql::port,
+                        $pgbouncer_tag             = undef,
+                        $pgbouncer_addr            = '127.0.0.1',
+                        $pgbouncer_auth_user       = 'pgbouncer',
+                        $pgbouncer_enable_get_auth = true,
                       ) {
 
   Postgresql_psql {
@@ -23,5 +27,18 @@ define postgresql::db (
   if defined(Postgresql::Role[$owner])
   {
     Postgresql::Role[$owner] -> Postgresql_psql["ALTER DATABASE ${dbname} OWNER TO ${owner}"]
+  }
+
+  if($pgbouncer_tag!=undef)
+  {
+    @postgresql::pgbouncer::database { "pgbouncer-${dbname}-${pgbouncer_addr}-${pgbouncer_tag}":
+      host            => $pgbouncer_addr,
+      auth_user       => $pgbouncer_auth_user,
+      port            => $port,
+      database        => $dbname,
+      remote_database => $dbname,
+      tag             => $pgbouncer_tag,
+      enable_get_auth => $pgbouncer_enable_get_auth,
+    }
   }
 }

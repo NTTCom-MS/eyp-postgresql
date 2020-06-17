@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.5.2
+
+* improved pgbouncer support with better control over the settings
+
 ## 0.5.1
 
 * fix raspbian bug
