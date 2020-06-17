@@ -57,7 +57,8 @@ class { 'postgresql':
 }
 
 class { 'postgresql::pgbouncer':
-  pool_mode              => 'session',
+  pool_mode              => 'transaction',
+  default_pool_size      => 20,
   realize_dbs_tag        => 'demopgbouncer',
   set_pgbouncer_password => 'pgbouncer',
   enable_auth_query      => true,
