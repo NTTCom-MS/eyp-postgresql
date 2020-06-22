@@ -50,14 +50,6 @@ class postgresql::params {
                         '12' => '/var/lib/pgsql/12/data',
                     }
 
-  $packagename_client = {
-                          '9.2' => [ 'postgresql92' ],
-                          '9.6' => [ 'postgresql96' ],
-                          '10'  => [ 'postgresql10' ],
-                          '11'  => [ 'postgresql11' ],
-                          '12'  => [ 'postgresql12' ],
-                        }
-
   $contrib = {
               '9.2' => 'postgresql92-contrib',
               '9.6' => 'postgresql96-contrib',
@@ -98,6 +90,13 @@ class postgresql::params {
                       '12'  => [ 'postgresql12-server' ],
                     }
 
+      $packagename_client = {
+                              '9.2' => [ 'postgresql92' ],
+                              '9.6' => [ 'postgresql96' ],
+                              '10'  => [ 'postgresql10' ],
+                              '11'  => [ 'postgresql11' ],
+                              '12'  => [ 'postgresql12' ],
+                            }
 
       case $::operatingsystemrelease
       {
@@ -157,6 +156,14 @@ class postgresql::params {
                           '11'  => [ 'postgresql-11-server' ],
                           '12'  => [ 'postgresql-12-server' ],
                         }
+
+          $packagename_client = {
+                                  '9.2' => [ 'postgresql-9.2' ],
+                                  '9.6' => [ 'postgresql-9.6' ],
+                                  '10'  => [ 'postgresql-10' ],
+                                  '11'  => [ 'postgresql-11' ],
+                                  '12'  => [ 'postgresql-12' ],
+                                }                        
 
           case $::operatingsystem
           {
