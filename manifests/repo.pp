@@ -17,6 +17,7 @@ class postgresql::repo(
     apt::source { 'pgdg':
       location => 'http://apt.postgresql.org/pub/repos/apt/',
       release  => "${::lsbdistcodename}-pgdg",
+      arch     => 'amd64',
       repos    => 'main',
     }
 
