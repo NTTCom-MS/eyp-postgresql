@@ -93,7 +93,7 @@ class postgresql::install inherits postgresql {
       command     => $initdb_command_path,
       environment => "PGDATA=${datadir_path}",
       user        => $postgresql::params::postgresuser,
-      creates     => "${datadir_path}/pg_hba.conf",
+      creates     => "${datadir_path}/global",
       require     => [File[$datadir_path], Package[$server_install_package_name]],
     }
 
