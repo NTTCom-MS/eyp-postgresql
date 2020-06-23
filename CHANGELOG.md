@@ -2,7 +2,8 @@
 
 ## 0.5.3
 
-* force arch for Debian
+* added forced arch amd64 for Debian
+* added support for **Debian 8, 9 and 10** and **Ubuntu 14.04, 16.04, 18.04 and 20.04**
 
 ## 0.5.2
 
@@ -17,7 +18,7 @@
 ## 0.5.0
 
 * added ability to control whether the replica should be paused
-* added support for **Debian 8, 9 and 10** and **Ubuntu 14.04, 16.04, 18.04 and 20.04**
+* added support for **Raspbian 10**
 
 ## 0.4.12
 
