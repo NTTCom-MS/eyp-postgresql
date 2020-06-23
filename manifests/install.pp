@@ -6,28 +6,14 @@ class postgresql::install inherits postgresql {
 
   if($postgresql::datadir==undef)
   {
-    if($postgresql::params::repoprovider=='raspbian10')
-    {
-      $datadir_path='/var/lib/postgresql/11/main'
-    }
-    else
-    {
-      $datadir_path=$postgresql::params::datadir_default[$postgresql::version]
-    }
+    $datadir_path=$postgresql::params::datadir_default[$postgresql::version]
   }
   else
   {
     $datadir_path = $postgresql::datadir
   }
 
-  if($postgresql::params::repoprovider=='raspbian10')
-  {
-    $server_install_package_name='postgresql-11'
-  }
-  else
-  {
-    $server_install_package_name=$postgresql::params::packagename[$postgresql::version]
-  }
+  $server_install_package_name=$postgresql::params::packagename[$postgresql::version]
 
   file { '/usr/local/bin/check_postgres_pending_restart':
     ensure  => 'present',
@@ -97,14 +83,7 @@ class postgresql::install inherits postgresql {
   if($postgresql::initdb)
   {
 
-    if($postgresql::params::repoprovider=='raspbian10')
-    {
-      $initdb_command_path='/usr/lib/postgresql/11/bin/initdb'
-    }
-    else
-    {
-      $initdb_command_path=$postgresql::params::initdb[$postgresql::version]
-    }
+    $initdb_command_path=$postgresql::params::initdb[$postgresql::version]
 
     #initdb
     #com a postgres

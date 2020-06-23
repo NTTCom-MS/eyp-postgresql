@@ -3,15 +3,7 @@ class postgresql::service inherits postgresql {
   $is_docker_container_var=getvar('::eyp_docker_iscontainer')
   $is_docker_container=str2bool($is_docker_container_var)
 
-  #raspbian postgresql.service
-  if($postgresql::params::repoprovider=='raspbian10')
-  {
-    $postgres_service_name='postgresql@11-main.service'
-  }
-  else
-  {
-    $postgres_service_name=$postgresql::params::servicename[$postgresql::version]
-  }
+  $postgres_service_name=$postgresql::params::servicename[$postgresql::version]
 
   if( $is_docker_container==false or
       $postgresql::manage_docker_service)
