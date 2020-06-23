@@ -150,19 +150,19 @@ class postgresql::params {
           $postgreshome='/var/lib/pgsql'
 
           $packagename= {
-                          '9.2' => [ 'postgresql-9.2-server' ],
-                          '9.6' => [ 'postgresql-9.6-server' ],
-                          '10'  => [ 'postgresql-10-server' ],
-                          '11'  => [ 'postgresql-11-server' ],
-                          '12'  => [ 'postgresql-12-server' ],
+                          '9.2' => [ 'postgresql-9.2' ],
+                          '9.6' => [ 'postgresql-9.6' ],
+                          '10'  => [ 'postgresql-10' ],
+                          '11'  => [ 'postgresql-11' ],
+                          '12'  => [ 'postgresql-12' ],
                         }
 
           $packagename_client = {
-                                  '9.2' => [ 'postgresql-9.2' ],
-                                  '9.6' => [ 'postgresql-9.6' ],
-                                  '10'  => [ 'postgresql-10' ],
-                                  '11'  => [ 'postgresql-11' ],
-                                  '12'  => [ 'postgresql-12' ],
+                                  '9.2' => [ 'postgresql-client-9.2' ],
+                                  '9.6' => [ 'postgresql-client-9.6' ],
+                                  '10'  => [ 'postgresql-client-19' ],
+                                  '11'  => [ 'postgresql-client-11' ],
+                                  '12'  => [ 'postgresql-client-12' ],
                                 }                        
 
           case $::operatingsystem
