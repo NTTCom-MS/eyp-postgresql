@@ -121,6 +121,8 @@ class postgresql::params {
       $postgresgroup='postgres'
       $postgreshome='/var/lib/postgresql'      
 
+      $fix_systemd_pg_ctlcluster = true
+
       $initdb = {
                   '9.2' => '/usr/lib/postgresql/9.2/bin/initdb',
                   '9.6' => '/usr/lib/postgresql/9.6/bin/initdb',
@@ -167,7 +169,6 @@ class postgresql::params {
         {
           #raspberry
           $repoprovider = 'raspbian10'
-          $fix_systemd_pg_ctlcluster = true
 
           case $::operatingsystem
           {
