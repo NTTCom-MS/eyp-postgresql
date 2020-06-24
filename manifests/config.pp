@@ -63,7 +63,7 @@ class postgresql::config inherits postgresql {
         path    => '/usr/sbin:/usr/bin:/sbin:/bin',
       }
 
-      file { '/etc/postgresql/${postgresql::version}/main/postgresql.conf':
+      file { "/etc/postgresql/${postgresql::version}/main/postgresql.conf":
         ensure => 'link',
         target => "${datadir_path}/postgresql.conf",
       }
