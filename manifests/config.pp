@@ -41,7 +41,7 @@ class postgresql::config inherits postgresql {
 
   if($postgresql::params::systemd)
   {
-    if($postgresql::params::repoprovider=='raspbian10')
+    if($postgresql::params::fix_systemd_pg_ctlcluster)
     {
       # Error: /usr/lib/postgresql/11/bin/pg_ctl /usr/lib/postgresql/11/bin/pg_ctl start -D /var/postgres/datadir
       # -l /var/log/postgresql/postgresql-11-main.log
@@ -58,12 +58,12 @@ class postgresql::config inherits postgresql {
       # }
       # TO AVOID CRICULAR DEPENDENCY:
       exec { 'ln hba raspberry':
-        command => "ln -f -s ${datadir_path}/pg_hba.conf /etc/postgresql/11/main/pg_hba.conf",
-        unless  => "ls -l /etc/postgresql/11/main/pg_hba.conf | grep ${datadir_path}/pg_hba.conf",
+        command => "ln -f -s ${datadir_path}/pg_hba.conf /etc/postgresql/${postgresql::version}/main/pg_hba.conf",
+        unless  => "ls -l /etc/postgresql/${postgresql::version}/main/pg_hba.conf | grep ${datadir_path}/pg_hba.conf",
         path    => '/usr/sbin:/usr/bin:/sbin:/bin',
       }
 
-      file { '/etc/postgresql/11/main/postgresql.conf':
+      file { "/etc/postgresql/${postgresql::version}/main/postgresql.conf":
         ensure => 'link',
         target => "${datadir_path}/postgresql.conf",
       }

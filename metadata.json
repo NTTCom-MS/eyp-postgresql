@@ -1,6 +1,6 @@
 {
   "name": "eyp-postgresql",
-  "version": "0.5.2",
+  "version": "0.5.3",
   "author": "eyp",
   "summary": "postgresql and pgbounce installation, configuration and management",
   "license": "Apache-2.0",
@@ -14,7 +14,7 @@
     {"name":"eyp/python","version_requirement":">= 0.1.0 < 0.2.0"},
     {"name":"eyp/lvm","version_requirement":">= 0.1.0 < 0.2.0"},
     {"name":"eyp/nrpe","version_requirement":">= 0.1.22 < 0.2.0"},
-    {"name":"eyp/apt","version_requirement":">= 0.1.11 < 0.2.0"},
+    {"name":"eyp/apt","version_requirement":">= 0.1.13 < 0.2.0"},
     {"name":"eyp/epel","version_requirement":">= 3.1.0 < 4.0.0"},
     {"name":"eyp/eyplib","version_requirement":">= 0.1.0 < 0.2.0"}
   ],
