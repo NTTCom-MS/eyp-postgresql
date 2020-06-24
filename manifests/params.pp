@@ -40,6 +40,7 @@ class postgresql::params {
     'redhat':
     {
       $repoprovider = 'rpm'
+      $fix_systemd_pg_ctlcluster = false
       $sysconfig=true
 
       $postgresuser='postgres'
@@ -166,6 +167,7 @@ class postgresql::params {
         {
           #raspberry
           $repoprovider = 'raspbian10'
+          $fix_systemd_pg_ctlcluster = true
 
           case $::operatingsystem
           {

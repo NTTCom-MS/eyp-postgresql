@@ -41,7 +41,7 @@ class postgresql::config inherits postgresql {
 
   if($postgresql::params::systemd)
   {
-    if($postgresql::params::repoprovider=='raspbian10')
+    if($postgresql::params::fix_systemd_pg_ctlcluster)
     {
       # Error: /usr/lib/postgresql/11/bin/pg_ctl /usr/lib/postgresql/11/bin/pg_ctl start -D /var/postgres/datadir
       # -l /var/log/postgresql/postgresql-11-main.log
