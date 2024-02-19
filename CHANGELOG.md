@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.5.4
+
+* stick stdlib version to 4.12 due to ceiling function being unavailable later on
+  
 ## 0.5.3
 
 * added forced arch amd64 for Debian
