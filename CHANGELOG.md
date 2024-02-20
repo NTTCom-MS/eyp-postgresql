@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.5.5
+
+* stick concat version lower than 6.0.0 for compatibility purposes.
+  
 ## 0.5.4
 
 * stick stdlib version to 4.12 due to ceiling function being unavailable later on
