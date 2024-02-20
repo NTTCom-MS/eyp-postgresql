@@ -2,7 +2,7 @@
 
 ## 0.5.5
 
-* Avoiding concat module to go further than 6.0..o for compatibility purposes
+* stick concat version lower than 6.0.0 for compatibility purposes.
   
 ## 0.5.4
 
